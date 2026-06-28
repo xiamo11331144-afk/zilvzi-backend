@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.TopicMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO topic (circle_id, user_id, title, content, create_time)
+        VALUES (#{circleId}, #{userId}, #{title}, #{content}, NOW())
+    </insert>
+
+    <select id="selectById" resultType="Topic">
+        SELECT t.*, u.nickname, u.avatar 
+        FROM topic t LEFT JOIN user u ON t.user_id = u.id 
+        WHERE t.id = #{id}
+    </select>
+
+    <select id="selectByCircleId" resultType="Topic">
+        SELECT t.*, u.nickname, u.avatar 
+        FROM topic t LEFT JOIN user u ON t.user_id = u.id 
+        WHERE t.circle_id = #{circleId}
+        ORDER BY t.is_pinned DESC, t.create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <update id="updateReplyCount">
+        UPDATE topic SET reply_count = #{count} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM topic WHERE id = #{id}
+    </delete>
+
+    <select id="selectAll" resultType="Topic">
+        SELECT t.*, u.nickname, u.avatar 
+        FROM topic t LEFT JOIN user u ON t.user_id = u.id 
+        ORDER BY t.create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countAll" resultType="Integer">
+        SELECT COUNT(*) FROM topic
+    </select>
+
+    <select id="search" resultType="Topic">
+        SELECT t.*, u.nickname, u.avatar 
+        FROM topic t LEFT JOIN user u ON t.user_id = u.id 
+        WHERE t.title LIKE CONCAT('%', #{keyword}, '%')
+           OR t.content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY t.create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <update id="update">
+        UPDATE topic
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="isPinned != null">is_pinned = #{isPinned},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

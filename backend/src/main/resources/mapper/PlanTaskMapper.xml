@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.PlanTaskMapper">
+
+    <select id="selectByPlanIdAndDay" resultType="PlanTask">
+        SELECT * FROM plan_task 
+        WHERE plan_id = #{planId} AND day_number = #{dayNumber}
+        ORDER BY sort_order
+    </select>
+
+    <select id="selectByPlanIdAndDate" resultType="PlanTask">
+        SELECT * FROM plan_task 
+        WHERE plan_id = #{planId} AND task_date = #{taskDate}
+        ORDER BY sort_order
+    </select>
+
+    <select id="selectByPlanId" resultType="PlanTask">
+        SELECT * FROM plan_task 
+        WHERE plan_id = #{planId}
+        ORDER BY day_number, sort_order
+    </select>
+
+    <insert id="batchInsert">
+        INSERT INTO plan_task (plan_id, day_number, task_date, task_name, task_type, task_description, task_duration, task_icon, task_color, sort_order, completed, create_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.planId}, #{item.dayNumber}, #{item.taskDate}, #{item.taskName}, #{item.taskType}, #{item.taskDescription}, #{item.taskDuration}, #{item.taskIcon}, #{item.taskColor}, #{item.sortOrder}, #{item.completed}, NOW())
+        </foreach>
+    </insert>
+
+    <update id="updateCompleted">
+        UPDATE plan_task SET completed = #{completed} WHERE id = #{id} AND completed != #{completed}
+    </update>
+
+    <update id="resetTaskCompletion">
+        UPDATE plan_task SET completed = 1, task_icon = '📚', task_color = '#4A90D9'
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStreakBreakStatus">
+        UPDATE plan_task SET completed = #{completed}, task_icon = #{taskIcon}, task_color = #{taskColor}
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectByPlanIdAndPhase" resultType="PlanTask">
+        SELECT * FROM plan_task 
+        WHERE plan_id = #{planId} AND day_number BETWEEN #{startDay} AND #{endDay}
+        ORDER BY day_number, sort_order
+    </select>
+
+    <select id="selectByPlanIdAndDayRange" resultType="PlanTask">
+        SELECT * FROM plan_task 
+        WHERE plan_id = #{planId} AND day_number BETWEEN #{startDay} AND #{endDay}
+        ORDER BY day_number, sort_order
+    </select>
+
+    <delete id="deleteByPlanId">
+        DELETE FROM plan_task WHERE plan_id = #{planId}
+    </delete>
+
+    <select id="selectById" resultType="PlanTask">
+        SELECT * FROM plan_task WHERE id = #{id}
+    </select>
+
+    <select id="selectByUserId" resultType="PlanTask">
+        SELECT pt.* FROM plan_task pt
+        JOIN plan p ON pt.plan_id = p.id
+        WHERE p.user_id = #{userId}
+        ORDER BY pt.task_date DESC
+    </select>
+
+    <select id="selectCompletedByUserId" resultType="PlanTask">
+        SELECT pt.* FROM plan_task pt
+        JOIN plan p ON pt.plan_id = p.id
+        WHERE p.user_id = #{userId} AND pt.completed = 1
+        ORDER BY pt.task_date DESC
+    </select>
+
+    <select id="selectIncompletePastDays" resultType="PlanTask">
+        <![CDATA[
+        SELECT * FROM plan_task
+        WHERE plan_id = #{planId} AND completed = 0 AND task_date < #{today}
+        AND task_name NOT LIKE '【补】%'
+        ORDER BY day_number
+        ]]>
+    </select>
+
+    <!-- 查询过期未完成的原始任务（排除补发任务，防止二次补发） -->
+    <!-- completed != 1 包含 0（未标记）和 -1（已被 autoMarkStreakBreak 标记） -->
+    <select id="selectIncompletePastDaysExcludeSupplement" resultType="PlanTask">
+        <![CDATA[
+        SELECT * FROM plan_task
+        WHERE plan_id = #{planId} AND completed != 1 AND task_date < #{today}
+        AND task_name NOT LIKE '【补】%'
+        ORDER BY day_number
+        ]]>
+    </select>
+
+    <insert id="singleInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plan_task (plan_id, day_number, task_date, task_name, task_type, task_description, task_duration, task_icon, task_color, sort_order, completed, create_time)
+        VALUES (#{planId}, #{dayNumber}, #{taskDate}, #{taskName}, #{taskType}, #{taskDescription}, #{taskDuration}, #{taskIcon}, #{taskColor}, #{sortOrder}, #{completed}, NOW())
+    </insert>
+
+    <select id="countCompletedDays" resultType="Integer">
+        SELECT COUNT(DISTINCT day_number) FROM plan_task 
+        WHERE plan_id = #{planId} AND completed = 1 AND task_name NOT LIKE '【补】%'
+    </select>
+
+    <select id="countCompletedDaysByUserId" resultType="Integer">
+        SELECT COUNT(DISTINCT pt.day_number) FROM plan_task pt
+        JOIN plan p ON pt.plan_id = p.id
+        WHERE p.user_id = #{userId} AND pt.completed = 1
+    </select>
+
+    <select id="countTotalTasksByUserId" resultType="Integer">
+        SELECT COUNT(DISTINCT pt.day_number) FROM plan_task pt
+        JOIN plan p ON pt.plan_id = p.id
+        WHERE p.user_id = #{userId}
+        AND pt.task_date &lt;= #{today}
+    </select>
+
+    <select id="selectIncompleteByPlanId" resultType="PlanTask">
+        SELECT * FROM plan_task 
+        WHERE plan_id = #{planId} AND completed = 0
+        ORDER BY day_number, sort_order
+    </select>
+
+    <delete id="deleteByPlanIdAndDayGreaterThanEqual">
+        DELETE FROM plan_task 
+        WHERE plan_id = #{planId} AND day_number &gt;= #{dayNumber}
+    </delete>
+
+    <!-- 查询计划中已有的补发任务（task_name 以【补】开头） -->
+    <select id="selectSupplementTasks" resultType="PlanTask">
+        SELECT * FROM plan_task
+        WHERE plan_id = #{planId} AND task_name LIKE '【补】%'
+        ORDER BY day_number, sort_order
+    </select>
+
+    <!-- 统计计划中已断卡的天数（completed = -1 的 distinct day_number） -->
+    <select id="countStreakBreakDays" resultType="Integer">
+        SELECT COUNT(DISTINCT day_number) FROM plan_task
+        WHERE plan_id = #{planId} AND completed = -1
+    </select>
+
+    <!-- 查询计划中断卡的任务详情（completed = -1） -->
+    <select id="selectStreakBreakTasks" resultType="PlanTask">
+        SELECT * FROM plan_task
+        WHERE plan_id = #{planId} AND completed = -1
+        ORDER BY day_number, sort_order
+    </select>
+
+    <!-- 删除过期的补发任务（task_date < 今天的未完成补发任务，保留已完成的） -->
+    <delete id="deleteExpiredSupplementTasks">
+        <![CDATA[
+        DELETE FROM plan_task
+        WHERE plan_id = #{planId} AND task_name LIKE '【补】%' AND task_date < #{today} AND completed != 1
+        ]]>
+    </delete>
+
+    <!-- 统计计划中 pending 状态的天数（task_date <= 今天 且 completed = 0 的 distinct day_number） -->
+    <select id="countPendingDays" resultType="Integer">
+        SELECT COUNT(DISTINCT day_number) FROM plan_task
+        WHERE plan_id = #{planId} AND completed = 0 AND task_date &lt;= #{today}
+    </select>
+</mapper>

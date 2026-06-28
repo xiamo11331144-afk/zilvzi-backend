@@ -1,0 +1,134 @@
+<!--pages/circle-detail/circle-detail.wxml-->
+<view class="page-circle-detail">
+  <!-- 圈子信息 -->
+  <view class="circle-header">
+    <view class="circle-cover-wrap">
+      <image class="circle-cover" src="{{circle.cover || '/images/default-circle.png'}}" mode="aspectFill" />
+    </view>
+    <view class="circle-info">
+      <text class="circle-name">{{circle.name}}</text>
+      <text class="circle-desc">{{circle.description}}</text>
+      <view class="circle-meta">
+        <text class="meta-item">{{circle.memberCount}}人加入</text>
+        <text class="meta-item">{{circle.postCount}}条动态</text>
+      </view>
+      <view class="circle-creator" wx:if="{{circle.creatorNickname}}">
+        <image class="creator-avatar" src="{{circle.creatorAvatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+        <text class="creator-name">圈主：{{circle.creatorNickname}}</text>
+      </view>
+      <view class="circle-tags" wx:if="{{circle.tags && circle.tags.length > 0}}">
+        <text class="tag" wx:for="{{circle.tags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+    <view class="circle-action">
+      <!-- 未加入 -->
+      <button class="btn-join" wx:if="{{!isMember}}" bindtap="joinCircle">加入圈子</button>
+      <!-- 已加入但不是创建者 -->
+      <view class="action-row" wx:elif="{{isMember && !isCreator}}">
+        <button class="btn-joined">已加入</button>
+        <button class="btn-leave" bindtap="leaveCircle">退出</button>
+      </view>
+      <!-- 创建者 -->
+      <view wx:else class="creator-badge">圈主</view>
+    </view>
+  </view>
+
+  <!-- 动态发布 -->
+  <view class="publish-card card" wx:if="{{isMember}}">
+    <view class="publish-input" bindtap="showPublishModal">
+      <text class="placeholder">分享你的想法...</text>
+    </view>
+  </view>
+
+  <!-- 动态列表 -->
+  <view class="post-list">
+    <view class="section-header">
+      <text class="section-title">圈子动态</text>
+      <text class="post-count">共{{posts.length}}条</text>
+    </view>
+    
+    <view class="post-item card" wx:for="{{posts}}" wx:key="id">
+      <view class="post-header">
+        <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+        <view class="user-info">
+          <text class="nickname">{{item.nickname}}</text>
+          <text class="time">{{item.createTime}}</text>
+        </view>
+      </view>
+      <view class="post-content">
+        <text>{{item.content}}</text>
+        <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
+          <image class="post-image" wx:for="{{item.images}}" wx:key="*this" wx:for-item="img" src="{{img}}" mode="aspectFill" bindtap="previewImage" data-url="{{img}}" data-urls="{{item.images}}" />
+        </view>
+      </view>
+      <view class="post-actions">
+        <view class="action-item {{item.isLiked ? 'liked' : ''}}" bindtap="toggleLike" data-id="{{item.id}}" data-index="{{index}}">
+          <text class="action-icon">{{item.isLiked ? '❤️' : '🤍'}}</text>
+          <text class="action-count">{{item.likeCount || 0}}</text>
+        </view>
+        <view class="action-item" bindtap="showComments" data-id="{{item.id}}" data-index="{{index}}">
+          <text class="action-icon">💬</text>
+          <text class="action-count">{{item.commentCount || 0}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{posts.length === 0}}">
+      <text>暂无动态，快来发布第一条吧~</text>
+    </view>
+  </view>
+
+  <!-- 发布动态弹窗 -->
+  <view class="modal-mask" wx:if="{{showPublish}}">
+    <view class="publish-modal">
+      <view class="modal-header">
+        <text class="modal-title">发布动态</text>
+        <text class="modal-close" bindtap="hidePublishModal">×</text>
+      </view>
+      <view class="modal-body">
+        <textarea class="publish-textarea" placeholder="分享你的学习心得、打卡感悟..." value="{{publishContent}}" bindinput="onPublishInput" maxlength="500" />
+        <view class="publish-images">
+          <view class="image-item" wx:for="{{publishImages}}" wx:key="*this">
+            <image src="{{item}}" mode="aspectFill" />
+            <text class="remove-image" bindtap="removeImage" data-index="{{index}}">×</text>
+          </view>
+          <view class="add-image" wx:if="{{publishImages.length < 9}}" bindtap="chooseImage">
+            <text>+</text>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="btn-primary {{publishContent ? '' : 'disabled'}}" bindtap="publishPost">发布</button>
+      </view>
+    </view>
+    <view class="mask-close" bindtap="hidePublishModal"></view>
+  </view>
+
+  <!-- 评论弹窗 -->
+  <view class="modal-mask" wx:if="{{showCommentModal}}">
+    <view class="comment-modal">
+      <view class="modal-header">
+        <text class="modal-title">评论 ({{comments.length}})</text>
+        <text class="modal-close" bindtap="hideCommentModal">×</text>
+      </view>
+      <scroll-view scroll-y class="comment-list">
+        <view class="comment-item" wx:for="{{comments}}" wx:key="id">
+          <image class="avatar-sm" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="comment-content">
+            <text class="comment-name">{{item.nickname}}</text>
+            <text class="comment-text">{{item.content}}</text>
+            <text class="comment-time">{{item.createTime}}</text>
+          </view>
+        </view>
+        <view class="empty-state" wx:if="{{comments.length === 0}}">
+          <text>暂无评论，快来抢沙发~</text>
+        </view>
+      </scroll-view>
+      <view class="comment-input-wrap">
+        <input class="comment-input" placeholder="写评论..." value="{{commentContent}}" bindinput="onCommentInput" bindconfirm="sendComment" />
+        <button class="send-btn" bindtap="sendComment">发送</button>
+      </view>
+    </view>
+    <view class="mask-close" bindtap="hideCommentModal"></view>
+  </view>
+</view>

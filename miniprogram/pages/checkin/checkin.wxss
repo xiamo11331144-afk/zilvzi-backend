@@ -1,0 +1,417 @@
+/* pages/checkin/checkin.wxss */
+.page-checkin {
+  padding: 20rpx;
+  padding-bottom: 140rpx;
+}
+
+/* 日历卡片 */
+.calendar-card {
+  margin-bottom: 20rpx;
+}
+
+.month-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 20rpx;
+}
+
+.nav-btn {
+  font-size: 28rpx;
+  color: #4A90D9;
+  padding: 10rpx;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+
+.day-item {
+  padding: 16rpx 0;
+  position: relative;
+  font-size: 28rpx;
+}
+
+.day-item.other-month {
+  color: #ccc;
+}
+
+.day-item.today {
+  color: #4A90D9;
+  font-weight: bold;
+}
+
+.day-item.start {
+  background: rgba(74, 144, 217, 0.1);
+  border-radius: 8rpx;
+}
+
+.day-item.end {
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 8rpx;
+}
+
+.day-item.checked::after {
+  content: '';
+  position: absolute;
+  bottom: 4rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8rpx;
+  height: 8rpx;
+  background: #52C41A;
+  border-radius: 50%;
+}
+
+.dot {
+  display: none;
+}
+
+/* 日历样式补充 */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4rpx;
+}
+
+.day-cell {
+  text-align: center;
+  padding: 12rpx 0;
+  font-size: 26rpx;
+  color: #333;
+  border-radius: 8rpx;
+}
+
+.day-cell.today {
+  background: #4A90D9;
+  color: #fff;
+}
+
+.day-cell.checked {
+  position: relative;
+}
+
+.day-cell.checked::after {
+  content: '';
+  position: absolute;
+  bottom: 4rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8rpx;
+  height: 8rpx;
+  background: #52C41A;
+  border-radius: 50%;
+}
+
+.day-cell.other-month {
+  color: #ccc;
+}
+
+/* 统计卡片 */
+.stats-card {
+  margin: 20rpx;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #4A90D9;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+/* 统计卡片 */
+.stats-card {
+  margin-bottom: 20rpx;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #4A90D9;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+/* 任务列表 */
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.task-check {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  border: 3rpx solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  font-size: 28rpx;
+  color: #fff;
+}
+
+.task-check.checked {
+  background: #52C41A;
+  border-color: #52C41A;
+}
+
+.task-check.streak-break {
+  background: #FF4D4F;
+  border-color: #FF4D4F;
+}
+
+.task-streak-break {
+  opacity: 0.85;
+  background: #fff2f0;
+}
+
+.task-name.streak-break-name {
+  color: #FF4D4F;
+  text-decoration: line-through;
+}
+
+.status-text.streak-break-status {
+  color: #FF4D4F;
+  font-weight: bold;
+}
+
+.task-info {
+  flex: 1;
+}
+
+.task-name {
+  font-size: 30rpx;
+  display: block;
+}
+
+.task-name.done {
+  color: #999;
+  text-decoration: line-through;
+}
+
+.task-tags {
+  display: flex;
+  gap: 8rpx;
+  margin-top: 8rpx;
+}
+
+.task-status {
+  margin-left: 16rpx;
+}
+
+.status-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.status-text.done {
+  color: #52C41A;
+}
+
+.task-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.task-streak {
+  display: flex;
+  align-items: baseline;
+}
+
+.streak-num {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #FAAD14;
+}
+
+.streak-label {
+  font-size: 22rpx;
+  color: #999;
+  margin-left: 4rpx;
+}
+
+/* 打卡按钮 */
+.checkin-action {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 40rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.checkin-btn {
+  width: 100%;
+}
+
+/* 成功弹窗 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-modal {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 60rpx 40rpx;
+  width: 70%;
+  text-align: center;
+}
+
+.success-icon {
+  width: 120rpx;
+  height: 120rpx;
+  background: #52C41A;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 60rpx;
+  line-height: 120rpx;
+  margin: 0 auto 30rpx;
+}
+
+.success-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.success-desc {
+  font-size: 28rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 40rpx;
+}
+
+/* 日期标注样式 */
+.mark {
+  position: absolute;
+  font-size: 16rpx;
+  padding: 2rpx 6rpx;
+  border-radius: 8rpx;
+  color: #fff;
+  z-index: 1;
+}
+
+.start-mark {
+  background: #4A90D9;
+  bottom: 2rpx;
+  right: 2rpx;
+}
+
+.end-mark {
+  background: #FF6B6B;
+  bottom: 2rpx;
+  right: 2rpx;
+}
+
+/* 图例 */
+.calendar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 30rpx;
+  padding: 16rpx 0;
+  border-top: 1rpx solid #f0f0f0;
+  margin-top: 16rpx;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.legend-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+}
+
+.legend-dot.checked {
+  background: #52C41A;
+}
+
+.legend-mark {
+  font-size: 16rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 8rpx;
+  color: #fff;
+}

@@ -1,0 +1,255 @@
+<!--pages/index/index.wxml-->
+<view class="page-index">
+  <!-- 顶部用户信息 -->
+  <view class="header">
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="greeting">
+        <text class="nickname">{{userInfo.nickname || '未登录'}}</text>
+        <text class="date">{{todayDate}} {{weekDay}}</text>
+      </view>
+    </view>
+    <view class="header-right">
+      <view class="notification-btn" bindtap="goToPage" data-url="/pages/notification/notification" wx:if="{{isLoggedIn}}">
+        <text class="notification-icon">🔔</text>
+        <view class="notification-badge" wx:if="{{unreadCount > 0}}">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
+      </view>
+      <view class="checkin-summary" wx:if="{{isLoggedIn}}">
+        <text class="count">{{checkinDays}}</text>
+        <text class="label">连续打卡</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日打卡状态 -->
+  <view class="today-card card" wx:if="{{isLoggedIn}}">
+    <view class="today-header flex-between">
+      <text class="section-title">今日任务</text>
+      <text class="checkin-status {{allChecked ? 'done' : ''}}">{{allChecked ? '全部完成' : '待打卡 ' + uncheckedCount + ' 项'}}</text>
+    </view>
+    <view class="goal-list">
+      <view class="goal-item" wx:for="{{todayGoals}}" wx:key="id">
+        <view class="goal-check {{item.checked ? 'checked' : ''}}" bindtap="toggleCheckin" data-id="{{item.id}}" data-index="{{index}}">
+          <text wx:if="{{item.checked}}">✓</text>
+        </view>
+        <view class="goal-info" bindtap="showTaskDetail" data-index="{{index}}">
+          <text class="goal-name {{item.checked ? 'done' : ''}}">{{item.name}}</text>
+          <view class="goal-tags">
+            <text class="tag tag-primary">{{item.type}}</text>
+            <text class="tag tag-warning" wx:if="{{item.duration}}">{{item.duration}}</text>
+          </view>
+        </view>
+        <view class="goal-action {{item.checked ? 'done' : ''}}" bindtap="toggleCheckin" data-id="{{item.id}}" data-index="{{index}}">
+          <text wx:if="{{item.pending}}" style="color:#faad14">待审核</text>
+          <text wx:elif="{{item.rejected}}" style="color:#ff4d4f">已驳回</text>
+          <text wx:elif="{{item.checked}}">已打卡</text>
+          <text wx:elif="{{uploadedTasks[item.id]}}" style="color:#52C41A">已上传</text>
+          <text wx:else>打卡</text>
+        </view>
+        <!-- 未上传时：显示拍照按钮 -->
+        <view class="goal-camera" bindtap="photoCheckin" data-id="{{item.id}}" data-index="{{index}}"
+              wx:if="{{!item.checked && !item.pending && !item.expired && !uploadedTasks[item.id]}}">
+          <text>📷</text>
+        </view>
+        <!-- 已上传时：显示重新上传按钮 -->
+        <view class="goal-reupload" bindtap="reuploadPhoto" data-id="{{item.id}}" data-index="{{index}}"
+              wx:if="{{!item.checked && !item.pending && !item.expired && uploadedTasks[item.id]}}">
+          <text style="font-size:22rpx;color:#4A90D9;">重新上传</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty-tip" wx:if="{{todayGoals.length === 0}}">
+      <text>暂无任务，点击"制定计划"AI生成</text>
+    </view>
+  </view>
+
+  <!-- 任务详情弹窗 -->
+  <view class="modal-mask" wx:if="{{showTaskModal}}" bindtap="hideTaskDetail">
+    <view class="task-modal" catchtap="">
+      <view class="task-modal-header">
+        <text class="task-modal-title">{{selectedTask.name}}</text>
+        <text class="task-modal-close" bindtap="hideTaskDetail">×</text>
+      </view>
+      <view class="task-modal-body">
+        <view class="task-detail-item">
+          <text class="detail-label">类型</text>
+          <text class="detail-value">{{selectedTask.type}}</text>
+        </view>
+        <view class="task-detail-item" wx:if="{{selectedTask.duration}}">
+          <text class="detail-label">时长</text>
+          <text class="detail-value">{{selectedTask.duration}}</text>
+        </view>
+        <view class="task-detail-item" wx:if="{{selectedTask.description}}">
+          <text class="detail-label">详情</text>
+          <text class="detail-value">{{selectedTask.description}}</text>
+        </view>
+      </view>
+      <view class="task-modal-footer">
+        <view class="task-done" wx:if="{{selectedTask.pending}}" style="color:#faad14;">
+          <text>⏳ 等待搭子审核</text>
+        </view>
+        <button class="btn-primary" bindtap="toggleCheckinFromModal" data-id="{{selectedTask.id}}" wx:elif="{{selectedTask.rejected || !selectedTask.checked}}">重新打卡</button>
+        <view class="task-done" wx:else>
+          <text>✓ 已完成</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 未登录提示 -->
+  <view class="login-tip card" wx:if="{{!isLoggedIn}}">
+    <text class="tip-text">登录后开启自律之旅</text>
+    <button class="btn-primary" bindtap="goLogin">立即登录</button>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="features card">
+    <view class="section-title">功能入口</view>
+    <view class="feature-grid">
+      <view class="feature-item" bindtap="goToPage" data-url="/pages/checkin/checkin">
+        <view class="feature-icon" style="background: linear-gradient(135deg, #4A90D9, #6DB3F8);">✓</view>
+        <text>打卡记录</text>
+      </view>
+      <view class="feature-item" bindtap="goToPage" data-url="/pages/stats/stats">
+        <view class="feature-icon" style="background: linear-gradient(135deg, #52C41A, #73D13D);">📊</view>
+        <text>数据统计</text>
+      </view>
+      <view class="feature-item" bindtap="goToPage" data-url="/pages/achievement/achievement">
+        <view class="feature-icon" style="background: linear-gradient(135deg, #FAAD14, #FFC940);">★</view>
+        <text>成就中心</text>
+      </view>
+      <view class="feature-item" bindtap="goToPage" data-url="/pages/plan/plan">
+        <view class="feature-icon" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">AI</view>
+        <text>制定计划</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的计划 -->
+  <view class="plans-card card" wx:if="{{isLoggedIn && plans.length > 0}}">
+    <view class="flex-between">
+      <text class="section-title">我的计划</text>
+    </view>
+    <view class="plan-list">
+      <view class="plan-item" wx:for="{{plans}}" wx:key="id">
+        <view class="plan-info" bindtap="viewPlan" data-id="{{item.id}}">
+          <view class="plan-name-row">
+            <text class="plan-name">{{item.name}}</text>
+            <text class="plan-status {{item.status}}">{{item.statusText}}</text>
+          </view>
+          <view class="plan-meta">
+            <text class="plan-days">共{{item.totalDays}}天</text>
+            <text class="plan-progress">已完成{{item.completedDays}}天</text>
+          </view>
+          <view class="plan-progress-bar">
+            <view class="progress" style="width: {{item.totalDays > 0 ? (item.completedDays / item.totalDays * 100) : 0}}%;"></view>
+          </view>
+        </view>
+        <view class="plan-actions">
+          <text class="delete-btn" bindtap="deletePlan" data-id="{{item.id}}">删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡趋势 -->
+  <view class="trend-card card" wx:if="{{isLoggedIn}}">
+    <view class="flex-between">
+      <text class="section-title">本周打卡趋势</text>
+      <text class="more" bindtap="goToPage" data-url="/pages/checkin/checkin">查看详情</text>
+    </view>
+    <view class="trend-chart">
+      <view class="chart-bars">
+        <view class="bar-item" wx:for="{{weekTrend}}" wx:key="day">
+          <view class="bar" style="height: {{item.height}}%; background: {{item.checked ? '#4A90D9' : '#E8E8E8'}};"></view>
+          <text class="bar-label">{{item.day}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 创建目标弹窗 -->
+<view class="modal-mask" wx:if="{{showCreateModal}}" bindtap="hideCreateModal">
+  <view class="modal-content" catchtap="">
+    <view class="modal-header">
+      <text class="modal-title">创建新目标</text>
+      <text class="modal-close" bindtap="hideCreateModal">×</text>
+    </view>
+    <view class="modal-body">
+      <view class="form-item">
+        <text class="form-label">目标名称</text>
+        <input class="form-input" placeholder="请输入目标名称" value="{{newGoal.name}}" bindinput="onGoalNameInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">目标类型</text>
+        <view class="type-selector">
+          <view class="type-item {{newGoal.type === item ? 'active' : ''}}" 
+                wx:for="{{goalTypes}}" wx:key="*this"
+                bindtap="selectGoalType" data-type="{{item}}">
+            {{item}}
+          </view>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">打卡周期</text>
+        <picker mode="selector" range="{{cycleOptions}}" value="{{cycleIndex}}" bindchange="onCycleChange">
+          <view class="picker-value">{{cycleOptions[cycleIndex]}}</view>
+        </picker>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-outline" bindtap="hideCreateModal">取消</button>
+      <button class="btn-primary" bindtap="createGoalConfirm">创建</button>
+    </view>
+  </view>
+</view>
+
+<!-- 凭证上传弹窗 -->
+<view class="modal-mask" wx:if="{{showProofModal}}">
+  <view class="modal-content proof-modal">
+    <view class="modal-header">
+      <text class="modal-title">提交打卡凭证</text>
+      <text class="modal-close" bindtap="hideProofModal">×</text>
+    </view>
+    <!-- 任务信息 -->
+    <view class="proof-task-info">
+      <view class="proof-task-name">{{proofTaskName}}</view>
+      <view class="proof-task-type-tag">{{proofTaskType}}</view>
+    </view>
+    <view class="modal-body">
+      <view class="form-item">
+        <text class="form-label">凭证照片（必填）</text>
+        <view style="margin-top:16rpx;">
+          <!-- 已上传状态 -->
+          <view wx:if="{{proofImage}}" class="proof-uploaded">
+            <image src="{{proofImage}}" mode="aspectFill"
+              class="proof-uploaded-img" bindtap="previewProofImage" />
+            <view class="proof-uploaded-info">
+              <text class="proof-uploaded-badge">✓ 已上传</text>
+              <text class="proof-reupload" bindtap="chooseProofImage">重新上传</text>
+            </view>
+          </view>
+          <!-- 未上传状态 -->
+          <view wx:else bindtap="chooseProofImage" class="proof-upload-box">
+            <text class="proof-upload-icon">📷</text>
+            <text class="proof-upload-text">点击拍照/选择照片</text>
+          </view>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">文字描述（可选）</text>
+        <input class="proof-textarea" placeholder="补充说明..." value="{{proofContent}}"
+          bindinput="onProofContentInput" bindblur="onProofContentBlur"
+          adjust-position="{{true}}" maxlength="200" confirm-type="done" />
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-outline" bindtap="hideProofModal">取消</button>
+      <button class="btn-primary" bindtap="submitProof">提交审核</button>
+    </view>
+  </view>
+</view>
+
+<!-- AI 助手悬浮球 -->
+<ai-ball wx:if="{{isLoggedIn}}" />

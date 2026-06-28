@@ -1,0 +1,88 @@
+<!--pages/message/message.wxml-->
+<view class="page-message">
+  <!-- 对话列表模式 -->
+  <view class="conversation-list" wx:if="{{viewMode === 'list'}}">
+    <view class="conv-item" wx:for="{{conversations}}" wx:key="partnerId"
+          bindtap="enterChat"
+          data-id="{{item.partnerId}}"
+          data-nickname="{{item.nickname}}"
+          data-avatar="{{item.avatar}}">
+      <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="conv-info">
+        <text class="conv-name">{{item.nickname}}</text>
+        <text class="conv-last">{{item.lastMessage}}</text>
+      </view>
+      <view class="conv-time">
+        <text>{{item.lastTime}}</text>
+        <view class="unread-dot" wx:if="{{item.unreadCount > 0}}">
+          <text class="unread-num">{{item.unreadCount > 99 ? '99+' : item.unreadCount}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty-state" wx:if="{{!loading && conversations.length === 0}}">
+      <text>暂无私信，去搭子页面发起聊天吧</text>
+    </view>
+  </view>
+
+  <!-- 聊天模式 -->
+  <view class="chat-page" wx:if="{{viewMode === 'chat'}}">
+    <view class="chat-header">
+      <text class="back-btn" bindtap="goBackToList">←</text>
+      <text class="chat-name">{{partnerNickname}}</text>
+    </view>
+
+    <scroll-view scroll-y class="chat-messages" id="msg-list"
+                 scroll-into-view="{{scrollToView}}"
+                 scroll-with-animation>
+      <view id="msg-bottom"></view>
+      <view class="chat-item {{item.isMine ? 'me' : 'partner'}}"
+            wx:for="{{messages}}" wx:key="id">
+        <image class="chat-avatar"
+               src="{{item.isMine ? (item.fromAvatar || '/images/default-avatar.png') : (partnerAvatar || '/images/default-avatar.png')}}"
+               mode="aspectFill" />
+        <view class="chat-bubble">
+          <!-- 打卡凭证消息 -->
+          <block wx:if="{{item.isCheckinProof || item.isMyCheckinProof || item.isCheckinConfirmed}}">
+            <view class="proof-card">
+              <view class="proof-header">📸 打卡凭证</view>
+              <image wx:if="{{item.proofImage}}" class="proof-img"
+                     src="{{item.proofImage}}" mode="widthFix"
+                     bindtap="previewImage" data-url="{{item.proofImage}}" />
+              <text class="proof-text" wx:if="{{item.displayContent}}">{{item.displayContent}}</text>
+              <button wx:if="{{item.isCheckinProof}}" class="confirm-btn"
+                      bindtap="confirmCheckin"
+                      data-checkinid="{{item.relatedId}}" data-msgid="{{item.id}}">
+                ✅ 确认打卡
+              </button>
+              <view wx:if="{{item.isMyCheckinProof}}" class="confirmed-badge" style="color:#4A90D9;">
+                等待对方确认
+              </view>
+              <view wx:if="{{item.isCheckinConfirmed && !item.isCheckinProof && !item.isMyCheckinProof}}" class="confirmed-badge">
+                已确认
+              </view>
+            </view>
+          </block>
+          <!-- 普通文本消息 -->
+          <block wx:else>
+            <text>{{item.content}}</text>
+          </block>
+          <text class="msg-time">{{item.createTime}}</text>
+        </view>
+      </view>
+      <view class="empty-state" wx:if="{{!loading && messages.length === 0}}">
+        <text>暂无消息，发送第一条吧~</text>
+      </view>
+    </scroll-view>
+
+    <view class="chat-input-bar">
+      <input class="chat-input"
+             placeholder="输入消息..."
+             value="{{inputMsg}}"
+             bindinput="onInputMsg"
+             bindconfirm="onConfirmSend"
+             confirm-type="send"
+             confirm-hold />
+      <button class="send-btn" bindtap="sendMsg">发送</button>
+    </view>
+  </view>
+</view>

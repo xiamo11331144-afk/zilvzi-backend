@@ -1,0 +1,51 @@
+<!-- AI 助手悬浮球 -->
+<view class="ai-ball {{isDragging ? 'dragging' : ''}} {{isOpen ? 'open' : ''}}"
+      style="right: {{ballX}}rpx; bottom: {{ballY}}rpx;"
+      bindtouchstart="onTouchStart"
+      bindtouchmove="onTouchMove"
+      bindtouchend="onTouchEnd"
+      catchtap="onBallTap">
+  <view class="ball-inner">
+    <text class="ball-icon">🤖</text>
+  </view>
+  <view class="ball-pulse"></view>
+  <view class="ball-label" wx:if="{{!isOpen && !isDragging}}">AI助手</view>
+</view>
+
+<!-- 快捷操作面板 -->
+<view class="ai-panel {{isOpen ? 'show' : ''}}" wx:if="{{isOpen}}">
+  <view class="panel-mask" bindtap="closePanel"></view>
+  <view class="panel-content">
+    <view class="panel-header">
+      <text class="panel-title">🤖 AI 智能助手</text>
+      <text class="panel-close" bindtap="closePanel">✕</text>
+    </view>
+    <view class="panel-body">
+      <scroll-view scroll-y class="chat-messages" scroll-into-view="{{scrollToView}}">
+        <view class="message-item {{item.isUser ? 'user' : 'ai'}}" wx:for="{{messages}}" wx:key="id" id="msg-{{item.id}}">
+          <view class="message-avatar" wx:if="{{!item.isUser}}">🤖</view>
+          <view class="message-bubble">
+            <text>{{item.content}}</text>
+          </view>
+          <view class="message-avatar user-avatar" wx:if="{{item.isUser}}">我</view>
+        </view>
+        <view class="typing-indicator" wx:if="{{isTyping}}">
+          <view class="dot"></view>
+          <view class="dot"></view>
+          <view class="dot"></view>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="quick-questions">
+      <view class="quick-item" wx:for="{{quickQuestions}}" wx:key="*this" bindtap="askQuickQuestion" data-question="{{item}}">
+        {{item}}
+      </view>
+    </view>
+    <view class="panel-footer">
+      <input class="chat-input" placeholder="问我任何问题..." value="{{inputValue}}" bindinput="onInput" bindconfirm="sendMessage" confirm-type="send" />
+      <view class="send-btn" bindtap="sendMessage">
+        <text>发送</text>
+      </view>
+    </view>
+  </view>
+</view>

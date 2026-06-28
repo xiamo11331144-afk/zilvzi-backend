@@ -1,0 +1,310 @@
+<!--pages/plan/plan.wxml-->
+<view class="page-plan">
+  <!-- 步骤指示器 -->
+  <view class="steps">
+    <view class="step-item {{currentStep >= 1 ? 'active' : ''}}">
+      <view class="step-num">1</view>
+      <text>目标信息</text>
+    </view>
+    <view class="step-line {{currentStep >= 2 ? 'active' : ''}}"></view>
+    <view class="step-item {{currentStep >= 2 ? 'active' : ''}}">
+      <view class="step-num">2</view>
+      <text>时间安排</text>
+    </view>
+    <view class="step-line {{currentStep >= 3 ? 'active' : ''}}"></view>
+    <view class="step-item {{currentStep >= 3 ? 'active' : ''}}">
+      <view class="step-num">3</view>
+      <text>AI生成</text>
+    </view>
+  </view>
+
+  <!-- 步骤1：目标信息 -->
+  <view class="step-content" wx:if="{{currentStep === 1}}">
+    <view class="card">
+      <view class="form-title">目标类型</view>
+      <view class="goal-types">
+        <view class="type-card {{selectedGoalType === item.value ? 'active' : ''}}" 
+              wx:for="{{goalTypes}}" wx:key="value"
+              bindtap="selectGoalType" data-type="{{item.value}}">
+          <view class="type-icon" style="background: {{item.color}};">{{item.icon}}</view>
+          <text class="type-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{selectedGoalType}}">
+      <view class="form-title">目标名称</view>
+      <input class="form-input" placeholder="如：英语四级、考研数学、健身减脂" value="{{goalName}}" bindinput="onGoalNameInput" />
+
+      <view class="form-title" style="margin-top: 30rpx;">开始日期</view>
+      <picker mode="date" start="{{today}}" value="{{startDate}}" bindchange="onStartDateChange">
+        <view class="date-picker {{startDate ? 'selected' : ''}}">
+          <text>{{startDate || '选择开始日期'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+
+      <view class="form-title" style="margin-top: 30rpx;">考试/截止日期</view>
+      <picker mode="date" start="{{startDate || today}}" value="{{examDate}}" bindchange="onDateChange">
+        <view class="date-picker {{examDate ? 'selected' : ''}}">
+          <text>{{examDate || '选择截止日期'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+
+      <view class="form-title" style="margin-top: 30rpx;">备注信息</view>
+      <textarea class="form-textarea" 
+                placeholder="描述你的情况，如：&#10;• 哪些知识点比较熟悉/不熟悉&#10;• 之前的学习基础如何"
+                value="{{remark}}" 
+                bindinput="onRemarkInput" 
+                maxlength="500" />
+    </view>
+
+    <button class="btn-primary next-btn" bindtap="nextStep" disabled="{{!selectedGoalType || !goalName}}">下一步</button>
+  </view>
+
+  <!-- 步骤2：时间安排 -->
+  <view class="step-content" wx:if="{{currentStep === 2}}">
+    <view class="card">
+      <view class="form-title">你是学生吗？</view>
+      <view class="radio-group">
+        <view class="radio-item {{isStudent ? 'active' : ''}}" bindtap="setStudentStatus" data-status="true">
+          <view class="radio-dot {{isStudent ? 'checked' : ''}}"></view>
+          <text>是学生</text>
+        </view>
+        <view class="radio-item {{!isStudent ? 'active' : ''}}" bindtap="setStudentStatus" data-status="false">
+          <view class="radio-dot {{!isStudent ? 'checked' : ''}}"></view>
+          <text>不是学生</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 学生：课表 -->
+    <view class="card" wx:if="{{isStudent}}">
+      <view class="form-title">课程表设置</view>
+      
+      <!-- 上传课表 -->
+      <view class="upload-section">
+        <view class="upload-btn" bindtap="uploadSchedule">
+          <text class="upload-icon">📄</text>
+          <text>上传课表（PDF/图片）</text>
+        </view>
+        <view class="upload-tip">上传后AI将自动识别你的课程安排</view>
+        <view class="uploaded-file" wx:if="{{scheduleFile}}">
+          <text class="file-name">{{scheduleFile.name}}</text>
+          <text class="file-remove" bindtap="removeScheduleFile">删除</text>
+        </view>
+      </view>
+
+      <view class="divider-text">
+        <view class="line"></view>
+        <text>或手动设置</text>
+        <view class="line"></view>
+      </view>
+
+      <view class="schedule-grid">
+        <view class="schedule-header">
+          <text></text>
+          <text wx:for="{{weekDays}}" wx:key="*this" wx:for-item="day">{{day}}</text>
+        </view>
+        <view class="schedule-row" wx:for="{{timeSlots}}" wx:key="*this" wx:for-item="time">
+          <text class="time-label">{{time}}</text>
+          <view class="schedule-cell {{schedule[time][dayIndex] ? 'has-class' : ''}}" 
+                wx:for="{{weekDays}}" wx:key="*this" wx:for-item="day" wx:for-index="dayIndex"
+                bindtap="toggleSchedule" data-time="{{time}}" data-day="{{dayIndex}}">
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 非学生：空闲时间 -->
+    <view class="card" wx:if="{{!isStudent}}">
+      <view class="form-title">时间安排设置</view>
+      
+      <!-- 上传安排表 -->
+      <view class="upload-section">
+        <view class="upload-btn" bindtap="uploadSchedule">
+          <text class="upload-icon">📄</text>
+          <text>上传安排表（PDF/图片）</text>
+        </view>
+        <view class="upload-tip">上传后AI将自动识别你的空闲时间</view>
+        <view class="uploaded-file" wx:if="{{scheduleFile}}">
+          <text class="file-name">{{scheduleFile.name}}</text>
+          <text class="file-remove" bindtap="removeScheduleFile">删除</text>
+        </view>
+      </view>
+
+      <view class="divider-text">
+        <view class="line"></view>
+        <text>或手动设置</text>
+        <view class="line"></view>
+      </view>
+
+      <view class="free-time-list">
+        <view class="free-day" wx:for="{{weekDays}}" wx:key="*this" wx:for-item="day" wx:for-index="dayIndex">
+          <view class="day-header" bindtap="toggleDayExpand" data-day="{{dayIndex}}">
+            <text class="day-name">{{day}}</text>
+            <text class="expand-icon {{expandedDays[dayIndex] ? 'expanded' : ''}}">›</text>
+          </view>
+          <view class="time-slots" wx:if="{{expandedDays[dayIndex]}}">
+            <view class="time-slot {{freeTime[dayIndex].includes(item) ? 'active' : ''}}" 
+                  wx:for="{{availableTimeSlots}}" wx:key="*this" wx:for-item="item"
+                  bindtap="toggleFreeTime" data-day="{{dayIndex}}" data-time="{{item}}">
+              {{item}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="btn-group">
+      <button class="btn-outline" bindtap="prevStep">上一步</button>
+      <button class="btn-primary" bindtap="nextStep">生成计划</button>
+    </view>
+  </view>
+
+  <!-- 步骤3：AI生成计划 -->
+  <view class="step-content" wx:if="{{currentStep === 3}}">
+    <!-- 生成中 -->
+    <view class="generating-card card" wx:if="{{isGenerating}}">
+      <view class="ai-animation">
+        <view class="ai-icon">AI</view>
+        <view class="loading-dots">
+          <view class="dot"></view>
+          <view class="dot"></view>
+          <view class="dot"></view>
+        </view>
+      </view>
+      <text class="generating-text">AI正在为你制定计划...</text>
+      <text class="generating-desc">生成学习大纲，规划学习路线</text>
+    </view>
+
+    <!-- 生成完成：显示大纲 -->
+    <view class="plan-result" wx:if="{{!isGenerating && planGenerated}}">
+      <!-- 计划头部 -->
+      <view class="plan-header card">
+        <view class="plan-title">
+          <text class="plan-name">{{goalName}}学习计划</text>
+          <text class="plan-duration">共{{phases.length}}个阶段</text>
+        </view>
+        <view class="plan-stats">
+          <view class="stat-item">
+            <text class="stat-num">{{planId ? '查看中' : '新建'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 阶段路线图 -->
+      <view class="phases-roadmap card">
+        <view class="roadmap-title">学习路线图</view>
+        <view class="phase-list">
+          <view class="phase-card {{currentPhase === item.phase ? 'active' : ''}} {{phaseTasks[item.phase] ? 'loaded' : ''}} {{isLoadingPhase && currentPhase === item.phase ? 'loading' : ''}}" 
+                wx:for="{{phases}}" wx:key="phase"
+                bindtap="switchPhase" data-phase="{{item.phase}}">
+            <view class="phase-header">
+              <view class="phase-num">阶段{{item.phase}}</view>
+              <view class="phase-badge">
+                <text class="badge-{{item.phaseStatus}}">{{item.phaseStatusText}}</text>
+              </view>
+            </view>
+            <view class="phase-name">{{item.name}}</view>
+            <view class="phase-days">第{{item.startDay}}-{{item.endDay}}天</view>
+            <view class="phase-theme">{{item.theme}}</view>
+            <view class="phase-progress" wx:if="{{item.progress !== undefined}}">
+              <view class="progress-bar">
+                <view class="progress" style="width: {{item.progress}}%;"></view>
+              </view>
+              <text class="progress-text">{{item.completedDays}}/{{item.totalDays}}天</text>
+            </view>
+            <view class="phase-topics" wx:if="{{item.topics}}">
+              <text wx:for="{{item.topics}}" wx:key="*this" wx:for-item="topic" class="topic-tag">{{topic}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 当前阶段任务详情 -->
+      <view class="phase-detail card" wx:if="{{phaseTasks[currentPhase]}}">
+        <view class="detail-header">
+          <text class="detail-title">{{phases[currentPhase-1].name}} - 每日任务</text>
+        </view>
+        
+        <view class="day-plan" wx:for="{{phaseTasks[currentPhase]}}" wx:key="day">
+          <view class="day-header">
+            <text class="day-label">第{{item.day}}天</text>
+            <text class="day-date">{{item.date}}</text>
+          </view>
+          <view class="task-list">
+            <view class="task-item" wx:for="{{item.tasks}}" wx:key="id" wx:for-item="task">
+              <view class="task-check {{task.completed === 1 ? 'checked' : ''}} {{task.completed === -1 ? 'streak-break' : ''}}" 
+                    bindtap="completeTask" data-id="{{task.id}}">
+                <text wx:if="{{task.completed === 1}}">✓</text>
+                <text wx:if="{{task.completed === -1}}">✕</text>
+              </view>
+              <view class="task-icon" style="background: {{task.color}};">{{task.icon}}</view>
+              <view class="task-info">
+                <text class="task-name {{task.completed === 1 ? 'done' : ''}} {{task.completed === -1 ? 'streak-break-name' : ''}}">{{task.name}}</text>
+                <text class="task-desc">{{task.description}}</text>
+              </view>
+              <text class="task-duration">{{task.duration}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载中 -->
+      <view class="loading-card card" wx:if="{{isLoadingPhase}}">
+        <view class="loading">
+          <text>正在生成该阶段任务...</text>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="btn-group">
+        <button class="btn-outline" bindtap="viewFullPlan">查看完整计划</button>
+        <button class="btn-primary" bindtap="regeneratePlan">重新生成</button>
+      </view>
+      <view class="delete-btn-wrap">
+        <text class="delete-btn" bindtap="deletePlan">删除计划</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 完整计划弹窗 -->
+  <view class="modal-mask" wx:if="{{showFullPlan}}" bindtap="hideFullPlan">
+    <view class="full-plan-modal" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">完整学习计划</text>
+        <text class="modal-close" bindtap="hideFullPlan">×</text>
+      </view>
+      <scroll-view scroll-y class="full-plan-scroll">
+        <view class="phase-section" wx:for="{{phases}}" wx:key="phase">
+          <view class="phase-title">{{item.name}}（第{{item.startDay}}-{{item.endDay}}天）</view>
+          <view class="day-plan" wx:for="{{phaseTasks[item.phase]}}" wx:key="day" wx:for-item="dayItem">
+            <view class="day-header">
+              <text class="day-label">第{{dayItem.day}}天</text>
+            </view>
+            <view class="task-list">
+              <view class="task-item" wx:for="{{dayItem.tasks}}" wx:key="id" wx:for-item="task">
+                <view class="task-check {{task.completed === 1 ? 'checked' : ''}} {{task.completed === -1 ? 'streak-break' : ''}}" 
+                      bindtap="completeTask" data-id="{{task.id}}">
+                  <text wx:if="{{task.completed === 1}}">✓</text>
+                  <text wx:if="{{task.completed === -1}}">✕</text>
+                </view>
+                <view class="task-icon" style="background: {{task.color}};">{{task.icon}}</view>
+                <view class="task-info">
+                  <text class="task-name {{task.completed === 1 ? 'done' : ''}} {{task.completed === -1 ? 'streak-break-name' : ''}}">{{task.name}}</text>
+                  <text class="task-desc">{{task.description}}</text>
+                </view>
+                <text class="task-duration">{{task.duration}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="no-tasks" wx:if="{{!phaseTasks[item.phase]}}">
+            <text>点击阶段卡片加载详细任务</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

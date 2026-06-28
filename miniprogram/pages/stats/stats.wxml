@@ -1,0 +1,84 @@
+<!--pages/stats/stats.wxml-->
+<view class="page-stats">
+  <!-- 顶部统计卡片 -->
+  <view class="stats-header">
+    <view class="stat-card">
+      <text class="stat-num">{{stats.totalCheckins}}</text>
+      <text class="stat-label">累计打卡</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num">{{stats.streakDays}}</text>
+      <text class="stat-label">连续打卡</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num">{{stats.completionRate}}%</text>
+      <text class="stat-label">完成率</text>
+    </view>
+  </view>
+
+  <!-- 打卡趋势图 -->
+  <view class="card trend-card">
+    <view class="card-title">本周打卡趋势</view>
+    <view class="trend-chart">
+      <view class="chart-bars">
+        <view class="bar-item" wx:for="{{weekTrend}}" wx:key="day">
+          <view class="bar-wrapper">
+            <view class="bar {{item.checked ? 'active' : ''}}" style="height: {{item.height}}%;"></view>
+          </view>
+          <text class="bar-label">{{item.day}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 目标完成率 -->
+  <view class="card completion-card">
+    <view class="card-title">目标完成率</view>
+    <view class="completion-rings">
+      <view class="ring-item" wx:for="{{goals}}" wx:key="id">
+        <view class="ring-wrapper">
+          <view class="ring-bg"></view>
+          <view class="ring-progress" style="background: conic-gradient({{item.color}} {{item.percent}}%, transparent {{item.percent}}%);"></view>
+          <view class="ring-inner">
+            <text class="ring-percent">{{item.percent}}%</text>
+          </view>
+        </view>
+        <text class="ring-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡排行榜 -->
+  <view class="card ranking-card">
+    <view class="card-header">
+      <text class="card-title">打卡排行榜</text>
+      <text class="card-subtitle">本周</text>
+    </view>
+    <view class="ranking-list">
+      <view class="rank-item" wx:for="{{ranking}}" wx:key="id">
+        <view class="rank-num {{item.rank <= 3 ? 'top' : ''}}">{{item.rank}}</view>
+        <image class="rank-avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+        <view class="rank-info">
+          <text class="rank-name">{{item.nickname}}</text>
+          <text class="rank-streak">打卡 {{item.totalDays || 0}} 天 · 连续 {{item.streakDays || 0}} 天</text>
+        </view>
+        <text class="rank-exp">Lv.{{item.level}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据导出 -->
+  <view class="card export-card">
+    <view class="card-title">数据导出</view>
+    <view class="export-buttons">
+      <button class="btn-outline" bindtap="exportExcel">
+        <text class="export-icon">📊</text>
+        <text>导出Excel</text>
+      </button>
+      <button class="btn-outline" bindtap="exportPdf">
+        <text class="export-icon">📄</text>
+        <text>导出PDF</text>
+      </button>
+    </view>
+  </view>
+</view>

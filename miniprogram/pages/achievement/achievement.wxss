@@ -1,0 +1,269 @@
+/* pages/achievement/achievement.wxss */
+.page-achievement {
+  padding-bottom: 24rpx;
+  min-height: 100vh;
+  background: #F6F8FC;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  color: #B8BCC8;
+  font-size: 28rpx;
+}
+
+/* 等级卡片 */
+.level-card {
+  padding: 48rpx 32rpx;
+  color: #fff;
+  background: linear-gradient(135deg, #4A90D9 0%, #6DB3F8 100%);
+}
+
+.level-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 36rpx;
+}
+
+.level-badge {
+  width: 112rpx;
+  height: 112rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 28rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+}
+
+.level-num {
+  font-size: 40rpx;
+  font-weight: 800;
+}
+
+.level-info {
+  flex: 1;
+}
+
+.level-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 16rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.exp-bar {
+  height: 14rpx;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 7rpx;
+  overflow: hidden;
+}
+
+.exp-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+  border-radius: 7rpx;
+  transition: width 0.8s ease;
+  box-shadow: 0 2rpx 8rpx rgba(255, 215, 0, 0.4);
+}
+
+.exp-text {
+  font-size: 22rpx;
+  opacity: 0.85;
+  margin-top: 10rpx;
+  display: block;
+}
+
+.level-stats {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 32rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.level-stats .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 44rpx;
+  font-weight: 800;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+  font-size: 22rpx;
+  opacity: 0.85;
+  margin-top: 6rpx;
+}
+
+/* 勋章墙 */
+.medals-section {
+  margin: 24rpx;
+  border-radius: 24rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28rpx;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1A1A2E;
+}
+
+.medal-count {
+  font-size: 24rpx;
+  color: #B8BCC8;
+  font-weight: 500;
+}
+
+.medals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24rpx;
+}
+
+.medal-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx 16rpx;
+  background: #F6F8FC;
+  border-radius: 20rpx;
+  transition: all 0.3s ease;
+}
+
+.medal-item.locked {
+  opacity: 0.45;
+  filter: grayscale(100%);
+}
+
+.medal-icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.15);
+}
+
+.medal-icon text {
+  font-size: 40rpx;
+  color: #fff;
+  font-weight: 700;
+}
+
+.medal-name {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1A1A2E;
+  text-align: center;
+}
+
+.medal-desc {
+  font-size: 20rpx;
+  color: #B8BCC8;
+  margin-top: 6rpx;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.medal-date {
+  font-size: 20rpx;
+  color: #52C41A;
+  margin-top: 6rpx;
+  font-weight: 500;
+}
+
+/* 排行榜 */
+.ranking-card {
+  margin: 24rpx;
+  border-radius: 24rpx;
+}
+
+.more {
+  font-size: 24rpx;
+  color: #4A90D9;
+  font-weight: 500;
+}
+
+.ranking-list {
+  margin-top: 20rpx;
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F0F2F5;
+}
+
+.rank-item:last-child {
+  border-bottom: none;
+}
+
+.rank-num {
+  width: 56rpx;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #B8BCC8;
+  text-align: center;
+}
+
+.rank-num.top {
+  color: #FAAD14;
+  text-shadow: 0 2rpx 4rpx rgba(250, 173, 20, 0.3);
+}
+
+.rank-item .avatar-sm {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  margin: 0 18rpx;
+  border: 2rpx solid rgba(74, 144, 217, 0.2);
+}
+
+.rank-info {
+  flex: 1;
+}
+
+.rank-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  display: block;
+  color: #1A1A2E;
+}
+
+.rank-stats {
+  font-size: 22rpx;
+  color: #B8BCC8;
+  display: block;
+  margin-top: 4rpx;
+}
+
+.rank-level {
+  font-size: 28rpx;
+  color: #FAAD14;
+  font-weight: 700;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48rpx;
+  color: #B8BCC8;
+  font-size: 28rpx;
+}

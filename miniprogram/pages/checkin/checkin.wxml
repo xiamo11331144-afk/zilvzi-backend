@@ -1,0 +1,131 @@
+<!--pages/checkin/checkin.wxml-->
+<view class="page-checkin">
+  <!-- 打卡日历 -->
+  <view class="calendar-card card">
+    <view class="calendar-header flex-between">
+      <text class="month-title">{{currentYear}}年{{currentMonth}}月</text>
+      <view class="calendar-nav">
+        <text class="nav-btn" bindtap="prevMonth">◀</text>
+        <text class="nav-btn" bindtap="nextMonth">▶</text>
+      </view>
+    </view>
+    <view class="calendar-weekdays">
+      <text wx:for="{{weekdays}}" wx:key="*this">{{item}}</text>
+    </view>
+    <view class="calendar-days">
+      <view class="day-item {{item.isToday ? 'today' : ''}} {{item.checked ? 'checked' : ''}} {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isStart ? 'start' : ''}} {{item.isEnd ? 'end' : ''}}"
+            wx:for="{{calendarDays}}" wx:key="day"
+            bindtap="selectDay" data-day="{{item}}">
+        <text>{{item.day}}</text>
+        <view class="dot" wx:if="{{item.checked}}"></view>
+        <view class="mark start-mark" wx:if="{{item.isStart}}">起</view>
+        <view class="mark end-mark" wx:if="{{item.isEnd}}">终</view>
+      </view>
+    </view>
+    <!-- 图例 -->
+    <view class="calendar-legend">
+      <view class="legend-item">
+        <view class="legend-dot checked"></view>
+        <text>已打卡</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-mark start-mark">起</view>
+        <text>开始日期</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-mark end-mark">终</view>
+        <text>结束日期</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡统计 -->
+  <view class="stats-card card">
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-num">{{stats.totalDays}}</text>
+        <text class="stat-label">累计打卡</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num">{{stats.streakDays}}</text>
+        <text class="stat-label">连续打卡</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num">{{stats.completionRate}}%</text>
+        <text class="stat-label">完成率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 标签切换 -->
+  <view class="tab-bar" style="display:flex;margin-bottom:20rpx;gap:0;">
+    <view style="flex:1;text-align:center;padding:20rpx 0;font-size:28rpx;{{activeTab==='tasks'?'border-bottom:4rpx solid #4A90D9;color:#4A90D9;font-weight:bold;':'color:#999;'}}" bindtap="switchTab" data-tab="tasks">今日任务</view>
+    <view style="flex:1;text-align:center;padding:20rpx 0;font-size:28rpx;position:relative;{{activeTab==='pending'?'border-bottom:4rpx solid #4A90D9;color:#4A90D9;font-weight:bold;':'color:#999;'}}" bindtap="switchTab" data-tab="pending">
+      待审核
+      <text wx:if="{{pendingReviews.length > 0}}" style="position:absolute;top:8rpx;right:20rpx;background:#ff4d4f;color:#fff;font-size:20rpx;border-radius:20rpx;padding:2rpx 10rpx;min-width:28rpx;text-align:center;">{{pendingReviews.length}}</text>
+    </view>
+  </view>
+
+  <!-- 今日打卡列表 -->
+  <view class="checkin-list card" wx:if="{{activeTab === 'tasks'}}">
+    <view class="section-title">今日打卡任务</view>
+    <view class="task-item {{item.streakBreak ? 'task-streak-break' : ''}}" wx:for="{{todayTasks}}" wx:key="id">
+      <view class="task-left">
+        <view class="task-check {{item.checked ? 'checked' : ''}} {{item.streakBreak ? 'streak-break' : ''}}"
+              bindtap="{{item.streakBreak || item.checked ? '' : 'doCheckin'}}" data-id="{{item.id}}">
+          <text wx:if="{{item.checked}}">✓</text>
+          <text wx:if="{{item.streakBreak}}">✕</text>
+        </view>
+        <view class="task-info">
+          <text class="task-name {{item.checked ? 'done' : ''}} {{item.streakBreak ? 'streak-break-name' : ''}}">{{item.name}}</text>
+          <view class="task-tags">
+            <text class="tag tag-primary" wx:if="{{item.type}}">{{item.type}}</text>
+            <text class="tag tag-warning" wx:if="{{item.duration}}">{{item.duration}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="task-status">
+        <text class="status-text {{item.checked ? 'done' : ''}} {{item.streakBreak ? 'streak-break-status' : ''}}"
+              wx:if="{{!item.streakBreak}}">{{item.checked ? '已完成' : '未完成'}}</text>
+        <text class="status-text streak-break-status" wx:if="{{item.streakBreak}}">已断卡</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡按钮 -->
+  <view class="checkin-action" wx:if="{{activeTab === 'tasks' && hasUnchecked}}">
+    <button class="btn-primary checkin-btn" bindtap="batchCheckin">一键打卡</button>
+  </view>
+
+  <!-- 待审核列表 -->
+  <view class="checkin-list card" wx:if="{{activeTab === 'pending'}}">
+    <view class="section-title">需要我审核的打卡</view>
+    <view wx:if="{{pendingReviews.length === 0}}" style="text-align:center;padding:40rpx;color:#999;">暂无待审核打卡</view>
+    <view class="task-item" wx:for="{{pendingReviews}}" wx:key="id" style="flex-direction:column;align-items:stretch;">
+      <view style="display:flex;align-items:center;margin-bottom:16rpx;">
+        <image wx:if="{{item.userAvatar}}" src="{{item.userAvatar}}" style="width:60rpx;height:60rpx;border-radius:50%;margin-right:16rpx;" />
+        <view style="flex:1;">
+          <text style="font-size:28rpx;font-weight:bold;">{{item.userNickname || '搭子'}}</text>
+          <text style="font-size:24rpx;color:#999;margin-left:12rpx;">{{item.goalName || ''}}</text>
+        </view>
+        <text style="font-size:22rpx;color:#999;">{{item.checkinTime}}</text>
+      </view>
+      <image wx:if="{{item.proofImage}}" src="{{item.proofImage}}" mode="widthFix" style="width:100%;border-radius:12rpx;margin-bottom:12rpx;" />
+      <text wx:if="{{item.proofContent}}" style="font-size:26rpx;color:#666;margin-bottom:16rpx;">{{item.proofContent}}</text>
+      <view style="display:flex;gap:20rpx;justify-content:flex-end;">
+        <button size="mini" style="color:#ff4d4f;border:1rpx solid #ff4d4f;background:#fff;" bindtap="rejectCheckin" data-id="{{item.id}}">驳回</button>
+        <button size="mini" type="primary" bindtap="approveCheckin" data-id="{{item.id}}">通过</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡成功弹窗 -->
+  <view class="modal-mask" wx:if="{{showSuccess}}" bindtap="hideSuccess">
+    <view class="success-modal" catchtap="">
+      <view class="success-icon">✓</view>
+      <text class="success-title">打卡成功！</text>
+      <text class="success-desc">已连续打卡{{stats.streakDays}}天，继续加油！</text>
+      <button class="btn-primary" bindtap="hideSuccess">确定</button>
+    </view>
+  </view>
+</view>

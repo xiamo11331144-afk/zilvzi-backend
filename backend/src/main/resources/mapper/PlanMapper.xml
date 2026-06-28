@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.PlanMapper">
+
+    <select id="selectById" resultType="Plan">
+        SELECT p.*, g.type as goal_type 
+        FROM plan p 
+        LEFT JOIN goal g ON p.goal_id = g.id 
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="selectByUserId" resultType="Plan">
+        SELECT * FROM plan WHERE user_id = #{userId} ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByGoalId" resultType="Plan">
+        SELECT * FROM plan WHERE goal_id = #{goalId} ORDER BY create_time DESC LIMIT 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plan (user_id, goal_id, name, total_days, completed_days, schedule_data, remark, outline, current_phase, status, create_time, update_time)
+        VALUES (#{userId}, #{goalId}, #{name}, #{totalDays}, #{completedDays}, #{scheduleData}, #{remark}, #{outline}, #{currentPhase}, #{status}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE plan
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="totalDays != null">total_days = #{totalDays},</if>
+            <if test="completedDays != null">completed_days = #{completedDays},</if>
+            <if test="outline != null">outline = #{outline},</if>
+            <if test="currentPhase != null">current_phase = #{currentPhase},</if>
+            <if test="status != null">status = #{status},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateCompletedDays">
+        UPDATE plan SET completed_days = #{completedDays}, update_time = NOW() WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM plan WHERE id = #{id}
+    </delete>
+
+    <select id="selectAllActive" resultType="Plan">
+        SELECT p.*, g.type as goal_type 
+        FROM plan p 
+        LEFT JOIN goal g ON p.goal_id = g.id 
+        WHERE p.status = 'active'
+        ORDER BY p.create_time DESC
+    </select>
+</mapper>

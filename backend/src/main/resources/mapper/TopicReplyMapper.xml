@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.TopicReplyMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO topic_reply (topic_id, user_id, content, create_time)
+        VALUES (#{topicId}, #{userId}, #{content}, NOW())
+    </insert>
+
+    <select id="selectByTopicId" resultType="TopicReply">
+        SELECT tr.*, u.nickname, u.avatar 
+        FROM topic_reply tr LEFT JOIN user u ON tr.user_id = u.id 
+        WHERE tr.topic_id = #{topicId}
+        ORDER BY tr.create_time ASC
+    </select>
+
+    <select id="countByTopicId" resultType="Integer">
+        SELECT COUNT(*) FROM topic_reply WHERE topic_id = #{topicId}
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM topic_reply WHERE id = #{id}
+    </delete>
+
+    <select id="search" resultType="TopicReply">
+        SELECT tr.*, u.nickname, u.avatar 
+        FROM topic_reply tr LEFT JOIN user u ON tr.user_id = u.id 
+        WHERE tr.topic_id = #{topicId} AND tr.content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY tr.create_time ASC
+    </select>
+</mapper>

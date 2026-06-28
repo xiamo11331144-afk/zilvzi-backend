@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "ai-ball": "/components/ai-ball/ai-ball"
+  },
+  "navigationBarTitleText": "自律搭子"
+}

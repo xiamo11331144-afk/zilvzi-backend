@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.PostMapper">
+
+    <resultMap id="postMap" type="Post">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="circleId" column="circle_id"/>
+        <result property="content" column="content"/>
+        <result property="images" column="images"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="nickname" column="nickname"/>
+        <result property="avatar" column="avatar"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO post (user_id, circle_id, content, images, like_count, comment_count, create_time)
+        VALUES (#{userId}, #{circleId}, #{content}, #{images}, #{likeCount}, #{commentCount}, NOW())
+    </insert>
+
+    <select id="selectById" resultType="Post">
+        SELECT * FROM post WHERE id = #{id}
+    </select>
+
+    <select id="selectByCircleId" resultMap="postMap">
+        SELECT p.*, u.nickname, u.avatar
+        FROM post p
+        LEFT JOIN user u ON p.user_id = u.id
+        WHERE p.circle_id = #{circleId}
+        ORDER BY p.create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countByCircleId" resultType="Integer">
+        SELECT COUNT(*) FROM post WHERE circle_id = #{circleId}
+    </select>
+
+    <update id="updateLikeCount">
+        UPDATE post SET like_count = #{count} WHERE id = #{id}
+    </update>
+
+    <update id="updateCommentCount">
+        UPDATE post SET comment_count = #{count} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM post WHERE id = #{id}
+    </delete>
+
+    <select id="selectAll" resultMap="postMap">
+        SELECT p.*, u.nickname, u.avatar FROM post p LEFT JOIN user u ON p.user_id = u.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                p.content LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY p.create_time DESC LIMIT #{limit}
+    </select>
+
+    <select id="countAll" resultType="Integer">
+        SELECT COUNT(*) FROM post
+    </select>
+</mapper>

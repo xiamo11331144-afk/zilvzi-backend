@@ -1,0 +1,187 @@
+/* 全局样式 - 自律搭子 */
+page {
+  background-color: #F6F8FC;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+  color: #1A1A2E;
+  line-height: 1.6;
+}
+
+/* 主题色变量 */
+:root {
+  --primary: #4A90D9;
+  --primary-light: #6DB3F8;
+  --primary-dark: #2E6DB4;
+  --success: #52C41A;
+  --warning: #FAAD14;
+  --danger: #FF4D4F;
+  --purple: #722ED1;
+  --teal: #13C2C2;
+}
+
+/* 通用容器 */
+.container {
+  padding: 24rpx;
+}
+
+/* 卡片样式 - 带微妙阴影和圆角 */
+.card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(74, 144, 217, 0.08);
+  border: 1rpx solid rgba(74, 144, 217, 0.06);
+}
+
+/* 主按钮 - 渐变 + 微妙动画 */
+.btn-primary {
+  background: linear-gradient(135deg, #4A90D9 0%, #6DB3F8 100%);
+  color: #fff;
+  border-radius: 48rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  letter-spacing: 2rpx;
+  box-shadow: 0 8rpx 24rpx rgba(74, 144, 217, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+/* 轮廓按钮 */
+.btn-outline {
+  background: transparent;
+  color: #4A90D9;
+  border: 2rpx solid #4A90D9;
+  border-radius: 48rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* 标签样式 - 胶囊形状 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6rpx 18rpx;
+  border-radius: 24rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.tag-primary {
+  background: rgba(74, 144, 217, 0.12);
+  color: #4A90D9;
+}
+
+.tag-success {
+  background: rgba(82, 196, 26, 0.12);
+  color: #52C41A;
+}
+
+.tag-warning {
+  background: rgba(250, 173, 20, 0.12);
+  color: #FAAD14;
+}
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background: linear-gradient(90deg, transparent, #E8ECF1, transparent);
+  margin: 24rpx 0;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+  color: #B8BCC8;
+}
+
+/* Flex布局 */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+/* 文字溢出 */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 头像样式 - 带边框 */
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3rpx solid rgba(74, 144, 217, 0.2);
+}
+
+.avatar-sm {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(74, 144, 217, 0.2);
+}
+
+.avatar-lg {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(74, 144, 217, 0.3);
+}
+
+/* 加载中 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx;
+  color: #B8BCC8;
+  font-size: 24rpx;
+}
+
+/* 渐变文字 */
+.gradient-text {
+  background: linear-gradient(135deg, #4A90D9, #6DB3F8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

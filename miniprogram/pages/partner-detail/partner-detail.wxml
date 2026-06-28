@@ -1,0 +1,111 @@
+<!--pages/partner-detail/partner-detail.wxml-->
+<wxs module="loc">
+function format(province, city, district) {
+  if (!province) return '';
+  var result = '';
+  if (city) {
+    var idx = city.indexOf(province);
+    if (idx !== -1) {
+      result = city;
+    } else {
+      result = province + ' ' + city;
+    }
+  } else {
+    result = province;
+  }
+  if (district) {
+    result = result + ' ' + district;
+  }
+  return result;
+}
+module.exports = { format: format };
+</wxs>
+<view class="page-partner-detail">
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <block wx:if="{{!loading}}">
+  <!-- 搭子头部信息 -->
+  <view class="partner-header card">
+    <view class="partner-profile">
+      <image class="avatar-lg" src="{{partner.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="partner-info">
+        <text class="partner-name">{{partner.nickname}}</text>
+        <view class="partner-tags">
+          <text class="tag tag-primary">Lv.{{partner.level || 1}}</text>
+          <text class="tag tag-location" wx:if="{{partner.province}}">📍{{loc.format(partner.province, partner.city, partner.district)}}</text>
+        </view>
+        <text class="partner-bio" wx:if="{{partner.bio}}">{{partner.bio}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 - 已是搭子 -->
+    <view class="partner-actions" wx:if="{{!isMatch}}">
+      <button class="btn-outline" bindtap="goMessage">发私信</button>
+      <button class="btn-outline" bindtap="remindPartner">提醒打卡</button>
+      <button class="btn-outline btn-danger" bindtap="removePartner">解除搭子</button>
+      <button class="btn-outline btn-danger" bindtap="blockPartner">拉黑</button>
+    </view>
+    <!-- 操作按钮 - 匹配阶段 -->
+    <view class="partner-actions" wx:else>
+      <button class="btn-outline disabled" wx:if="{{applied}}">已申请</button>
+      <button class="btn-primary" wx:else bindtap="applyPartner">申请搭子</button>
+      <button class="btn-outline btn-danger" bindtap="blockPartner">拉黑</button>
+    </view>
+  </view>
+
+  <!-- 打卡统计 -->
+  <view class="stats-card card">
+    <view class="stats-title">打卡统计</view>
+    <view class="stats-grid">
+      <view class="stat-box">
+        <text class="stat-value">{{totalDays}}</text>
+        <text class="stat-label">累计打卡(天)</text>
+      </view>
+      <view class="stat-box">
+        <text class="stat-value">{{checkinRate}}%</text>
+        <text class="stat-label">打卡率</text>
+      </view>
+      <view class="stat-box">
+        <text class="stat-value">{{goals.length}}</text>
+        <text class="stat-label">进行中目标</text>
+      </view>
+    </view>
+    <!-- 打卡率进度条 -->
+    <view class="rate-bar-wrap" wx:if="{{totalDays > 0}}">
+      <view class="rate-bar-bg">
+        <view class="rate-bar-fill" style="width: {{checkinRate > 100 ? 100 : checkinRate}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 目标列表 -->
+  <view class="goals-section" wx:if="{{goals.length > 0}}">
+    <view class="section-title">Ta 的目标</view>
+    <view class="goal-card card" wx:for="{{goals}}" wx:key="id">
+      <view class="goal-header">
+        <text class="goal-name">{{item.name || item.type}}</text>
+        <text class="goal-type tag" wx:if="{{item.name && item.type !== item.name}}">{{item.type}}</text>
+      </view>
+      <text class="goal-desc" wx:if="{{item.description && item.description !== item.name}}">{{item.description}}</text>
+      <view class="goal-stats">
+        <view class="goal-stat">
+          <text class="goal-stat-value">{{item.streak}}</text>
+          <text class="goal-stat-label">连续打卡</text>
+        </view>
+        <view class="goal-stat">
+          <text class="goal-stat-value">{{item.totalCheckins}}</text>
+          <text class="goal-stat-label">总打卡次数</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 无目标 -->
+  <view class="empty-state" wx:if="{{goals.length === 0}}">
+    <text>暂无进行中的目标</text>
+  </view>
+  </block>
+</view>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.UserMapper">
+
+    <select id="selectById" resultType="User">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+
+    <select id="selectByUsername" resultType="User">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+
+    <select id="selectByPhone" resultType="User">
+        SELECT * FROM user WHERE phone = #{phone}
+    </select>
+
+    <select id="selectByEmail" resultType="User">
+        SELECT * FROM user WHERE email = #{email}
+    </select>
+
+    <select id="selectByOpenid" resultType="User">
+        SELECT * FROM user WHERE openid = #{openid}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (username, password, phone, email, nickname, avatar, bio, level, experience, role, openid, province, city, district, create_time, update_time)
+        VALUES (#{username}, #{password}, #{phone}, #{email}, #{nickname}, #{avatar}, #{bio}, #{level}, #{experience}, #{role}, #{openid}, #{province}, #{city}, #{district}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE user
+        <set>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="bio != null">bio = #{bio},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="district != null">district = #{district},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 管理员专用：可更新 level 和 experience -->
+    <update id="updateAdmin">
+        UPDATE user
+        <set>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="bio != null">bio = #{bio},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="district != null">district = #{district},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="role != null">role = #{role},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateAvatar">
+        UPDATE user SET avatar = #{avatar}, update_time = NOW() WHERE id = #{id}
+    </update>
+
+    <select id="selectTopByExperience" resultType="User">
+        SELECT * FROM user ORDER BY experience DESC LIMIT #{limit}
+    </select>
+
+    <select id="selectRankingByCheckin" resultType="java.util.HashMap">
+        SELECT u.id as userId, u.nickname, u.avatar, u.level,
+               COUNT(DISTINCT c.date) as totalDays
+        FROM user u
+        LEFT JOIN checkin c ON u.id = c.user_id
+        GROUP BY u.id, u.nickname, u.avatar, u.level
+        ORDER BY totalDays DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 排行榜查询（内联 streak 计算，避免 N+1 查询） -->
+    <select id="selectRankingWithStreak" resultType="java.util.HashMap">
+        <![CDATA[
+        SELECT u.id as userId, u.nickname, u.avatar, u.level,
+               COUNT(DISTINCT c.date) as totalDays,
+               COALESCE(streak_data.streakDays, 0) as streakDays
+        FROM user u
+        LEFT JOIN checkin c ON u.id = c.user_id
+        LEFT JOIN (
+            SELECT user_id, COUNT(*) as streakDays
+            FROM (
+                SELECT user_id, date,
+                       ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY date DESC) as rn
+                FROM checkin
+                WHERE date <= #{today}
+                GROUP BY user_id, date
+            ) consecutive_dates
+            WHERE DATEDIFF(#{today}, date) = rn - 1
+            GROUP BY user_id
+        ) streak_data ON u.id = streak_data.user_id
+        GROUP BY u.id, u.nickname, u.avatar, u.level, streak_data.streakDays
+        ORDER BY totalDays DESC
+        LIMIT #{limit}
+        ]]>
+    </select>
+
+    <select id="selectByGoalType" resultType="User">
+        SELECT DISTINCT u.* FROM user u
+        INNER JOIN goal g ON u.id = g.user_id
+        WHERE g.type = #{goalType} AND u.id != #{excludeUserId}
+        LIMIT 20
+    </select>
+
+    <select id="selectAll" resultType="User">
+        SELECT * FROM user ORDER BY create_time DESC
+    </select>
+
+    <select id="countAll" resultType="Integer">
+        SELECT COUNT(*) FROM user
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+
+    <select id="selectAllExcept" resultType="User">
+        SELECT * FROM user WHERE id != #{excludeUserId} ORDER BY experience DESC
+    </select>
+
+    <select id="selectGoalsByUserId" resultType="java.util.HashMap">
+        SELECT type FROM goal WHERE user_id = #{userId} AND status = 'active'
+    </select>
+
+    <select id="searchUsers" resultType="User">
+        SELECT * FROM user 
+        WHERE id != #{excludeUserId} 
+        AND (phone = #{keyword} OR nickname LIKE CONCAT('%', #{keyword}, '%') OR username LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY experience DESC
+    </select>
+
+    <!-- 专用更新经验值和等级（仅更新 level + experience，不影响 role 等字段） -->
+    <update id="updateExperience">
+        UPDATE user SET level = #{level}, experience = #{experience}, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 搭子匹配候选用户：按目标类型 + 可选省份筛选，联查打卡率 -->
+    <select id="selectMatchCandidates" resultType="java.util.HashMap">
+        <![CDATA[
+        SELECT u.id, u.nickname, u.avatar, u.level, u.province, u.city, u.district,
+               COALESCE(checkin_stats.totalCheckins, 0) as totalCheckins,
+               COALESCE(checkin_stats.totalDays, 0) as totalDays,
+               COALESCE(checkin_stats.checkinRate, 0) as checkinRate
+        FROM user u
+        INNER JOIN goal g ON u.id = g.user_id AND g.status = 'active'
+        LEFT JOIN (
+            SELECT c.user_id, 
+                   COUNT(*) as totalCheckins,
+                   COUNT(DISTINCT c.date) as totalDays,
+                   ROUND(COUNT(DISTINCT c.date) * 100.0 / GREATEST(DATEDIFF(CURDATE(), MIN(c.date)) + 1, 1), 1) as checkinRate
+            FROM checkin c
+            WHERE c.status = 'approved'
+            GROUP BY c.user_id
+        ) checkin_stats ON u.id = checkin_stats.user_id
+        WHERE u.id != #{excludeUserId}
+          AND g.type = #{goalType}
+        ORDER BY
+            CASE WHEN u.province = #{province} THEN 0 ELSE 1 END,
+            checkinRate DESC
+        LIMIT 30
+        ]]>
+    </select>
+</mapper>

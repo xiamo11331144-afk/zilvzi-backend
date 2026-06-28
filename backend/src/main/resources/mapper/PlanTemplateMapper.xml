@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.PlanTemplateMapper">
+
+    <resultMap id="templateMap" type="PlanTemplate">
+        <id property="id" column="id"/>
+        <result property="goalType" column="goal_type"/>
+        <result property="goalKeyword" column="goal_keyword"/>
+        <result property="totalDays" column="total_days"/>
+        <result property="difficulty" column="difficulty"/>
+        <result property="planOutline" column="plan_outline"/>
+        <result property="dailyTasksTemplate" column="daily_tasks_template"/>
+        <result property="aiModel" column="ai_model"/>
+        <result property="usageCount" column="usage_count"/>
+        <result property="successCount" column="success_count"/>
+        <result property="qualityScore" column="quality_score"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plan_template (goal_type, goal_keyword, total_days, difficulty, plan_outline, daily_tasks_template, ai_model, usage_count, success_count, quality_score, create_time, update_time)
+        VALUES (#{goalType}, #{goalKeyword}, #{totalDays}, #{difficulty}, #{planOutline}, #{dailyTasksTemplate}, #{aiModel}, #{usageCount}, #{successCount}, #{qualityScore}, NOW(), NOW())
+    </insert>
+
+    <select id="exactMatch" resultMap="templateMap">
+        SELECT * FROM plan_template 
+        WHERE goal_type = #{goalType} 
+        AND goal_keyword = #{goalKeyword} 
+        AND total_days = #{totalDays}
+        ORDER BY quality_score DESC
+        LIMIT 1
+    </select>
+
+    <select id="fuzzyMatch" resultMap="templateMap">
+        SELECT * FROM plan_template 
+        WHERE goal_type = #{goalType} 
+        AND total_days BETWEEN #{totalDays} - #{daysRange} AND #{totalDays} + #{daysRange}
+        AND (goal_keyword LIKE CONCAT('%', #{goalKeyword}, '%') OR #{goalKeyword} LIKE CONCAT('%', goal_keyword, '%'))
+        ORDER BY quality_score DESC, usage_count DESC
+        LIMIT 5
+    </select>
+
+    <update id="incrementUsage">
+        UPDATE plan_template SET usage_count = usage_count + 1, update_time = NOW() WHERE id = #{id}
+    </update>
+
+    <update id="incrementSuccess">
+        UPDATE plan_template SET success_count = success_count + 1, update_time = NOW() WHERE id = #{id}
+    </update>
+
+    <update id="updateScore">
+        UPDATE plan_template SET quality_score = #{score}, update_time = NOW() WHERE id = #{id}
+    </update>
+
+    <select id="getTopTemplates" resultMap="templateMap">
+        SELECT * FROM plan_template 
+        ORDER BY quality_score DESC, usage_count DESC 
+        LIMIT #{limit}
+    </select>
+</mapper>

@@ -1,0 +1,117 @@
+<!--pages/login/login.wxml-->
+<view class="page-login">
+  <view class="login-header">
+    <view class="logo">自律搭子</view>
+    <view class="slogan">养成好习惯，遇见更好的自己</view>
+  </view>
+
+  <!-- 模式切换 -->
+  <view class="mode-tabs">
+    <view class="mode-tab {{mode === 'login' ? 'active' : ''}}" bindtap="switchMode" data-mode="login">登录</view>
+    <view class="mode-tab {{mode === 'register' ? 'active' : ''}}" bindtap="switchMode" data-mode="register">注册</view>
+  </view>
+
+  <!-- 注册表单 -->
+  <view class="login-form" wx:if="{{mode === 'register'}}">
+    <!-- 头像选择 -->
+    <view class="avatar-section" bindtap="chooseAvatar">
+      <image class="avatar-preview" src="{{avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+      <text class="avatar-tip">点击选择头像</text>
+    </view>
+
+    <view class="input-group">
+      <view class="input-item">
+        <text class="input-label">昵称</text>
+        <input placeholder="请输入昵称" value="{{nickname}}" bindinput="onNicknameInput" />
+      </view>
+      <view class="input-item">
+        <text class="input-label">手机号</text>
+        <input type="number" maxlength="11" placeholder="请输入手机号" value="{{phone}}" bindinput="onPhoneInput" />
+      </view>
+      <view class="input-item">
+        <text class="input-label">密码</text>
+        <input password placeholder="请输入密码" value="{{password}}" bindinput="onPasswordInput" />
+      </view>
+      <view class="input-item">
+        <text class="input-label">所在地区</text>
+        <picker mode="region" value="{{region}}" bindchange="onRegionChange">
+          <view class="region-picker">{{regionText || '请选择省/市/区'}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <button class="btn-primary" bindtap="submit">注册</button>
+  </view>
+
+  <!-- 登录表单 -->
+  <view class="login-form" wx:if="{{mode === 'login'}}">
+    <!-- 微信一键登录 -->
+    <button class="btn-wechat" bindtap="wechatLogin">
+      <text class="wechat-icon">微</text>
+      <text>微信一键登录</text>
+    </button>
+
+    <view class="divider-text">
+      <view class="line"></view>
+      <text>其他登录方式</text>
+      <view class="line"></view>
+    </view>
+
+    <!-- 登录方式切换 -->
+    <view class="login-tabs">
+      <view class="tab-item {{loginType === 'phone' ? 'active' : ''}}" bindtap="switchLoginType" data-type="phone">手机号</view>
+      <view class="tab-item {{loginType === 'email' ? 'active' : ''}}" bindtap="switchLoginType" data-type="email">邮箱</view>
+      <view class="tab-item {{loginType === 'username' ? 'active' : ''}}" bindtap="switchLoginType" data-type="username">账号密码</view>
+    </view>
+
+    <!-- 手机号登录 -->
+    <view class="input-group" wx:if="{{loginType === 'phone'}}">
+      <view class="input-item">
+        <text class="input-prefix">+86</text>
+        <input type="number" maxlength="11" placeholder="请输入手机号" value="{{phone}}" bindinput="onPhoneInput" />
+      </view>
+      <view class="input-item">
+        <input type="number" maxlength="6" placeholder="请输入验证码" value="{{code}}" bindinput="onCodeInput" />
+        <view class="code-btn {{codeSent ? 'disabled' : ''}}" bindtap="sendCode">
+          {{codeSent ? countdown + 's后重发' : '获取验证码'}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 邮箱登录 -->
+    <view class="input-group" wx:if="{{loginType === 'email'}}">
+      <view class="input-item">
+        <input type="text" placeholder="请输入邮箱" value="{{email}}" bindinput="onEmailInput" />
+      </view>
+      <view class="input-item">
+        <input type="number" maxlength="6" placeholder="请输入验证码" value="{{code}}" bindinput="onCodeInput" />
+        <view class="code-btn {{codeSent ? 'disabled' : ''}}" bindtap="sendCode">
+          {{codeSent ? countdown + 's后重发' : '获取验证码'}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 账号密码登录 -->
+    <view class="input-group" wx:if="{{loginType === 'username'}}">
+      <view class="input-item">
+        <input placeholder="请输入手机号" value="{{username}}" bindinput="onUsernameInput" />
+      </view>
+      <view class="input-item">
+        <input password placeholder="请输入密码" value="{{password}}" bindinput="onPasswordInput" />
+      </view>
+    </view>
+
+    <button class="btn-primary" bindtap="submit">登录</button>
+  </view>
+
+  <!-- 协议 -->
+  <view class="agreement">
+    <checkbox-group bindchange="onAgreementChange">
+      <checkbox value="agree" checked="{{agreed}}" color="#4A90D9" />
+    </checkbox-group>
+    <text>我已阅读并同意</text>
+    <text class="link">《用户协议》</text>
+    <text>和</text>
+    <text class="link">《隐私政策》</text>
+  </view>
+</view>

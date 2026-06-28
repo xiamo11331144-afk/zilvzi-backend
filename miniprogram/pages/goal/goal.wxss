@@ -1,0 +1,138 @@
+/* pages/goal/goal.wxss */
+.page-goal { min-height:100vh; background:#F4F6FA; padding-bottom:40rpx; }
+
+.header-bar { 
+  display:flex; justify-content:space-between; align-items:center; 
+  padding:28rpx 28rpx 20rpx; 
+}
+.header-title { font-size:40rpx; font-weight:800; color:#1A1A2E; }
+.add-btn { 
+  background:linear-gradient(135deg,#4A90D9,#6DB3F8); 
+  color:#fff; padding:14rpx 32rpx; border-radius:36rpx; 
+  font-size:26rpx; font-weight:600; 
+  box-shadow:0 6rpx 20rpx rgba(74,144,217,.25);
+}
+
+/* 卡片 */
+.goal-card { 
+  display:flex; margin:0 24rpx 20rpx; background:#fff; 
+  border-radius:18rpx; overflow:hidden; 
+  box-shadow:0 2rpx 16rpx rgba(0,0,0,.04);
+}
+.goal-card.done .card-accent { opacity:.5; }
+.goal-card.abandoned { opacity:.6; }
+.goal-card.abandoned .card-accent { background:#d0d0d0 !important; }
+
+.card-accent { 
+  width:8rpx; flex-shrink:0; 
+}
+.card-body { 
+  flex:1; padding:24rpx 28rpx; min-width:0; 
+}
+
+.card-top { margin-bottom:12rpx; }
+.goal-name-row { 
+  display:flex; justify-content:space-between; align-items:flex-start; 
+  margin-bottom:10rpx; 
+}
+.goal-name { 
+  font-size:32rpx; font-weight:700; color:#1A1A2E; 
+  flex:1; min-width:0; 
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  margin-right:12rpx;
+}
+.goal-status { 
+  font-size:22rpx; padding:4rpx 16rpx; border-radius:20rpx; 
+  flex-shrink:0; font-weight:500;
+}
+.goal-status.active { background:rgba(74,144,217,.1); color:#4A90D9; }
+.goal-status.completed { background:rgba(82,196,26,.1); color:#52C41A; }
+.goal-status.abandoned { background:rgba(0,0,0,.05); color:#999; }
+
+.goal-tags { display:flex; align-items:center; gap:16rpx; }
+.goal-type { font-size:24rpx; color:#666; }
+.goal-streak { font-size:22rpx; color:#FA8C16; font-weight:500; }
+
+.goal-desc { 
+  font-size:24rpx; color:#999; line-height:1.6;
+  margin-bottom:16rpx; 
+}
+
+.card-actions { 
+  display:flex; gap:12rpx; 
+  padding-top:16rpx; border-top:1rpx solid #f3f4f6;
+}
+.action { 
+  font-size:22rpx; padding:8rpx 20rpx; border-radius:20rpx; 
+  font-weight:500; 
+}
+.action.edit { background:#f0f4ff; color:#4A90D9; }
+.action.complete { background:#f0fff0; color:#52C41A; }
+.action.abandon { background:#fff8e8; color:#FAAD14; }
+.action.delete { background:#fff0f0; color:#FF4D4F; }
+
+/* 弹窗 */
+.modal-mask { 
+  position:fixed; top:0;left:0;right:0;bottom:0; z-index:999; 
+  display:flex; align-items:center; justify-content:center; 
+}
+.mask-close { position:absolute; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,.45); }
+.goal-modal { 
+  position:relative; z-index:1000; width:620rpx; background:#fff; 
+  border-radius:24rpx; overflow:hidden; 
+}
+.goal-modal .modal-header { 
+  padding:32rpx 32rpx 0; 
+  display:flex; justify-content:space-between; align-items:center; 
+}
+.goal-modal .modal-title { font-size:34rpx; font-weight:700; color:#1A1A2E; }
+.goal-modal .modal-close { 
+  width:48rpx; height:48rpx; border-radius:50%; 
+  background:#f0f2f5; display:flex; align-items:center; justify-content:center; 
+  font-size:30rpx; color:#999; 
+}
+.goal-modal .modal-body { padding:24rpx 32rpx 8rpx; }
+.goal-modal .form-item { margin-bottom:24rpx; }
+.goal-modal .form-label { font-size:26rpx; color:#666; margin-bottom:10rpx; display:block; font-weight:500; }
+.goal-modal .form-input { 
+  border:2rpx solid #EEEFF2; border-radius:14rpx; padding:22rpx 24rpx; 
+  font-size:30rpx; width:100%; box-sizing:border-box; height:88rpx; 
+  background:#F8F9FB; 
+}
+.goal-modal .form-textarea { 
+  border:2rpx solid #EEEFF2; border-radius:14rpx; padding:22rpx 24rpx; 
+  font-size:28rpx; width:100%; height:120rpx; box-sizing:border-box; 
+  background:#F8F9FB; 
+}
+.goal-modal .type-row { display:flex; flex-wrap:wrap; gap:12rpx; }
+.goal-modal .type-item { 
+  padding:12rpx 28rpx; border-radius:26rpx; font-size:26rpx; 
+  color:#666; background:#F4F6FA; 
+}
+.goal-modal .type-item.active { 
+  background:linear-gradient(135deg,#4A90D9,#6DB3F8); color:#fff; 
+  font-weight:600; 
+}
+.goal-modal .modal-footer { 
+  display:flex; gap:16rpx; padding:12rpx 32rpx 32rpx; 
+}
+.modal-cancel { 
+  flex:1; height:88rpx; line-height:88rpx; text-align:center; 
+  font-size:30rpx; color:#999; background:#f0f2f5; border-radius:44rpx; 
+}
+.modal-confirm { 
+  flex:2; height:88rpx; line-height:88rpx; text-align:center; 
+  font-size:30rpx; color:#fff; 
+  background:linear-gradient(135deg,#4A90D9,#6DB3F8); 
+  border-radius:44rpx; font-weight:600; 
+  box-shadow:0 6rpx 20rpx rgba(74,144,217,.3);
+}
+
+/* 空态 */
+.empty-state { 
+  display:flex; flex-direction:column; align-items:center; 
+  padding:120rpx 0; 
+}
+.empty-icon { font-size:80rpx; margin-bottom:20rpx; }
+.empty-text { font-size:30rpx; color:#999; font-weight:600; }
+.empty-sub { font-size:24rpx; color:#B8BCC8; margin-top:8rpx; }

@@ -1,0 +1,74 @@
+<!--pages/goal/goal.wxml-->
+<view class="page-goal">
+  <view class="header-bar">
+    <text class="header-title">我的目标</text>
+    <view class="add-btn" bindtap="showCreate">＋ 新建</view>
+  </view>
+
+  <view class="goal-list">
+    <view class="goal-card {{item.status === 'completed' ? 'done' : item.status === 'abandoned' ? 'abandoned' : ''}}" wx:for="{{goals}}" wx:key="id">
+      <view class="card-accent" style="background: {{item.status === 'completed' ? '#52C41A' : item.status === 'abandoned' ? '#ccc' : '#4A90D9'}};"></view>
+      <view class="card-body">
+        <view class="card-top">
+          <view class="goal-name-row">
+            <text class="goal-name">{{item.name}}</text>
+            <text class="goal-status {{item.status}}">
+              {{item.status === 'active' ? '进行中' : item.status === 'completed' ? '已完成' : '已放弃'}}
+            </text>
+          </view>
+          <view class="goal-tags">
+            <text class="goal-type">{{item.typeIcon}} {{item.type}}</text>
+            <text class="goal-streak" wx:if="{{item.streak}}">🔥 {{item.streak}} 天</text>
+          </view>
+        </view>
+        <text class="goal-desc" wx:if="{{item.description}}">{{item.description}}</text>
+        <view class="card-actions" wx:if="{{item.status === 'active'}}">
+          <view class="action edit" bindtap="editGoal" data-id="{{item.id}}">编辑</view>
+          <view class="action complete" bindtap="completeGoal" data-id="{{item.id}}">完成</view>
+          <view class="action abandon" bindtap="abandonGoal" data-id="{{item.id}}">放弃</view>
+          <view class="action delete" bindtap="deleteGoal" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{goals.length === 0}}">
+      <text class="empty-icon">🎯</text>
+      <text class="empty-text">还没有目标</text>
+      <text class="empty-sub">点击上方按钮创建你的第一个目标吧</text>
+    </view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showModal}}">
+    <view class="goal-modal" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">{{editMode ? '编辑目标' : '新建目标'}}</text>
+        <view class="modal-close" bindtap="hideModal">
+          <text>×</text>
+        </view>
+      </view>
+      <view class="modal-body">
+        <view class="form-item">
+          <text class="form-label">目标名称</text>
+          <input class="form-input" placeholder="你想达成什么目标？" value="{{goalForm.name}}" bindinput="onNameInput" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">类型</text>
+          <view class="type-row">
+            <view class="type-item {{goalForm.type === item ? 'active' : ''}}" wx:for="{{types}}" wx:key="*this" bindtap="selectType" data-type="{{item}}">
+              <text>{{item}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="form-item">
+          <text class="form-label">描述（选填）</text>
+          <textarea class="form-textarea" placeholder="简单描述一下这个目标" value="{{goalForm.description}}" bindinput="onDescInput" />
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="modal-cancel" bindtap="hideModal">取消</view>
+        <view class="modal-confirm" bindtap="saveGoal">{{editMode ? '保存修改' : '创建目标'}}</view>
+      </view>
+    </view>
+    <view class="mask-close" bindtap="hideModal"></view>
+  </view>
+</view>

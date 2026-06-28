@@ -1,0 +1,141 @@
+<!--pages/profile/profile.wxml-->
+<wxs module="loc">
+function format(province, city, district) {
+  if (!province) return '';
+  var result = '';
+  if (city) {
+    var idx = city.indexOf(province);
+    if (idx !== -1) {
+      result = city;
+    } else {
+      result = province + ' ' + city;
+    }
+  } else {
+    result = province;
+  }
+  if (district) {
+    result = result + ' ' + district;
+  }
+  return result;
+}
+module.exports = { format: format };
+</wxs>
+<view class="page-profile">
+  <!-- 用户信息卡片 -->
+  <view class="profile-header">
+    <view class="user-card">
+      <image class="avatar-lg" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill" bindtap="changeAvatar" />
+      <view class="user-info">
+        <text class="nickname">{{userInfo.nickname || '未登录'}}</text>
+        <text class="user-id" wx:if="{{isLoggedIn}}">ID: {{userInfo.id}} · Lv.{{userInfo.level}}</text>
+        <text class="user-location" wx:if="{{userInfo.province}}">📍 {{loc.format(userInfo.province, userInfo.city, userInfo.district)}}</text>
+      </view>
+      <view class="edit-btn" bindtap="editProfile" wx:if="{{isLoggedIn}}">
+        <text>编辑资料</text>
+      </view>
+    </view>
+
+    <!-- 统计数据 -->
+    <view class="stats-row" wx:if="{{isLoggedIn}}">
+      <view class="stat-item" bindtap="goToPage" data-url="/pages/checkin/checkin">
+        <text class="stat-num">{{stats.checkinDays}}</text>
+        <text class="stat-label">打卡天数</text>
+      </view>
+      <view class="stat-item" bindtap="goToPage" data-url="/pages/partner/partner">
+        <text class="stat-num">{{stats.partners}}</text>
+        <text class="stat-label">搭子数量</text>
+      </view>
+      <view class="stat-item" bindtap="goToPage" data-url="/pages/achievement/achievement">
+        <text class="stat-num">{{stats.medals}}</text>
+        <text class="stat-label">获得勋章</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num">{{stats.circles}}</text>
+        <text class="stat-label">加入圈子</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-group">
+      <view class="menu-item" bindtap="showInfo">
+        <view class="menu-icon" style="background: #4A90D9;">👤</view>
+        <text class="menu-text">个人信息</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goToPage" data-url="/pages/goal/goal">
+        <view class="menu-icon" style="background: #722ED1;">🎯</view>
+        <text class="menu-text">目标管理</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goToPage" data-url="/pages/stats/stats">
+        <view class="menu-icon" style="background: #52C41A;">📊</view>
+        <text class="menu-text">数据统计</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goToPage" data-url="/pages/notification/notification">
+        <view class="menu-icon" style="background: #FAAD14;">🔔</view>
+        <text class="menu-text">消息通知</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goToPage" data-url="/pages/message/message">
+        <view class="menu-icon" style="background: #13C2C2;">💬</view>
+        <text class="menu-text">我的私信</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="menu-group">
+      <view class="menu-item" bindtap="showAbout">
+        <view class="menu-icon" style="background: #999;">ℹ️</view>
+        <text class="menu-text">关于我们</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section" wx:if="{{isLoggedIn}}">
+    <button class="logout-btn" bindtap="logout">退出登录</button>
+  </view>
+
+  <!-- 登录提示 -->
+  <view class="login-section" wx:if="{{!isLoggedIn}}">
+    <button class="btn-primary" bindtap="goLogin">立即登录</button>
+  </view>
+
+  <!-- 个人信息弹窗 -->
+  <view class="modal-mask" wx:if="{{showInfoModal}}" bindtap="hideInfo">
+    <view class="info-modal" catchtap="">
+      <view class="info-modal-title">个人信息</view>
+      <view class="info-row">
+        <text class="info-label">昵称</text>
+        <text class="info-value">{{userInfo.nickname || '-'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">手机号</text>
+        <text class="info-value">{{userInfo.phone || '未绑定'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">邮箱</text>
+        <text class="info-value">{{userInfo.email || '未绑定'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">等级</text>
+        <text class="info-value">Lv.{{userInfo.level}}（{{userInfo.experience || 0}} EXP）</text>
+      </view>
+      <picker mode="region" value="{{regionValue}}" bindchange="onRegionChange">
+        <view class="info-row">
+          <text class="info-label">所在地区</text>
+          <text class="info-value" style="color:#4A90D9;">{{userInfo.province ? loc.format(userInfo.province, userInfo.city, userInfo.district) : '点击设置'}}</text>
+        </view>
+      </picker>
+      <view class="info-row">
+        <text class="info-label">用户ID</text>
+        <text class="info-value">{{userInfo.id}}</text>
+      </view>
+      <button class="btn-primary" bindtap="hideInfo">关闭</button>
+    </view>
+  </view>
+</view>

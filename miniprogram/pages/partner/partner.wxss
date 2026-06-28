@@ -1,0 +1,67 @@
+/* pages/partner/partner.wxss */
+.page-partner{padding-bottom:20rpx;min-height:100vh;background:#F6F8FC}
+.tabs{display:flex;background:#fff;margin-bottom:16rpx}
+.tab-item{flex:1;text-align:center;padding:26rpx 0;font-size:30rpx;color:#666}
+.tab-item.active{color:#4A90D9;font-weight:700;position:relative}
+.tab-item.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:48rpx;height:4rpx;background:#4A90D9;border-radius:2rpx}
+
+/* 申请列表 */
+.request-section{padding:20rpx}
+.requests-header{font-size:28rpx;font-weight:600;color:#666;margin-bottom:16rpx}
+.request-card{display:flex;align-items:center;background:#fff;border-radius:16rpx;padding:24rpx;margin-bottom:16rpx;box-shadow:0 2rpx 8rpx rgba(0,0,0,.04)}
+.request-card .avatar{width:72rpx;height:72rpx;border-radius:50%;margin-right:16rpx;flex-shrink:0}
+.request-body{flex:1;min-width:0}
+.request-text{font-size:28rpx;color:#333;display:block}
+.request-goal{font-size:24rpx;color:#999;display:block;margin-top:4rpx}
+.request-btns{display:flex;gap:16rpx;flex-shrink:0}
+.btn-reject{padding:12rpx 28rpx;border:2rpx solid #ddd;border-radius:24rpx;font-size:26rpx;color:#666}
+.btn-accept{padding:12rpx 28rpx;background:linear-gradient(135deg,#4A90D9,#6DB3F8);border-radius:24rpx;font-size:26rpx;color:#fff}
+.btn-block{padding:12rpx 28rpx;border:2rpx solid #FF4D4F;border-radius:24rpx;font-size:26rpx;color:#FF4D4F}
+.request-status.rejected{font-size:22rpx;color:#FF4D4F;display:block;margin-top:4rpx}
+
+/* 搭子列表 */
+.partner-list{padding:0 20rpx}
+.partner-item{margin-bottom:16rpx}
+.partner-header{display:flex;align-items:center;margin-bottom:20rpx}
+.partner-header .avatar{width:80rpx;height:80rpx;border-radius:50%;margin-right:16rpx}
+.partner-name{font-size:30rpx;font-weight:600}
+.partner-tags{margin-top:8rpx}
+.partner-actions{display:flex;gap:16rpx}
+.btn-outline-sm{flex:1;text-align:center;padding:16rpx 0;border:2rpx solid #4A90D9;border-radius:24rpx;font-size:26rpx;color:#4A90D9}
+.btn-primary-sm{flex:1;text-align:center;padding:16rpx 0;background:linear-gradient(135deg,#4A90D9,#6DB3F8);border-radius:24rpx;font-size:26rpx;color:#fff}
+
+/* 匹配推荐 */
+.match-section{padding:0 20rpx}
+.search-bar{display:flex;align-items:center;padding:16rpx 24rpx;margin-bottom:16rpx}
+.search-input{flex:1;height:64rpx;background:#F6F8FC;border-radius:32rpx;padding:0 24rpx;font-size:28rpx}
+.search-btn{font-size:28rpx;color:#4A90D9;font-weight:600;margin-left:16rpx;flex-shrink:0}
+.match-filter{padding:20rpx 24rpx;margin-bottom:16rpx}
+.filter-tags{display:flex;flex-wrap:wrap;gap:12rpx}
+.filter-tags .tag{padding:10rpx 22rpx;background:#F6F8FC;border-radius:24rpx;font-size:26rpx;color:#666}
+.filter-tags .tag.active{background:#4A90D9;color:#fff}
+.match-list{margin-top:8rpx}
+.match-item{margin-bottom:16rpx}
+.match-top{display:flex;align-items:center;gap:16rpx}
+.match-top .avatar{width:72rpx;height:72rpx;border-radius:50%}
+.match-info{flex:1}
+.match-name{font-size:30rpx;font-weight:600;display:block}
+.match-score{font-size:22rpx;color:#4A90D9;margin-top:4rpx;display:block}
+
+.empty-state{text-align:center;padding:60rpx;color:#999;font-size:28rpx}
+
+/* 拉黑列表 */
+.blocked-section{margin-top:24rpx}
+.blocked-header{font-size:28rpx;font-weight:600;color:#FF4D4F;margin-bottom:16rpx}
+.blocked-item{display:flex;align-items:center;padding:24rpx;gap:16rpx}
+.blocked-item .avatar{width:64rpx;height:64rpx;border-radius:50%;flex-shrink:0}
+.blocked-info{flex:1}
+.btn-unblock{padding:12rpx 24rpx;background:#52C41A;border-radius:24rpx;font-size:26rpx;color:#fff;flex-shrink:0}
+
+/* 匹配模式切换 */
+.match-mode-bar{display:flex;margin-bottom:20rpx;overflow:hidden;border-radius:12rpx;background:#f5f5f5}
+.match-mode-btn{flex:1;text-align:center;padding:20rpx 0;font-size:26rpx;color:#666;transition:all .2s}
+.match-mode-btn.active{background:#4A90D9;color:#fff;font-weight:600}
+
+/* 禁用状态按钮 */
+.btn-outline-sm.disabled{border-color:#ddd;color:#ccc;background:#f5f5f5}
+.btn-primary-sm.disabled{background:#ccc;color:#fff}

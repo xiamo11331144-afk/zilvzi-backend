@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "成就中心",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
+}

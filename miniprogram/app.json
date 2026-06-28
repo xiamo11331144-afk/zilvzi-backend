@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/checkin/checkin",
+    "pages/partner/partner",
+    "pages/partner-detail/partner-detail",
+    "pages/circle/circle",
+    "pages/circle-detail/circle-detail",
+    "pages/achievement/achievement",
+    "pages/ai/ai",
+    "pages/profile/profile",
+    "pages/plan/plan",
+    "pages/notification/notification",
+    "pages/stats/stats",
+    "pages/message/message",
+    "pages/topic-detail/topic-detail",
+    "pages/goal/goal"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4A90D9",
+    "navigationBarTitleText": "自律搭子",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4A90D9",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-active.png"
+      },
+      {
+        "pagePath": "pages/partner/partner",
+        "text": "搭子",
+        "iconPath": "images/partner.png",
+        "selectedIconPath": "images/partner-active.png"
+      },
+      {
+        "pagePath": "pages/circle/circle",
+        "text": "圈子",
+        "iconPath": "images/circle.png",
+        "selectedIconPath": "images/circle-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/profile.png",
+        "selectedIconPath": "images/profile-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

@@ -1,0 +1,133 @@
+<!--pages/partner/partner.wxml-->
+<wxs module="loc">
+function format(province, city, district) {
+  if (!province) return '';
+  var result = '';
+  if (city) {
+    var idx = city.indexOf(province);
+    if (idx !== -1) {
+      result = city;
+    } else {
+      result = province + ' ' + city;
+    }
+  } else {
+    result = province;
+  }
+  if (district) {
+    result = result + ' ' + district;
+  }
+  return result;
+}
+module.exports = { format: format };
+</wxs>
+<view class="page-partner">
+  <view class="tabs">
+    <view class="tab-item {{currentTab === 'my' ? 'active' : ''}}" bindtap="switchTab" data-tab="my">我的搭子</view>
+    <view class="tab-item {{currentTab === 'match' ? 'active' : ''}}" bindtap="switchTab" data-tab="match">匹配推荐</view>
+  </view>
+
+  <!-- 申请列表 -->
+  <view class="request-section" wx:if="{{requests.length > 0}}">
+    <view class="requests-header">收到的申请 ({{requests.length}})</view>
+    <view class="request-card" wx:for="{{requests}}" wx:key="id">
+      <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="request-body">
+        <text class="request-text">{{item.nickname}} 邀请你成为搭子</text>
+        <text class="request-status rejected" wx:if="{{item.status === 'rejected'}}">已拒绝</text>
+      </view>
+      <view class="request-btns">
+        <!-- pending 状态：显示同意/拒绝/拉黑 -->
+        <block wx:if="{{item.status === 'pending'}}">
+          <view class="btn-accept" bindtap="acceptRequest" data-id="{{item.id}}">同意</view>
+          <view class="btn-reject" bindtap="rejectRequest" data-id="{{item.id}}">拒绝</view>
+          <view class="btn-block" bindtap="blockUser" data-id="{{item.userId}}">拉黑</view>
+        </block>
+        <!-- rejected 状态：仅显示拉黑 -->
+        <block wx:else>
+          <view class="btn-block" bindtap="blockUser" data-id="{{item.userId}}">拉黑</view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的搭子列表 -->
+  <view class="partner-list" wx:if="{{currentTab === 'my'}}">
+    <!-- 搭子列表 -->
+    <view class="partner-item card" wx:for="{{myPartners}}" wx:key="id">
+      <view class="partner-header">
+        <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+        <view class="partner-info">
+          <text class="partner-name">{{item.nickname}}</text>
+        </view>
+      </view>
+      <view class="partner-actions">
+        <view class="btn-outline-sm" bindtap="sendMessage" data-id="{{item.partnerId}}" data-nickname="{{item.nickname}}" data-avatar="{{item.avatar}}">发私信</view>
+        <view class="btn-outline-sm" bindtap="viewPartner" data-id="{{item.id}}">查看详情</view>
+        <view class="btn-primary-sm" bindtap="remindPartner" data-id="{{item.partnerId}}">提醒打卡</view>
+      </view>
+    </view>
+
+    <!-- 拉黑列表 -->
+    <view class="blocked-section" wx:if="{{blockedPartners.length > 0}}">
+      <view class="blocked-header">已拉黑 ({{blockedPartners.length}})</view>
+      <view class="blocked-item card" wx:for="{{blockedPartners}}" wx:key="id">
+        <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+        <view class="blocked-info">
+          <text class="partner-name">{{item.nickname}}</text>
+        </view>
+        <view class="btn-unblock" bindtap="unblockUser" data-id="{{item.partnerId}}">解除拉黑</view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{myPartners.length === 0 && blockedPartners.length === 0}}">
+      <text>暂无搭子，去匹配页面寻找吧</text>
+    </view>
+  </view>
+
+  <!-- 匹配推荐 -->
+  <view class="match-section" wx:if="{{currentTab === 'match'}}">
+    <view class="search-bar card">
+      <input class="search-input" placeholder="输入手机号或昵称搜索搭子" value="{{searchKeyword}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="doSearch" />
+      <text class="search-btn" bindtap="doSearch">搜索</text>
+    </view>
+    <!-- 匹配模式切换 -->
+    <view class="card match-mode-bar">
+      <view class="match-mode-btn {{matchMode==='mutual'?'active':''}}" bindtap="switchMatchMode" data-mode="mutual">共勉型（相似打卡率）</view>
+      <view class="match-mode-btn {{matchMode==='lead'?'active':''}}" bindtap="switchMatchMode" data-mode="lead">引领型（高手带新手）</view>
+    </view>
+    <view class="match-filter card">
+      <view class="filter-tags">
+        <view class="tag {{selectedType === item ? 'active' : ''}}" 
+              wx:for="{{goalTypes}}" wx:key="*this"
+              bindtap="selectType" data-type="{{item}}">{{item}}</view>
+      </view>
+    </view>
+    <view class="match-list">
+      <view wx:if="{{matchList.length > 0}}" style="padding:8rpx 0 16rpx;font-size:24rpx;color:#999;">
+        当前：{{matchMode === 'mutual' ? '共勉型' : '引领型'}}模式
+        <text wx:if="{{selectedType !== '全部'}}"> · {{selectedType}}</text>
+        · 共{{matchList.length}}人
+      </view>
+      <view class="match-item card" wx:for="{{matchList}}" wx:key="id" bindtap="viewMatchDetail" data-id="{{item.id}}">
+        <view class="match-top">
+          <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="match-info">
+            <text class="match-name">{{item.nickname}}</text>
+            <text class="match-score">匹配度 {{item.matchScore}}%</text>
+            <view wx:if="{{item.province || item.checkinRate > 0}}" style="display:flex;gap:12rpx;margin-top:6rpx;align-items:center;">
+              <text wx:if="{{item.province}}" style="font-size:24rpx;color:#666;">📍{{loc.format(item.province, item.city, item.district)}}</text>
+              <text wx:if="{{item.checkinRate > 0}}" style="font-size:24rpx;color:#52c41a;">打卡率 {{item.checkinRate}}%</text>
+            </view>
+          </view>
+          <view class="btn-outline-sm disabled" wx:if="{{item.relationStatus === 'partner'}}">已是搭子</view>
+          <view class="btn-outline-sm disabled" wx:elif="{{item.relationStatus === 'pending'}}">已申请</view>
+          <view class="btn-outline-sm disabled" wx:elif="{{item.relationStatus === 'blocked'}}">无法申请</view>
+          <view class="btn-primary-sm" wx:else catchtap="sendRequest" data-id="{{item.id}}">申请搭子</view>
+        </view>
+      </view>
+    </view>
+    <view class="empty-state" wx:if="{{matchList.length === 0}}">
+      <text>暂无推荐用户</text>
+    </view>
+  </view>
+</view>

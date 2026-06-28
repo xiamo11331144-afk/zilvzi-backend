@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自律搭子 - 后台管理</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f7fa;color:#333}
+.header{background:linear-gradient(135deg,#4A90D9,#6DB3F8);color:#fff;padding:14px 0}
+.header-content{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:20px;font-weight:bold}
+.nav{display:flex;gap:4px;margin-bottom:20px;background:#fff;padding:6px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.nav-item{padding:10px 24px;border-radius:6px;cursor:pointer;font-size:14px;color:#666;transition:.2s}
+.nav-item:hover,.nav-item.active{background:#4A90D9;color:#fff}
+.container{max-width:1400px;margin:0 auto;padding:20px}
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:20px}
+.stat-card{background:#fff;border-radius:10px;padding:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.stat-num{font-size:36px;font-weight:bold;color:#4A90D9}
+.stat-label{font-size:13px;color:#999;margin-top:4px}
+.panel{background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.panel-title{font-size:16px;font-weight:bold}
+.sbar{display:flex;gap:8px}
+.sinput{padding:8px 12px;border:1px solid #ddd;border-radius:6px;width:200px;font-size:13px}
+.sbtn{background:#4A90D9;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #f0f0f0;font-size:13px}
+th{background:#f8f9fa;font-weight:600;color:#666}
+.abtn{padding:5px 10px;border:none;border-radius:4px;cursor:pointer;font-size:12px;margin-right:4px}
+.btn-red{background:#FF4D4F;color:#fff}
+.btn-green{background:#52C41A;color:#fff}
+.btn-gray{background:#999;color:#fff}
+.btn-blue{background:#4A90D9;color:#fff}
+.login-container{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#4A90D9,#6DB3F8)}
+.login-box{background:#fff;border-radius:16px;padding:36px;width:360px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.login-title{font-size:22px;font-weight:bold;text-align:center;margin-bottom:28px;color:#4A90D9}
+.fgroup{margin-bottom:16px}.flabel{font-size:13px;color:#666;margin-bottom:6px;display:block}
+.finput{width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:6px;font-size:13px}
+.login-btn{width:100%;background:linear-gradient(135deg,#4A90D9,#6DB3F8);color:#fff;border:none;padding:12px;border-radius:6px;font-size:15px;cursor:pointer}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center}
+.modal-box{background:#fff;border-radius:12px;padding:24px;width:400px;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:bold;margin-bottom:16px}
+.modal-close{float:right;cursor:pointer;font-size:22px;color:#999}
+.empty{text-align:center;padding:40px;color:#999;font-size:14px}
+</style>
+</head>
+<body>
+<div id="loginPage" class="login-container">
+<div class="login-box"><h1 class="login-title">自律搭子 - 后台管理</h1>
+<div class="fgroup"><label class="flabel">用户名</label><input class="finput" id="username" value="admin"></div>
+<div class="fgroup"><label class="flabel">密码</label><input type="password" class="finput" id="password" value="admin123"></div>
+<button class="login-btn" onclick="login()">登录</button></div></div>
+
+<div id="mainPage" style="display:none">
+<div class="header"><div class="header-content"><div class="logo">自律搭子 后台管理</div><div><span style="margin-right:12px">管理员</span><button onclick="logout()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:16px;cursor:pointer">退出</button></div></div></div>
+<div class="container">
+<div class="nav">
+<div class="nav-item active" onclick="switchPage('users',this)">用户管理</div>
+<div class="nav-item" onclick="switchPage('circles',this)">圈子管理</div>
+<div class="nav-item" onclick="switchPage('posts',this)">动态审核</div>
+<div class="nav-item" onclick="switchPage('comments',this)">评论管理</div>
+<div class="nav-item" onclick="switchPage('topics',this)">话题管理</div>
+<div class="nav-item" onclick="switchPage('system',this)">系统配置</div>
+</div>
+<div class="stats-grid">
+<div class="stat-card"><span class="stat-num" id="totalUsers">0</span><span class="stat-label">总用户数</span></div>
+<div class="stat-card"><span class="stat-num" id="totalCircles">0</span><span class="stat-label">圈子数</span></div>
+<div class="stat-card"><span class="stat-num" id="totalPosts">0</span><span class="stat-label">动态数</span></div>
+<div class="stat-card"><span class="stat-num" id="totalTopics">0</span><span class="stat-label">话题数</span></div>
+<div class="stat-card"><span class="stat-num" id="todayCheckins">0</span><span class="stat-label">今日打卡</span></div>
+</div>
+
+<div id="page-users" class="panel">
+<div class="panel-header"><h2 class="panel-title">用户管理</h2>
+<div class="sbar"><input class="sinput" id="userSearch" placeholder="搜索用户"><button class="sbtn" onclick="loadUsers()">搜索</button>
+<button class="sbtn" onclick="showAddUser()">+ 新增</button></div></div>
+<table><thead><tr><th>ID</th><th>昵称</th><th>手机号</th><th>等级</th><th>经验</th><th>时间</th><th>操作</th></tr></thead><tbody id="userList"></tbody></table>
+<div class="empty" id="userEmpty" style="display:none">暂无数据</div>
+</div>
+
+<div id="page-circles" class="panel" style="display:none">
+<div class="panel-header"><h2 class="panel-title">圈子管理</h2></div>
+<table><thead><tr><th>ID</th><th>名称</th><th>创建者</th><th>成员</th><th>动态</th><th>时间</th><th>操作</th></tr></thead><tbody id="circleList"></tbody></table>
+<div class="empty" id="circleEmpty" style="display:none">暂无数据</div>
+</div>
+
+<div id="page-posts" class="panel" style="display:none">
+<div class="panel-header"><h2 class="panel-title">动态审核</h2>
+<div class="sbar"><input class="sinput" id="postSearch" placeholder="搜索动态内容"><button class="sbtn" onclick="loadPosts()">搜索</button></div></div>
+<table><thead><tr><th>ID</th><th>发布者</th><th>内容</th><th>圈子</th><th>时间</th><th>操作</th></tr></thead><tbody id="postList"></tbody></table>
+<div class="empty" id="postEmpty" style="display:none">暂无数据</div>
+</div>
+
+<div id="page-comments" class="panel" style="display:none">
+<div class="panel-header"><h2 class="panel-title">评论管理</h2>
+<div class="sbar"><input class="sinput" id="commentSearch" placeholder="搜索评论内容"><button class="sbtn" onclick="loadComments()">搜索</button></div></div>
+<table><thead><tr><th>ID</th><th>用户</th><th>内容</th><th>动态ID</th><th>时间</th><th>操作</th></tr></thead><tbody id="commentList"></tbody></table>
+<div class="empty" id="commentEmpty" style="display:none">暂无数据</div>
+</div>
+
+<div id="page-topics" class="panel" style="display:none">
+<div class="panel-header"><h2 class="panel-title">话题管理</h2>
+<div class="sbar"><input class="sinput" id="topicSearch" placeholder="搜索话题标题/内容"><button class="sbtn" onclick="loadTopics()">搜索</button></div></div>
+<table><thead><tr><th>ID</th><th>标题</th><th>发布者</th><th>圈子</th><th>回复数</th><th>时间</th><th>操作</th></tr></thead><tbody id="topicList"></tbody></table>
+<div class="empty" id="topicEmpty" style="display:none">暂无数据</div>
+</div>
+
+<div id="page-system" class="panel" style="display:none">
+<div class="panel-header"><h2 class="panel-title">系统配置</h2></div>
+<table>
+<tr><td style="font-weight:600;width:160px">敏感词过滤</td><td><span style="color:#52C41A">已启用</span></td></tr>
+<tr><td style="font-weight:600">断卡自动检测</td><td><span style="color:#52C41A">已启用</span></td></tr>
+<tr><td style="font-weight:600">平台版本</td><td>v1.0.0</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<div class="modal" id="userModal">
+<div class="modal-box">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+<span class="modal-title" id="userModalTitle">新增用户</span><span class="modal-close" onclick="closeUserModal()">×</span></div>
+<input type="hidden" id="editUserId">
+<div class="fgroup"><label class="flabel">昵称</label><input class="finput" id="editNickname"></div>
+<div class="fgroup"><label class="flabel">手机号</label><input class="finput" id="editPhone"></div>
+<div class="fgroup"><label class="flabel">等级</label><input class="finput" type="number" id="editLevel" value="1"></div>
+<button class="login-btn" onclick="saveUser()">保存</button>
+</div></div>
+
+<div class="modal" id="replyModal">
+<div class="modal-box" style="width:600px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+<span class="modal-title">话题回复</span><span class="modal-close" onclick="closeReplyModal()">×</span></div>
+<div class="sbar" style="margin-bottom:12px"><input class="sinput" id="replySearch" placeholder="搜索回复内容"><button class="sbtn" onclick="showTopicReplies(currentTopicId)">搜索</button></div>
+<div id="replyList"></div>
+</div></div>
+
+<script>
+var B='http://localhost:8081';
+var token=localStorage.getItem('adminToken')||'';
+
+function handleAuth(r){
+  if(r.status===401||r.status===403){logout();alert('登录已过期，请重新登录');return null;}
+  return r;
+}
+
+if(token){validateAndLoad();}
+
+async function validateAndLoad(){
+  try{
+    var r=await fetch(B+'/api/admin/stats',{headers:{Authorization:'Bearer '+token}});
+    if(r.status===401||r.status===403){logout();return;}
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('mainPage').style.display='block';
+    var d=await r.json();
+    if(d.code===200){
+      document.getElementById('totalUsers').textContent=d.data.totalUsers||0;
+      document.getElementById('todayCheckins').textContent=d.data.todayCheckins||0;
+      document.getElementById('totalCircles').textContent=d.data.totalCircles||0;
+      document.getElementById('totalPosts').textContent=d.data.totalPosts||0;
+      document.getElementById('totalTopics').textContent=d.data.totalTopics||0;
+    }
+    loadUsers();
+  }catch(e){logout();}
+}
+
+function switchPage(p,el){
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+  el.classList.add('active');
+  document.querySelectorAll('[id^="page-"]').forEach(function(p){p.style.display='none'});
+  document.getElementById('page-'+p).style.display='block';
+  if(p==='circles')loadCircles();
+  if(p==='posts')loadPosts();
+  if(p==='comments')loadComments();
+  if(p==='topics')loadTopics();
+}
+
+async function login(){
+  var u=document.getElementById('username').value;
+  var p=document.getElementById('password').value;
+  try{
+    var r=await fetch(B+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    var d=await r.json();
+    if(d.code===200){token=d.data.token;localStorage.setItem('adminToken',token);document.getElementById('loginPage').style.display='none';document.getElementById('mainPage').style.display='block';loadStats();loadUsers();}
+    else alert(d.message||'登录失败');
+  }catch(e){alert('网络错误');}
+}
+
+function logout(){token='';localStorage.removeItem('adminToken');document.getElementById('loginPage').style.display='flex';document.getElementById('mainPage').style.display='none'}
+
+async function loadStats(){
+  try{
+    var r=await fetch(B+'/api/admin/stats',{headers:{Authorization:'Bearer '+token}});
+    if(r.status===401||r.status===403){logout();return;}
+    var d=await r.json();
+    if(d.code===200){
+      document.getElementById('totalUsers').textContent=d.data.totalUsers||0;
+      document.getElementById('todayCheckins').textContent=d.data.todayCheckins||0;
+      document.getElementById('totalCircles').textContent=d.data.totalCircles||0;
+      document.getElementById('totalPosts').textContent=d.data.totalPosts||0;
+      document.getElementById('totalTopics').textContent=d.data.totalTopics||0;
+    }
+  }catch(e){console.error('loadStats error:',e);}
+}
+
+function esc(s){return (s||'').replace(/'/g,"\\'").replace(/"/g,"&quot;");}
+
+function buildUsers(users){
+  var h='';
+  for(var i=0;i<users.length;i++){
+    var u=users[i];
+    h+='<tr><td>'+u.id+'</td><td>'+esc(u.nickname)+'</td><td>'+(u.phone||'-')+'</td><td>Lv.'+u.level+'</td><td>'+u.experience+'</td><td>'+(u.createTime||'-')+'</td>';
+    h+='<td><button class="abtn btn-blue" onclick="editUser('+u.id+',\''+esc(u.nickname)+'\',\''+(u.phone||'')+'\','+u.level+')">编辑</button> ';
+    h+='<button class="abtn btn-red" onclick="deleteUser('+u.id+')">删除</button></td></tr>';
+  }
+  return h;
+}
+
+async function loadUsers(){
+  try{
+    var k=document.getElementById('userSearch').value.trim();
+    var url=B+'/api/admin/users'+(k?'?keyword='+encodeURIComponent(k):'');
+    var r=await fetch(url,{headers:{Authorization:'Bearer '+token}});
+    if(r.status===401||r.status===403){logout();return;}
+    var d=await r.json();
+    if(d.code===200&&d.data&&d.data.length>0){document.getElementById('userList').innerHTML=buildUsers(d.data);document.getElementById('userEmpty').style.display='none';}
+    else{document.getElementById('userList').innerHTML='';document.getElementById('userEmpty').style.display='block';}
+  }catch(e){console.error('loadUsers error:',e);}
+}
+
+function showAddUser(){document.getElementById('editUserId').value='';document.getElementById('editNickname').value='';document.getElementById('editPhone').value='';document.getElementById('editLevel').value='1';document.getElementById('userModalTitle').textContent='新增用户';document.getElementById('userModal').style.display='flex'}
+function editUser(id,nick,phone,level){document.getElementById('editUserId').value=id;document.getElementById('editNickname').value=nick;document.getElementById('editPhone').value=phone;document.getElementById('editLevel').value=level;document.getElementById('userModalTitle').textContent='编辑用户';document.getElementById('userModal').style.display='flex'}
+function closeUserModal(){document.getElementById('userModal').style.display='none'}
+
+async function saveUser(){
+  var id=document.getElementById('editUserId').value;
+  var data={nickname:document.getElementById('editNickname').value,phone:document.getElementById('editPhone').value,level:parseInt(document.getElementById('editLevel').value)};
+  var url=id?B+'/api/admin/users/'+id+'/update':B+'/api/admin/users/create';
+  var method=id?'PUT':'POST';
+  var r=await fetch(url,{method:method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify(data)});
+  var d=await r.json();
+  if(d.code===200){closeUserModal();loadUsers();}else alert(d.message);
+}
+
+async function deleteUser(id){if(!confirm('确定删除用户#'+id+'？'))return;var r=await fetch(B+'/api/admin/users/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadUsers();else alert(d.message)}
+
+async function loadCircles(){
+  var r=await fetch(B+'/api/circle/list?size=100');var d=await r.json();
+  if(d.code===200&&d.data.length>0){
+    var h='';
+    for(var i=0;i<d.data.length;i++){var c=d.data[i];h+='<tr><td>'+c.id+'</td><td>'+esc(c.name)+'</td><td>'+(c.creatorNickname||c.creatorId)+'</td><td>'+c.memberCount+'</td><td>'+c.postCount+'</td><td>'+c.createTime+'</td><td><button class="abtn btn-red" onclick="deleteCircle('+c.id+')">删除</button></td></tr>';}
+    document.getElementById('circleList').innerHTML=h;document.getElementById('circleEmpty').style.display='none';
+  }else{document.getElementById('circleList').innerHTML='';document.getElementById('circleEmpty').style.display='block';}
+}
+
+async function deleteCircle(id){if(!confirm('确定删除？'))return;var r=await fetch(B+'/api/admin/circles/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadCircles();else alert(d.message)}
+
+async function loadPosts(){
+  var k=document.getElementById('postSearch').value;
+  var r=await fetch(B+'/api/circle/all-posts?size=100&keyword='+encodeURIComponent(k));var d=await r.json();
+  if(d.code===200&&d.data.length>0){
+    var h='';
+    for(var i=0;i<d.data.length;i++){var p=d.data[i];h+='<tr><td>'+p.id+'</td><td>'+esc(p.nickname||'匿名')+'</td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p.content)+'</td><td>'+p.circleId+'</td><td>'+p.createTime+'</td><td><button class="abtn btn-red" onclick="deletePost('+p.id+')">删除</button></td></tr>';}
+    document.getElementById('postList').innerHTML=h;document.getElementById('postEmpty').style.display='none';
+  }else{document.getElementById('postList').innerHTML='';document.getElementById('postEmpty').style.display='block';}
+}
+
+async function deletePost(id){if(!confirm('确定删除？'))return;var r=await fetch(B+'/api/admin/posts/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadPosts();else alert(d.message)}
+
+async function loadComments(){
+  var k=document.getElementById('commentSearch').value;
+  var r=await fetch(B+'/api/circle/all-comments?size=200&keyword='+encodeURIComponent(k));var d=await r.json();
+  if(d.code===200&&d.data.length>0){
+    var h='';
+    for(var i=0;i<d.data.length;i++){var c=d.data[i];h+='<tr><td>'+c.id+'</td><td>'+esc(c.nickname||'匿名')+'</td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(c.content)+'</td><td>'+c.postId+'</td><td>'+c.createTime+'</td><td><button class="abtn btn-red" onclick="deleteComment('+c.id+')">删除</button></td></tr>';}
+    document.getElementById('commentList').innerHTML=h;document.getElementById('commentEmpty').style.display='none';
+  }else{document.getElementById('commentList').innerHTML='';document.getElementById('commentEmpty').style.display='block';}
+}
+
+async function deleteComment(id){if(!confirm('确定删除？'))return;var r=await fetch(B+'/api/admin/comments/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadComments();else alert(d.message)}
+
+async function loadTopics(){
+  var k=document.getElementById('topicSearch').value;
+  var r=await fetch(B+'/api/admin/topics?keyword='+encodeURIComponent(k),{headers:{Authorization:'Bearer '+token}});var d=await r.json();
+  if(d.code===200&&d.data.length>0){
+    var h='';
+    for(var i=0;i<d.data.length;i++){var t=d.data[i];h+='<tr><td>'+t.id+'</td><td style="cursor:pointer;color:#4A90D9" onclick="showTopicReplies('+t.id+')">'+esc(t.title)+'</td><td>'+esc(t.nickname||'匿名')+'</td><td>'+t.circleId+'</td><td>'+(t.replyCount||0)+'</td><td>'+t.createTime+'</td><td><button class="abtn btn-red" onclick="deleteTopic('+t.id+')">删除</button></td></tr>';}
+    document.getElementById('topicList').innerHTML=h;document.getElementById('topicEmpty').style.display='none';
+  }else{document.getElementById('topicList').innerHTML='';document.getElementById('topicEmpty').style.display='block';}
+}
+
+async function deleteTopic(id){if(!confirm('确定删除话题#'+id+'？'))return;var r=await fetch(B+'/api/admin/topics/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadTopics();else alert(d.message)}
+
+var currentTopicId=0;
+
+async function showTopicReplies(id){
+  currentTopicId=id;
+  var k=document.getElementById('replySearch').value||'';
+  var url=B+'/api/admin/topics/'+id+'/replies';
+  if(k)url+='?keyword='+encodeURIComponent(k);
+  var r=await fetch(url,{headers:{Authorization:'Bearer '+token}});var d=await r.json();
+  var h='';
+  if(d.code===200&&d.data.length>0){
+    for(var i=0;i<d.data.length;i++){var rp=d.data[i];h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0"><div><span style="color:#4A90D9;font-weight:600">'+esc(rp.nickname||'匿名')+'</span><span style="margin-left:8px;color:#333">'+esc(rp.content)+'</span><div style="font-size:12px;color:#999">'+rp.createTime+'</div></div><button class="abtn btn-red" onclick="deleteReply('+rp.id+','+id+')">删除</button></div>';}
+  }else{h='<div class="empty" style="padding:20px">暂无回复</div>';}
+  document.getElementById('replyList').innerHTML=h;
+  document.getElementById('replyModal').style.display='flex';
+}
+
+function closeReplyModal(){document.getElementById('replyModal').style.display='none'}
+
+async function deleteReply(id,topicId){if(!confirm('确定删除？'))return;var r=await fetch(B+'/api/admin/topics/reply/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)showTopicReplies(topicId);else alert(d.message)}
+</script></body></html>

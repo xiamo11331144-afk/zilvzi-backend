@@ -1,0 +1,34 @@
+# Secrets
+backend/src/main/resources/application.yml
+miniprogram/project.private.config.json
+
+# IDE
+.idea/
+.codegraph/
+.opencode/
+backend/.idea/
+backend/.codegraph/
+backend/.vscode/
+*.iml
+
+# Build output
+backend/target/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Python temp scripts (docs generation)
+extract_docx.py
+generate_doc.py
+generate_flow.py
+generate_log.py
+verify_log.py
+
+# Generated docs (not source code)
+docs/
+flow_sections/
+*.docx

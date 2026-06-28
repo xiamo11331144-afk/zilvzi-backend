@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.AchievementMapper">
+
+    <select id="selectByUserId" resultType="Achievement">
+        SELECT * FROM achievement WHERE user_id = #{userId} ORDER BY unlock_time DESC
+    </select>
+
+    <select id="selectByUserIdAndName" resultType="Achievement">
+        SELECT * FROM achievement WHERE user_id = #{userId} AND medal_name = #{medalName}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO achievement (user_id, medal_name, medal_icon, medal_color, `condition`, unlock_time)
+        VALUES (#{userId}, #{medalName}, #{medalIcon}, #{medalColor}, #{condition}, #{unlockTime})
+    </insert>
+
+    <select id="countByUserIdAndName" resultType="int">
+        SELECT COUNT(*) FROM achievement WHERE user_id = #{userId} AND medal_name = #{medalName}
+    </select>
+</mapper>

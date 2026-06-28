@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.GoalMapper">
+
+    <select id="selectById" resultType="Goal">
+        SELECT * FROM goal WHERE id = #{id} AND status != 'deleted'
+    </select>
+
+    <select id="selectByUserId" resultType="Goal">
+        SELECT * FROM goal WHERE user_id = #{userId} AND status != 'deleted' ORDER BY create_time DESC
+    </select>
+
+    <select id="selectTodayGoals" resultType="Goal">
+        SELECT g.*, 
+               CASE WHEN c.id IS NOT NULL THEN true ELSE false END as checked
+        FROM goal g
+        LEFT JOIN checkin c ON g.id = c.goal_id AND c.date = #{today}
+        WHERE g.user_id = #{userId} AND g.status = 'active'
+        ORDER BY g.create_time DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO goal (user_id, name, type, description, start_date, end_date, status, streak, total_checkins, create_time, update_time)
+        VALUES (#{userId}, #{name}, #{type}, #{description}, #{startDate}, #{endDate}, #{status}, #{streak}, #{totalCheckins}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE goal
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="status != null">status = #{status},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE goal SET status = #{status}, update_time = NOW() WHERE id = #{id}
+    </update>
+
+    <update id="updateCheckinStats">
+        UPDATE goal SET streak = #{streak}, total_checkins = #{totalCheckins}, update_time = NOW() WHERE id = #{id}
+    </update>
+
+    <select id="selectActiveByName" resultType="Goal">
+        SELECT * FROM goal WHERE user_id = #{userId} AND name = #{name} AND status = 'active' LIMIT 1
+    </select>
+
+    <select id="selectGoalsByUserIds" resultType="Goal">
+        SELECT * FROM goal WHERE user_id IN
+        <foreach collection="userIds" item="uid" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+        AND status != 'deleted'
+    </select>
+</mapper>

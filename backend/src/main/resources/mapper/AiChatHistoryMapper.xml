@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.AiChatHistoryMapper">
+
+    <resultMap id="AiChatHistoryMap" type="AiChatHistory">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="role" column="role"/>
+        <result property="content" column="content"/>
+        <result property="sessionType" column="session_type"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_chat_history (user_id, role, content, session_type, create_time)
+        VALUES (#{userId}, #{role}, #{content}, #{sessionType}, NOW())
+    </insert>
+
+    <!-- 查询用户最近的对话历史（前端展示用，按时间倒序） -->
+    <select id="selectRecentByUserId" resultMap="AiChatHistoryMap">
+        SELECT * FROM ai_chat_history
+        WHERE user_id = #{userId}
+        <if test="sessionType != null">
+            AND session_type = #{sessionType}
+        </if>
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询用户对话历史（构建 AI 上下文用，按时间正序） -->
+    <select id="selectContextByUserId" resultMap="AiChatHistoryMap">
+        SELECT * FROM (
+            SELECT * FROM ai_chat_history
+            WHERE user_id = #{userId}
+            <if test="sessionType != null">
+                AND session_type = #{sessionType}
+            </if>
+            ORDER BY create_time DESC
+            LIMIT #{limit}
+        ) t
+        ORDER BY t.create_time ASC
+    </select>
+
+    <delete id="deleteByUserId">
+        DELETE FROM ai_chat_history WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteByUserIdAndType">
+        DELETE FROM ai_chat_history WHERE user_id = #{userId} AND session_type = #{sessionType}
+    </delete>
+
+    <select id="countByUserId" resultType="Integer">
+        SELECT COUNT(*) FROM ai_chat_history WHERE user_id = #{userId}
+    </select>
+
+</mapper>

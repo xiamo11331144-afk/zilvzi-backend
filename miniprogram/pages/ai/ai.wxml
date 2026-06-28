@@ -1,0 +1,76 @@
+<!--pages/ai/ai.wxml-->
+<view class="page-ai">
+  <!-- AI建议卡片 -->
+  <view class="suggestions-section">
+    <view class="section-title">个性化建议</view>
+    <view class="suggestion-card" wx:for="{{suggestions}}" wx:key="id">
+      <view class="suggestion-header">
+        <view class="suggestion-icon" style="background: {{item.color}};">
+          <text>{{item.icon}}</text>
+        </view>
+        <view class="suggestion-title">
+          <text class="title">{{item.title}}</text>
+          <text class="time">{{item.time}}</text>
+        </view>
+      </view>
+      <text class="suggestion-content">{{item.content}}</text>
+      <view class="suggestion-actions">
+        <button class="btn-outline" bindtap="feedback" data-id="{{item.id}}" data-type="helpful">有帮助</button>
+        <button class="btn-outline" bindtap="feedback" data-id="{{item.id}}" data-type="not-helpful">没帮助</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 智能对话 -->
+  <view class="chat-section card">
+    <view class="flex-between">
+      <view class="section-title">智能助手</view>
+      <text class="clear-btn" bindtap="clearHistory">清除记录</text>
+    </view>
+    <scroll-view scroll-y class="chat-messages" scroll-into-view="{{scrollToView}}">
+      <view class="message-item {{item.isUser ? 'user' : 'ai'}}" wx:for="{{messages}}" wx:key="id" id="msg-{{item.id}}">
+        <view class="message-avatar" wx:if="{{!item.isUser}}">AI</view>
+        <view class="message-bubble">
+          <text>{{item.content}}</text>
+        </view>
+        <view class="message-avatar" wx:if="{{item.isUser}}">我</view>
+      </view>
+      <view class="typing-indicator" wx:if="{{isTyping}}">
+        <view class="dot"></view>
+        <view class="dot"></view>
+        <view class="dot"></view>
+      </view>
+    </scroll-view>
+    <view class="chat-input">
+      <input placeholder="问我任何关于习惯养成的问题..." value="{{inputValue}}" bindinput="onInput" bindconfirm="sendMessage" />
+      <button class="send-btn" bindtap="sendMessage">发送</button>
+    </view>
+  </view>
+
+  <!-- 快捷问题 -->
+  <view class="quick-questions card">
+    <view class="section-title">快捷提问</view>
+    <view class="question-list">
+      <view class="question-item" wx:for="{{quickQuestions}}" wx:key="*this" bindtap="askQuestion" data-question="{{item}}">
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据预测 -->
+  <view class="prediction-card card">
+    <view class="section-title">目标预测</view>
+    <view class="prediction-item" wx:for="{{predictions}}" wx:key="id">
+      <view class="prediction-header">
+        <text class="prediction-name">{{item.name}}</text>
+        <text class="prediction-rate {{item.rate >= 80 ? 'high' : item.rate >= 50 ? 'medium' : 'low'}}">
+          {{item.rate}}%
+        </text>
+      </view>
+      <text class="prediction-desc">{{item.description}}</text>
+      <view class="prediction-bar">
+        <view class="prediction-progress" style="width: {{item.rate}}%; background: {{item.rate >= 80 ? '#52C41A' : item.rate >= 50 ? '#FAAD14' : '#FF4D4F'}};"></view>
+      </view>
+    </view>
+  </view>
+</view>

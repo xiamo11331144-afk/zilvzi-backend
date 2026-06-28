@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.PartnerMapper">
+
+    <select id="selectByUserId" resultType="Partner">
+        SELECT * FROM partner WHERE (user_id = #{userId} OR partner_id = #{userId}) AND status = 'accepted'
+    </select>
+
+    <select id="selectByPartnerId" resultType="Partner">
+        SELECT * FROM partner WHERE partner_id = #{partnerId}
+    </select>
+
+    <select id="selectByUserAndPartner" resultType="Partner">
+        SELECT * FROM partner 
+        WHERE (user_id = #{userId} AND partner_id = #{partnerId})
+           OR (user_id = #{partnerId} AND partner_id = #{userId})
+        LIMIT 1
+    </select>
+
+    <select id="selectAllByUserAndPartner" resultType="Partner">
+        SELECT * FROM partner 
+        WHERE (user_id = #{userId} AND partner_id = #{partnerId})
+           OR (user_id = #{partnerId} AND partner_id = #{userId})
+    </select>
+
+    <select id="selectById" resultType="Partner">
+        SELECT * FROM partner WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO partner (user_id, partner_id, goal_id, status, create_time)
+        VALUES (#{userId}, #{partnerId}, #{goalId}, #{status}, NOW())
+    </insert>
+
+    <update id="updateStatus">
+        UPDATE partner SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="updatePrevStatus">
+        UPDATE partner SET prev_status = #{prevStatus} WHERE id = #{id}
+    </update>
+
+    <update id="updateUserAndPartner">
+        UPDATE partner SET user_id = #{userId}, partner_id = #{partnerId} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM partner WHERE id = #{id}
+    </delete>
+
+    <select id="selectByUserAsPartner" resultType="Partner">
+        SELECT * FROM partner WHERE partner_id = #{partnerId} AND status = 'accepted'
+    </select>
+
+    <select id="selectBlockedByUserId" resultType="Partner">
+        SELECT * FROM partner WHERE user_id = #{userId} AND status = 'blocked'
+    </select>
+</mapper>

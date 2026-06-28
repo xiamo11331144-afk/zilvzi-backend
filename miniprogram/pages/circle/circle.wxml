@@ -1,0 +1,106 @@
+<!--pages/circle/circle.wxml-->
+<view class="page-circle">
+  <!-- 顶部搜索 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <text class="search-icon">🔍</text>
+      <input placeholder="搜索圈子" value="{{searchKeyword}}" bindinput="onSearch" />
+    </view>
+    <view class="search-btn" bindtap="searchCircle">搜索</view>
+  </view>
+
+  <!-- 热门标签 -->
+  <view class="hot-tags">
+    <scroll-view scroll-x class="tags-scroll">
+      <view class="tag-item {{selectedTag === item ? 'active' : ''}}" 
+            wx:for="{{hotTags}}" wx:key="*this"
+            bindtap="selectTag" data-tag="{{item}}">
+        {{item}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 圈子列表 -->
+  <view class="circle-list">
+    <view class="list-header">
+      <text class="list-title">热门圈子</text>
+      <text class="create-link" bindtap="createCircle">+ 创建圈子</text>
+    </view>
+    <view class="circle-item card" wx:for="{{circles}}" wx:key="id" bindtap="enterCircle" data-id="{{item.id}}">
+      <view class="circle-header">
+        <image class="circle-cover" src="{{item.cover || '/images/default-circle.png'}}" mode="aspectFill" />
+        <view class="circle-info">
+          <text class="circle-name">{{item.name}}</text>
+          <text class="circle-desc">{{item.description}}</text>
+          <view class="circle-meta">
+            <text class="member-count">{{item.memberCount}}人</text>
+            <text class="post-count">{{item.postCount}}条动态</text>
+          </view>
+        </view>
+      </view>
+      <view class="circle-tags">
+        <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+      </view>
+    </view>
+    <view class="empty-state" wx:if="{{circles.length === 0 && searched}}">
+      <text>未找到相关圈子</text>
+    </view>
+  </view>
+
+  <!-- 我的圈子 -->
+  <view class="my-circles card">
+    <view class="section-title">我的圈子</view>
+    <scroll-view scroll-x class="my-circles-scroll">
+      <view class="my-circle-item" wx:for="{{myCircles}}" wx:key="id" bindtap="enterCircle" data-id="{{item.id}}">
+        <image class="my-circle-avatar" src="{{item.cover || '/images/default-circle.png'}}" mode="aspectFill" />
+        <text class="my-circle-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 创建圈子弹窗 -->
+<view class="modal-mask" wx:if="{{showCreateModal}}">
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">创建圈子</text>
+      <text class="modal-close" bindtap="hideCreateModal">×</text>
+    </view>
+    <view class="modal-body">
+      <view class="form-item">
+        <text class="form-label">圈子头像</text>
+        <view class="cover-upload" bindtap="chooseCover">
+          <image class="cover-preview" wx:if="{{newCircle.cover}}" src="{{newCircle.cover}}" mode="aspectFill" />
+          <view class="cover-placeholder" wx:else>
+            <text class="upload-icon">+</text>
+            <text class="upload-text">选择图片</text>
+          </view>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">圈子名称</text>
+        <input class="form-input" placeholder="请输入圈子名称" value="{{newCircle.name}}" bindinput="onNameInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">圈子简介</text>
+        <textarea class="form-textarea" placeholder="请输入圈子简介" value="{{newCircle.desc}}" bindinput="onDescInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">选择标签</text>
+        <view class="tag-selector">
+          <view class="tag-item {{selectedTags[item] ? 'active' : ''}}" 
+                wx:for="{{allTags}}" wx:key="*this"
+                bindtap="toggleTag" data-tag="{{item}}">
+            {{item}}
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-outline" bindtap="hideCreateModal">取消</button>
+      <button class="btn-primary" bindtap="createCircleConfirm">创建</button>
+    </view>
+  </view>
+  <!-- 遮罩层点击关闭 -->
+  <view class="mask-close" bindtap="hideCreateModal"></view>
+</view>

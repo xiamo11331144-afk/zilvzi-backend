@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zilvzi.mapper.CheckinMapper">
+
+    <select id="selectById" resultType="Checkin">
+        SELECT * FROM checkin WHERE id = #{id}
+    </select>
+
+    <select id="selectByUserAndDate" resultType="Checkin">
+        SELECT * FROM checkin 
+        WHERE user_id = #{userId} AND goal_id = #{goalId} AND date = #{date}
+        AND task_id IS NULL
+        LIMIT 1
+    </select>
+
+    <select id="selectCheckinDates" resultType="String">
+        SELECT DISTINCT date FROM checkin 
+        WHERE user_id = #{userId} 
+        AND YEAR(date) = #{year} 
+        AND MONTH(date) = #{month}
+    </select>
+
+    <select id="selectTodayTasks" resultType="Checkin">
+        <![CDATA[
+        SELECT 
+            pt.id,
+            COALESCE(p.goal_id, p.id) as goalId,
+            pt.task_name as taskName,
+            pt.task_type as taskType,
+            pt.task_description as taskDescription,
+            pt.task_duration as taskDuration,
+            pt.completed,
+            pt.task_date as taskDate,
+            p.user_id as userId,
+            c.status as checkinStatus,
+            c.proof_image as proofImage,
+            c.proof_content as proofContent
+        FROM plan_task pt
+        JOIN plan p ON pt.plan_id = p.id
+        LEFT JOIN checkin c ON c.task_id = pt.id AND c.date = pt.task_date
+        WHERE p.user_id = #{userId} 
+        AND p.status = 'active'
+        AND pt.task_date = #{today}
+        ORDER BY pt.sort_order
+        ]]>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO checkin (user_id, goal_id, task_id, content, image, checkin_time, date, status, partner_id, proof_image, proof_content)
+        VALUES (#{userId}, #{goalId}, #{taskId}, #{content}, #{image}, NOW(), #{date}, #{status}, #{partnerId}, #{proofImage}, #{proofContent})
+    </insert>
+
+    <select id="selectByTaskAndDate" resultType="Checkin">
+        SELECT * FROM checkin 
+        WHERE task_id = #{taskId} AND date = #{date}
+        LIMIT 1
+    </select>
+
+    <select id="countStreak" resultType="Integer">
+        <![CDATA[
+        SELECT COUNT(*) FROM (
+            SELECT date, ROW_NUMBER() OVER (ORDER BY date DESC) as rn
+            FROM checkin 
+            WHERE user_id = #{userId} 
+            AND (goal_id = #{goalId} OR #{goalId} IS NULL)
+            AND status = 'approved'
+            AND date <= #{today}
+            GROUP BY date
+            ORDER BY date DESC
+        ) t
+        WHERE DATEDIFF(#{today}, date) = rn - 1
+        ]]>
+    </select>
+
+    <select id="countTotal" resultType="Integer">
+        SELECT COUNT(DISTINCT date) FROM checkin 
+        WHERE user_id = #{userId} AND (goal_id = #{goalId} OR #{goalId} IS NULL)
+        AND status = 'approved'
+    </select>
+
+    <select id="countTotalCheckins" resultType="Integer">
+        SELECT COUNT(DISTINCT date) FROM checkin 
+        WHERE user_id = #{userId}
+        AND status = 'approved'
+    </select>
+
+    <select id="countToday" resultType="Integer">
+        SELECT COUNT(*) FROM plan_task 
+        WHERE task_date = #{today} AND completed = 1
+    </select>
+
+    <select id="selectRecentByUserId" resultType="Checkin">
+        SELECT * FROM checkin 
+        WHERE user_id = #{userId} 
+        ORDER BY checkin_time DESC 
+        LIMIT #{limit}
+    </select>
+
+    <update id="updateStatus">
+        UPDATE checkin SET status = #{status}, partner_id = #{partnerId},
+        review_comment = #{reviewComment}, review_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectPendingByGoalId" resultType="Checkin">
+        SELECT c.*, u.nickname as reviewerNickname, u.avatar as reviewerAvatar
+        FROM checkin c
+        LEFT JOIN user u ON c.partner_id = u.id
+        WHERE c.goal_id = #{goalId} AND c.status = 'pending'
+        ORDER BY c.checkin_time DESC
+    </select>
+
+    <select id="selectPendingForReview" resultType="Checkin">
+        SELECT DISTINCT c.*, g.name as goalName, u.nickname as userNickname, u.avatar as userAvatar
+        FROM checkin c
+        JOIN partner p ON p.status = 'accepted'
+           AND (p.user_id = #{userId} OR p.partner_id = #{userId})
+           AND c.user_id != #{userId}
+        JOIN goal cg ON cg.id = c.goal_id
+        LEFT JOIN goal pg ON (pg.user_id = p.user_id OR pg.user_id = p.partner_id)
+           AND pg.status = 'active'
+           AND (
+               (p.goal_id IS NOT NULL AND p.goal_id = c.goal_id)
+               OR (p.goal_id IS NULL AND pg.type = cg.type)
+           )
+        JOIN goal g ON g.id = c.goal_id
+        JOIN user u ON u.id = c.user_id
+        WHERE c.status = 'pending'
+          AND (p.goal_id IS NOT NULL OR pg.id IS NOT NULL)
+        ORDER BY c.checkin_time DESC
+    </select>
+
+    <select id="selectEarliestDate" resultType="String">
+        SELECT MIN(date) FROM checkin WHERE user_id = #{userId}
+    </select>
+</mapper>
