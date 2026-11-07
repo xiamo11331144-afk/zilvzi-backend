@@ -1,5 +1,8 @@
 <!--pages/message/message.wxml-->
 <view class="page-message">
+  <view class="badge-feedback" wx:if="{{badgeError}}" bindtap="retryBadges">未读数更新失败，点击重试</view>
+  <view class="badge-feedback" wx:if="{{loadError}}" bindtap="retryLoad">{{loadError}}，点击重试</view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
   <!-- 对话列表模式 -->
   <view class="conversation-list" wx:if="{{viewMode === 'list'}}">
     <view class="conv-item" wx:for="{{conversations}}" wx:key="partnerId"
@@ -19,9 +22,10 @@
         </view>
       </view>
     </view>
-    <view class="empty-state" wx:if="{{!loading && conversations.length === 0}}">
+    <view class="empty-state" wx:if="{{!loading && !loadError && conversations.length === 0}}">
       <text>暂无私信，去搭子页面发起聊天吧</text>
     </view>
+    <view class="loading" wx:if="{{!loading && !loadError && conversationsHasMore}}" bindtap="loadMoreConversations">加载更多会话</view>
   </view>
 
   <!-- 聊天模式 -->
@@ -34,7 +38,7 @@
     <scroll-view scroll-y class="chat-messages" id="msg-list"
                  scroll-into-view="{{scrollToView}}"
                  scroll-with-animation>
-      <view id="msg-bottom"></view>
+      <view class="loading" wx:if="{{!loading && !loadError && messagesHasMore}}" bindtap="loadOlderMessages">查看更早消息</view>
       <view class="chat-item {{item.isMine ? 'me' : 'partner'}}"
             wx:for="{{messages}}" wx:key="id">
         <image class="chat-avatar"
@@ -69,9 +73,10 @@
           <text class="msg-time">{{item.createTime}}</text>
         </view>
       </view>
-      <view class="empty-state" wx:if="{{!loading && messages.length === 0}}">
+      <view class="empty-state" wx:if="{{!loading && !loadError && messages.length === 0}}">
         <text>暂无消息，发送第一条吧~</text>
       </view>
+      <view id="msg-bottom"></view>
     </scroll-view>
 
     <view class="chat-input-bar">

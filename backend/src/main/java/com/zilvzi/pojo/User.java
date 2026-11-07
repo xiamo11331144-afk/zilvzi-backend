@@ -23,6 +23,7 @@ public class User {
     private Integer level;
     private Integer experience;
     private Integer role; // 0-普通用户 1-管理员
+    private Integer mentorEnabled; // 是否开启认证引领者匹配: 0-否 1-是
     private String openid; // 微信openid
     private String province; // 省份（用于搭子匹配地域筛选）
     private String city; // 城市（用于搭子匹配地域筛选）

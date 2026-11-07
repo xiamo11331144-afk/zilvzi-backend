@@ -1,8 +1,11 @@
 const app = getApp()
 const request = require('../../utils/request')
+const badges = require('../../utils/badges')
 
 Page({
   data: {
+    badgeCounts: badges.emptyCounts(),
+    badgeError: '',
     hotTags: ['全部', '考研', '健身', '早起', '阅读', '学习', '减脂', '冥想'],
     selectedTag: '全部',
     circles: [],
@@ -23,67 +26,24 @@ Page({
     this.loadMyCircles()
   },
 
+  onHide() { badges.unbind(this) },
+  onUnload() { badges.unbind(this) },
+
   onShow() {
+    badges.bind(this)
     if (app.globalData.isLoggedIn) {
       this.loadMyCircles()
-      this.loadUnreadCount()
-      this.loadAllBadges()
     }
   },
 
-  async loadUnreadCount() {
-    try {
-      const res = await request.get('/api/notification/unread/count/comment')
-      if (res.code === 200 && res.data !== undefined) {
-        if (res.data > 0) {
-          wx.setTabBarBadge({ index: 2, text: String(res.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 2 })
-        }
-      }
-    } catch (err) {}
-  },
+  retryBadges() { return badges.refresh(true) },
 
-  async markCircleRead() {
-    try {
-      await request.put('/api/notification/read/type/comment')
-      wx.removeTabBarBadge({ index: 2 })
-    } catch (err) {}
-  },
-
-  // 加载所有Tab角标
-  async loadAllBadges() {
-    try {
-      const notiRes = await request.get('/api/notification/unread/count')
-      if (notiRes.code === 200) {
-        if (notiRes.data > 0) {
-          wx.setTabBarBadge({ index: 0, text: String(notiRes.data > 99 ? '99+' : notiRes.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 0 })
-        }
-      }
-    } catch (err) {}
-    try {
-      const partnerRes = await request.get('/api/partner/requests')
-      if (partnerRes.code === 200 && partnerRes.data) {
-        const pendingCount = partnerRes.data.filter(r => r.status === 'pending').length
-        if (pendingCount > 0) {
-          wx.setTabBarBadge({ index: 1, text: String(pendingCount) })
-        } else {
-          wx.removeTabBarBadge({ index: 1 })
-        }
-      }
-    } catch (err) {}
-    try {
-      const msgRes = await request.get('/api/notification/unread/count/private_message')
-      if (msgRes.code === 200) {
-        if (msgRes.data > 0) {
-          wx.setTabBarBadge({ index: 3, text: String(msgRes.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 3 })
-        }
-      }
-    } catch (err) {}
+  openInteractions() {
+    if (!app.globalData.isLoggedIn) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      return
+    }
+    wx.navigateTo({ url: '/pages/notification/notification?category=circle' })
   },
 
   async loadCircles() {

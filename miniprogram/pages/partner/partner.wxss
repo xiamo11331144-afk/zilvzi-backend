@@ -62,6 +62,15 @@
 .match-mode-btn{flex:1;text-align:center;padding:20rpx 0;font-size:26rpx;color:#666;transition:all .2s}
 .match-mode-btn.active{background:#4A90D9;color:#fff;font-weight:600}
 
+.section-feedback{padding:16rpx;color:#737B86;font-size:24rpx;line-height:1.5}
+.section-feedback.error{color:#B43B3B}
+.request-mode{display:inline-block;width:fit-content;margin-top:6rpx;padding:4rpx 10rpx;border-radius:8rpx;font-size:20rpx;line-height:1.4}
+.lead-mode{background:#FFF1B8;color:#875A00}
+.mutual-mode{background:#E8F2FF;color:#326D9E}
+.legacy-mode{background:#F0F0F0;color:#777}
+.mentor-unknown{display:block;margin-top:5rpx;color:#A15D24;font-size:21rpx}
+.mentor-badge{display:inline-block;margin-left:10rpx;padding:4rpx 10rpx;background:#FFF1B8;color:#9C6500;border-radius:12rpx;font-size:20rpx;vertical-align:middle}
+
 /* 禁用状态按钮 */
 .btn-outline-sm.disabled{border-color:#ddd;color:#ccc;background:#f5f5f5}
 .btn-primary-sm.disabled{background:#ccc;color:#fff}

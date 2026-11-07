@@ -24,6 +24,8 @@ const handleUnauthorized = () => {
   app.globalData.isLoggedIn = false
   app.globalData.token = null
   app.globalData.userInfo = null
+  app.globalData.userId = null
+  require('./badges').reset()
 
   const pages = getCurrentPages()
   const currentPage = pages[pages.length - 1]

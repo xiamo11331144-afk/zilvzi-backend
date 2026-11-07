@@ -1,5 +1,6 @@
 const app = getApp()
 const request = require('../../utils/request')
+const badges = require('../../utils/badges')
 const { formatDate, getWeekDay } = require('../../utils/util')
 
 // 标准化目标类型为统一中文
@@ -18,6 +19,8 @@ function normalizeGoalType(type) {
 
 Page({
   data: {
+    badgeCounts: badges.emptyCounts(),
+    badgeError: '',
     isLoggedIn: false,
     userInfo: {},
     todayDate: '',
@@ -28,7 +31,6 @@ Page({
     uncheckedCount: 0,
     weekTrend: [],
     plans: [], // 计划列表
-    unreadCount: 0, // 未读通知数
     showCreateModal: false,
     showTaskModal: false,
     showProofModal: false,
@@ -53,16 +55,18 @@ Page({
     this.initData()
   },
 
+  onHide() { badges.unbind(this) },
+  onUnload() { badges.unbind(this) },
+
   onShow() {
+    badges.bind(this)
     this.checkLoginStatus()
     if (this.data.isLoggedIn) {
       this.loadUserInfo()
       this.loadGoals()
       this.loadWeekTrend()
       this.loadPlans()
-      this.loadUnreadCount()
       this.loadStreakDays()
-      this.loadAllBadges()
       this.checkStreakBreak()
       this.loadPartners()
     }
@@ -253,57 +257,7 @@ Page({
     }
   },
 
-  // 加载未读通知数量
-  async loadUnreadCount() {
-    try {
-      const res = await request.get('/api/notification/unread/count')
-      if (res.code === 200 && res.data !== undefined) {
-        this.setData({ unreadCount: res.data })
-        // 设置首页TabBar角标
-        if (res.data > 0) {
-          wx.setTabBarBadge({ index: 0, text: String(res.data > 99 ? '99+' : res.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 0 })
-        }
-      }
-    } catch (err) {
-      console.log('加载未读通知失败', err)
-    }
-  },
-
-  // 加载所有Tab角标
-  async loadAllBadges() {
-    try {
-      // 搭子Tab角标：待处理申请数
-      const partnerRes = await request.get('/api/partner/requests')
-      if (partnerRes.code === 200 && partnerRes.data) {
-        const pendingCount = partnerRes.data.filter(r => r.status === 'pending').length
-        if (pendingCount > 0) {
-          wx.setTabBarBadge({ index: 1, text: String(pendingCount) })
-        } else {
-          wx.removeTabBarBadge({ index: 1 })
-        }
-      }
-    } catch (err) {}
-    try {
-      // 圈子Tab角标：评论未读数
-      const circleRes = await request.get('/api/notification/unread/count/comment')
-      if (circleRes.code === 200 && circleRes.data > 0) {
-        wx.setTabBarBadge({ index: 2, text: String(circleRes.data) })
-      } else {
-        wx.removeTabBarBadge({ index: 2 })
-      }
-    } catch (err) {}
-    try {
-      // 我的Tab角标：私信未读数
-      const msgRes = await request.get('/api/notification/unread/count/private_message')
-      if (msgRes.code === 200 && msgRes.data > 0) {
-        wx.setTabBarBadge({ index: 3, text: String(msgRes.data) })
-      } else {
-        wx.removeTabBarBadge({ index: 3 })
-      }
-    } catch (err) {}
-  },
+  retryBadges() { return badges.refresh(true) },
 
   // 断卡检测（进入小程序时执行，每天只弹窗一次，但后端补卡逻辑始终执行）
   async checkStreakBreak() {
@@ -317,6 +271,7 @@ Page({
         console.log('[StreakBreak] hasStreakBreak:', hasBreak)
 
         if (hasBreak) {
+          badges.refresh(true)
           // 检查今天是否已提示过，避免反复弹窗
           const today = formatDate(new Date(), 'YYYY-MM-DD')
           const lastDate = wx.getStorageSync('lastStreakBreakNotifyDate')

@@ -33,6 +33,52 @@
         LIMIT #{offset}, #{limit}
     </select>
 
+    <sql id="categoryPredicate">
+        <choose>
+            <when test="category == 'notice'">
+                AND n.type NOT IN ('private_message', 'comment', 'like', 'topic_reply', 'partner_apply')
+            </when>
+            <when test="category == 'circle'">
+                AND n.type IN ('comment', 'like', 'topic_reply')
+            </when>
+        </choose>
+    </sql>
+
+    <select id="selectByUserIdAndCategory" resultMap="notificationMap">
+        SELECT n.*, u.nickname as from_nickname, u.avatar as from_avatar
+        FROM notification n
+        LEFT JOIN user u ON n.from_user_id = u.id
+        WHERE n.user_id = #{userId}
+        <include refid="categoryPredicate"/>
+        ORDER BY n.create_time DESC, n.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="selectUnreadBadgeCounts" resultType="java.util.HashMap">
+        SELECT
+            COALESCE(SUM(CASE WHEN type NOT IN ('private_message', 'comment', 'like', 'topic_reply', 'partner_apply') THEN 1 ELSE 0 END), 0) AS notificationUnread,
+            COALESCE(SUM(CASE WHEN type IN ('comment', 'like', 'topic_reply') THEN 1 ELSE 0 END), 0) AS circleUnread
+        FROM notification WHERE user_id = #{userId} AND is_read = 0
+    </select>
+
+    <select id="countUnreadByCategory" resultType="Integer">
+        SELECT COUNT(*) FROM notification n
+        WHERE n.user_id = #{userId} AND n.is_read = 0
+        <include refid="categoryPredicate"/>
+    </select>
+
+    <update id="markAllAsReadByCategory">
+        UPDATE notification n SET is_read = 1
+        WHERE n.user_id = #{userId} AND n.is_read = 0
+        <include refid="categoryPredicate"/>
+    </update>
+
+    <delete id="deleteByCategory">
+        DELETE n FROM notification n
+        WHERE n.user_id = #{userId}
+        <include refid="categoryPredicate"/>
+    </delete>
+
     <select id="countUnread" resultType="Integer">
         SELECT COUNT(*) FROM notification WHERE user_id = #{userId} AND is_read = 0
     </select>

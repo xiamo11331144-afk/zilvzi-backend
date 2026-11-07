@@ -15,7 +15,8 @@
     "pages/stats/stats",
     "pages/message/message",
     "pages/topic-detail/topic-detail",
-    "pages/goal/goal"
+    "pages/goal/goal",
+    "pages/vip/vip"
   ],
   "window": {
     "backgroundTextStyle": "light",

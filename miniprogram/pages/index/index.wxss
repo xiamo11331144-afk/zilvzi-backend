@@ -120,6 +120,13 @@
   box-shadow: 0 8rpx 32rpx rgba(74, 144, 217, 0.12);
 }
 
+/* 首页反馈随卡片正常排版，避免卡片向上偏移时遮挡提示。 */
+.home-badge-feedback {
+  margin-bottom: 24rpx;
+  border-radius: 12rpx;
+  line-height: 1.6;
+}
+
 .section-title {
   font-size: 34rpx;
   font-weight: 700;

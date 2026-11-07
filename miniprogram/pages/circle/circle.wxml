@@ -1,5 +1,10 @@
 <!--pages/circle/circle.wxml-->
 <view class="page-circle">
+  <view class="unread-entry" bindtap="openInteractions">
+    <view><text class="unread-entry-title">圈子互动</text><text class="unread-entry-desc">评论、点赞和话题回复</text></view>
+    <view class="unread-entry-right"><text class="unread-badge" wx:if="{{badgeCounts.circleUnread > 0}}">{{badgeCounts.circleUnread > 99 ? '99+' : badgeCounts.circleUnread}}</text><text>›</text></view>
+  </view>
+  <view class="badge-feedback" wx:if="{{badgeError}}" bindtap="retryBadges">互动未读数更新失败，点击重试</view>
   <!-- 顶部搜索 -->
   <view class="search-bar">
     <view class="search-input">

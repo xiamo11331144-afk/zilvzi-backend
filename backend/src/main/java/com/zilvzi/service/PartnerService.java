@@ -22,7 +22,7 @@ public interface PartnerService {
     /**
      * 发送搭子申请
      */
-    void sendRequest(Long userId, Long partnerId, Long goalId);
+    void sendRequest(Long userId, Long partnerId, Long goalId, String matchMode);
 
     /**
      * 获取收到的申请
@@ -32,12 +32,12 @@ public interface PartnerService {
     /**
      * 同意申请
      */
-    void acceptRequest(Long requestId);
+    void acceptRequest(Long userId, Long requestId);
 
     /**
      * 拒绝申请
      */
-    void rejectRequest(Long requestId);
+    void rejectRequest(Long userId, Long requestId);
 
     /**
      * 提醒搭子打卡

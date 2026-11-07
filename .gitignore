@@ -1,34 +1,49 @@
-# Secrets
-backend/src/main/resources/application.yml
+# Build output and dependencies
+**/target/
+**/node_modules/
+.verification/
+**/.verification/
+**/__pycache__/
+*.py[cod]
+*.class
+*.jar
+*.war
+
+# IDE, local indexing and developer settings
+**/.idea/
+**/.vscode/
+**/*.iml
+**/.codegraph/
+.opencode/
+.agents/tmp-db-tools/
+.agents/mentor_db_helper.py
+.agents/apply_mentor_rules_migration.py
 miniprogram/project.private.config.json
 
-# IDE
-.idea/
-.codegraph/
-.opencode/
-backend/.idea/
-backend/.codegraph/
-backend/.vscode/
-*.iml
-
-# Build output
-backend/target/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
+# Local configuration, credentials, uploads and logs
+.env
+.env.*
+!.env.example
+**/application-local.yml
+**/application-local.yaml
+**/application-*.local.yml
+**/application-*.local.yaml
+*.pem
+*.key
+*.p12
+*.pfx
+**/uploads/
+**/logs/
 *.log
 
-# Python temp scripts (docs generation)
-extract_docx.py
-generate_doc.py
-generate_flow.py
-generate_log.py
-verify_log.py
+# Operating-system and editor temporary files
+.DS_Store
+Thumbs.db
+Desktop.ini
+~$*
+*.tmp
+*.bak
 
-# Generated docs (not source code)
-docs/
-flow_sections/
-*.docx
+# Local archives and publication preparation
+本地归档_*/
+上传准备_*/

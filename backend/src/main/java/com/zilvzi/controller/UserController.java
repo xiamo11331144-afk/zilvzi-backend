@@ -5,6 +5,7 @@ import com.zilvzi.pojo.User;
 import com.zilvzi.pojo.Goal;
 import com.zilvzi.pojo.Partner;
 import com.zilvzi.service.UserService;
+import com.zilvzi.service.MentorMatchingService;
 import com.zilvzi.mapper.GoalMapper;
 import com.zilvzi.mapper.CheckinMapper;
 import com.zilvzi.mapper.PartnerMapper;
@@ -35,6 +36,9 @@ public class UserController {
 
     @Autowired
     private PartnerMapper partnerMapper;
+
+    @Autowired
+    private MentorMatchingService mentorMatchingService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -165,6 +169,30 @@ public class UserController {
         }
     }
 
+    @GetMapping("/mentor/status")
+    public Result<?> getMentorStatus(@RequestAttribute("userId") Long userId) {
+        try {
+            return Result.success(userService.getMentorStatus(userId));
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PutMapping("/mentor")
+    public Result<?> setMentorEnabled(@RequestAttribute("userId") Long userId,
+                                      @RequestBody Map<String, Object> params) {
+        try {
+            Object value = params.get("enabled");
+            if (value == null) return Result.error("缺少enabled参数");
+            if (!(value instanceof Boolean)) return Result.error("enabled必须为布尔值true或false");
+            boolean enabled = (Boolean) value;
+            userService.setMentorEnabled(userId, enabled);
+            return Result.success("引领者匹配设置已更新", userService.getMentorStatus(userId));
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
     /**
      * 获取指定用户信息（脱敏）
      */
@@ -212,11 +240,6 @@ public class UserController {
             if (user == null) {
                 return Result.error("用户不存在");
             }
-            System.out.println("[UserDetail] userId=" + id
-                + " province=" + user.getProvince()
-                + " city=" + user.getCity()
-                + " district=" + user.getDistrict()
-                + " nickname=" + user.getNickname());
             // 脱敏
             user.setPhone(null);
             user.setEmail(null);
@@ -237,15 +260,10 @@ public class UserController {
                 goals.add(gm);
             }
 
-            // 打卡统计
+            // 详情与匹配、资格接口统一采用最近30天有效打卡率。
+            Map<String, Object> mentorStatus = mentorMatchingService.getStatus(id);
             Integer totalDays = checkinMapper.countTotalCheckins(id);
-            String earliestDate = checkinMapper.selectEarliestDate(id);
-            double checkinRate = 0;
-            if (earliestDate != null && totalDays != null && totalDays > 0) {
-                long daysBetween = java.time.LocalDate.parse(earliestDate)
-                        .until(java.time.LocalDate.now()).getDays() + 1;
-                checkinRate = Math.round(totalDays * 100.0 / Math.max(daysBetween, 1));
-            }
+            String leadReason = mentorMatchingService.unavailableReason(currentUserId, id, null);
 
             // 查询当前用户与该用户的关系状态
             String relationStatus = "none";
@@ -260,7 +278,17 @@ public class UserController {
             result.put("user", user);
             result.put("goals", goals);
             result.put("totalDays", totalDays != null ? totalDays : 0);
-            result.put("checkinRate", checkinRate);
+            result.put("checkinRate", mentorStatus.get("checkinRate"));
+            result.put("approvedDays", mentorStatus.get("approvedDays"));
+            result.put("streak", mentorStatus.get("streak"));
+            result.put("mentorStatus", mentorStatus);
+            if (relation != null && ("pending".equals(relation.getStatus())
+                    || "accepted".equals(relation.getStatus()) || "blocked".equals(relation.getStatus()))) {
+                leadReason = "blocked".equals(relation.getStatus()) ? "存在拉黑关系，无法申请" : "已存在待处理申请或搭子关系";
+            }
+            result.put("leadAvailable", leadReason == null);
+            result.put("leadUnavailableReason", leadReason);
+            result.put("relationMatchMode", relation == null ? "mutual" : relation.getMatchMode());
             result.put("relationStatus", relationStatus);
 
             return Result.success(result);

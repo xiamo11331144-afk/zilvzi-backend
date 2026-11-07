@@ -12,7 +12,7 @@
     <view class="header-right">
       <view class="notification-btn" bindtap="goToPage" data-url="/pages/notification/notification" wx:if="{{isLoggedIn}}">
         <text class="notification-icon">🔔</text>
-        <view class="notification-badge" wx:if="{{unreadCount > 0}}">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
+        <view class="notification-badge" wx:if="{{badgeCounts.notificationUnread > 0}}">{{badgeCounts.notificationUnread > 99 ? '99+' : badgeCounts.notificationUnread}}</view>
       </view>
       <view class="checkin-summary" wx:if="{{isLoggedIn}}">
         <text class="count">{{checkinDays}}</text>
@@ -23,6 +23,7 @@
 
   <!-- 今日打卡状态 -->
   <view class="today-card card" wx:if="{{isLoggedIn}}">
+    <view class="badge-feedback home-badge-feedback" wx:if="{{badgeError}}" bindtap="retryBadges">通知未读数更新失败，点击重试</view>
     <view class="today-header flex-between">
       <text class="section-title">今日任务</text>
       <text class="checkin-status {{allChecked ? 'done' : ''}}">{{allChecked ? '全部完成' : '待打卡 ' + uncheckedCount + ' 项'}}</text>

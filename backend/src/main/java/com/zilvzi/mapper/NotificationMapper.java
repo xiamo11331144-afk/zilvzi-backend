@@ -19,6 +19,17 @@ public interface NotificationMapper {
      */
     List<Notification> selectByUserId(@Param("userId") Long userId, @Param("offset") Integer offset, @Param("limit") Integer limit);
 
+    List<Notification> selectByUserIdAndCategory(@Param("userId") Long userId, @Param("category") String category,
+                                                  @Param("offset") Integer offset, @Param("limit") Integer limit);
+
+    java.util.Map<String, Object> selectUnreadBadgeCounts(@Param("userId") Long userId);
+
+    Integer countUnreadByCategory(@Param("userId") Long userId, @Param("category") String category);
+
+    int markAllAsReadByCategory(@Param("userId") Long userId, @Param("category") String category);
+
+    int deleteByCategory(@Param("userId") Long userId, @Param("category") String category);
+
     /**
      * 统计未读数量
      */

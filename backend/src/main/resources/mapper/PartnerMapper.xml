@@ -8,6 +8,10 @@
         SELECT * FROM partner WHERE (user_id = #{userId} OR partner_id = #{userId}) AND status = 'accepted'
     </select>
 
+    <select id="countPendingReceivedRequests" resultType="int">
+        SELECT COUNT(*) FROM partner WHERE partner_id = #{partnerId} AND status = 'pending'
+    </select>
+
     <select id="selectByPartnerId" resultType="Partner">
         SELECT * FROM partner WHERE partner_id = #{partnerId}
     </select>
@@ -16,6 +20,7 @@
         SELECT * FROM partner 
         WHERE (user_id = #{userId} AND partner_id = #{partnerId})
            OR (user_id = #{partnerId} AND partner_id = #{userId})
+        ORDER BY FIELD(status, 'blocked', 'accepted', 'pending', 'rejected'), id DESC
         LIMIT 1
     </select>
 
@@ -25,13 +30,14 @@
            OR (user_id = #{partnerId} AND partner_id = #{userId})
     </select>
 
-    <select id="selectById" resultType="Partner">
+    <!-- 事务中取用户锁前后会再次读取申请；必须清理一级缓存，不能复用锁前状态。 -->
+    <select id="selectById" resultType="Partner" flushCache="true" useCache="false">
         SELECT * FROM partner WHERE id = #{id}
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO partner (user_id, partner_id, goal_id, status, create_time)
-        VALUES (#{userId}, #{partnerId}, #{goalId}, #{status}, NOW())
+        INSERT INTO partner (user_id, partner_id, goal_id, match_mode, status, create_time)
+        VALUES (#{userId}, #{partnerId}, #{goalId}, COALESCE(#{matchMode}, 'mutual'), #{status}, NOW())
     </insert>
 
     <update id="updateStatus">
@@ -57,4 +63,23 @@
     <select id="selectBlockedByUserId" resultType="Partner">
         SELECT * FROM partner WHERE user_id = #{userId} AND status = 'blocked'
     </select>
+    <update id="resetRequest">
+        UPDATE partner SET user_id = #{userId}, partner_id = #{partnerId}, goal_id = #{goalId},
+            match_mode = #{matchMode}, status = 'pending', prev_status = NULL, create_time = NOW()
+        WHERE id = #{id} AND status = 'rejected'
+    </update>
+
+    <update id="updatePendingStatus">
+        UPDATE partner SET status = #{status} WHERE id = #{id} AND status = 'pending'
+    </update>
+
+    <select id="selectMentorCapacity" resultType="java.util.HashMap">
+        SELECT COUNT(*) AS occupiedSlots,
+               COALESCE(SUM(status = 'pending'), 0) AS pendingCount,
+               COALESCE(SUM(status = 'accepted'), 0) AS acceptedCount
+        FROM partner WHERE partner_id = #{mentorId} AND match_mode = 'lead'
+          AND status IN ('pending', 'accepted')
+        <if test="excludeRequestId != null">AND id != #{excludeRequestId}</if>
+    </select>
+
 </mapper>

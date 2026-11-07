@@ -90,6 +90,10 @@ public interface UserMapper {
      */
     int updateExperience(@Param("id") Long id, @Param("level") Integer level, @Param("experience") Integer experience);
 
+    int updateMentorEnabled(@Param("id") Long id, @Param("enabled") Integer enabled);
+
+    Map<String, Object> selectMentorStats(@Param("userId") Long userId);
+
     /**
      * 排行榜查询（内联 streak 计算，避免 N+1 查询）
      */
@@ -98,5 +102,10 @@ public interface UserMapper {
     /**
      * 搭子匹配候选用户：按目标类型 + 可选省份筛选，联查打卡率
      */
-    List<Map> selectMatchCandidates(@Param("excludeUserId") Long excludeUserId, @Param("goalType") String goalType, @Param("province") String province);
+    User selectByIdForUpdate(@Param("id") Long id);
+
+    List<Map<String, Object>> selectMatchCandidates(@Param("excludeUserId") Long excludeUserId,
+            @Param("goalTypes") List<String> goalTypes, @Param("province") String province,
+            @Param("keyword") String keyword, @Param("requireMentor") Integer requireMentor,
+            @Param("requesterRate") double requesterRate);
 }

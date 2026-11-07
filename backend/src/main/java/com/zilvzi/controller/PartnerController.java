@@ -2,6 +2,7 @@ package com.zilvzi.controller;
 
 import com.zilvzi.pojo.Partner;
 import com.zilvzi.pojo.Result;
+import com.zilvzi.exception.BusinessException;
 import com.zilvzi.service.PartnerService;
 import com.zilvzi.mapper.PartnerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +63,11 @@ public class PartnerController {
             Long partnerId = Long.valueOf(params.get("partnerId").toString());
             Long goalId = params.get("goalId") != null ? Long.valueOf(params.get("goalId").toString()) : null;
 
-            partnerService.sendRequest(userId, partnerId, goalId);
+            String matchMode = params.get("matchMode") == null ? "mutual" : params.get("matchMode").toString();
+            partnerService.sendRequest(userId, partnerId, goalId, matchMode);
             return Result.success("申请已发送");
+        } catch (BusinessException e) {
+            return Result.error(e.getCode(), e.getMessage());
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }
@@ -93,7 +97,7 @@ public class PartnerController {
             if (partner == null || !partner.getPartnerId().equals(userId)) {
                 return Result.error(403, "无权操作此申请");
             }
-            partnerService.acceptRequest(requestId);
+            partnerService.acceptRequest(userId, requestId);
             return Result.success("已同意");
         } catch (Exception e) {
             return Result.error(e.getMessage());
@@ -111,7 +115,7 @@ public class PartnerController {
             if (partner == null || !partner.getPartnerId().equals(userId)) {
                 return Result.error(403, "无权操作此申请");
             }
-            partnerService.rejectRequest(requestId);
+            partnerService.rejectRequest(userId, requestId);
             return Result.success("已拒绝");
         } catch (Exception e) {
             return Result.error(e.getMessage());

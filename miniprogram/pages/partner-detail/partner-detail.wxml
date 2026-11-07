@@ -26,8 +26,26 @@ module.exports = { format: format };
     <text>加载中...</text>
   </view>
 
-  <block wx:if="{{!loading}}">
-  <!-- 搭子头部信息 -->
+  <view wx:if="{{detailError}}" class="detail-error">
+    <text>{{detailError}}</text>
+    <text class="detail-retry" bindtap="retryDetail">重新加载</text>
+  </view>
+  <view wx:if="{{relationStatus === 'partner' && relationMatchMode === 'lead'}}" class="relation-mode lead-mode">已建立认证引领关系</view>
+  <view wx:elif="{{relationStatus === 'partner' && relationMatchMode === 'mutual'}}" class="relation-mode mutual-mode">已建立共勉关系</view>
+  <view wx:if="{{matchMode === 'lead' && isMatch}}" class="mentor-detail card">
+    <view class="mentor-detail-title">认证引领状态</view>
+    <view wx:if="{{leadDataComplete}}">
+      <text class="mentor-detail-line">近30天有效打卡 {{mentorStatus.approvedDays}} / 30 天（{{mentorStatus.checkinRate}}%，要求至少{{mentorStatus.requiredApprovedDays}}天/{{mentorStatus.requiredRate}}%）</text>
+      <text class="mentor-detail-line">连续打卡 {{mentorStatus.streak}} / {{mentorStatus.requiredDays}} 天</text>
+      <text class="mentor-detail-line">已占名额 {{mentorStatus.occupiedSlots}} / {{mentorStatus.capacity}} · 剩余 {{mentorStatus.remainingSlots}} · 待处理 {{mentorStatus.pendingCount}}</text>
+    </view>
+    <text class="mentor-detail-line" bindtap="openVip">查看会员 · 到期不影响已有申请和关系</text>
+    <text wx:if="{{leadAvailable === true}}" class="lead-ready">当前匹配条件允许申请，发起新申请仍需 VIP</text>
+    <text wx:elif="{{leadUnavailableReason}}" class="lead-unavailable">{{leadUnavailableReason}}</text>
+    <text wx:else class="lead-unavailable">引领资格状态未确认，请刷新后重试</text>
+  </view>
+
+  <block wx:if="{{!loading && !detailError}}">
   <view class="partner-header card">
     <view class="partner-profile">
       <image class="avatar-lg" src="{{partner.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
@@ -51,7 +69,9 @@ module.exports = { format: format };
     <!-- 操作按钮 - 匹配阶段 -->
     <view class="partner-actions" wx:else>
       <button class="btn-outline disabled" wx:if="{{applied}}">已申请</button>
-      <button class="btn-primary" wx:else bindtap="applyPartner">申请搭子</button>
+      <button class="btn-outline disabled" wx:elif="{{applyPending}}">发送中...</button>
+      <button class="btn-outline disabled" wx:elif="{{matchMode === 'lead' && leadAvailable !== true}}">暂不可申请</button>
+      <button class="btn-primary" wx:else bindtap="applyPartner">{{matchMode === 'lead' ? '申请引领搭子' : '申请搭子'}}</button>
       <button class="btn-outline btn-danger" bindtap="blockPartner">拉黑</button>
     </view>
   </view>

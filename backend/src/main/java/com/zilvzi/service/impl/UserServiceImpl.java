@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zilvzi.mapper.UserMapper;
 import com.zilvzi.pojo.User;
 import com.zilvzi.service.UserService;
+import com.zilvzi.service.MentorMatchingService;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import com.zilvzi.utils.JwtUtil;
 import com.zilvzi.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private MentorMatchingService mentorMatchingService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -65,6 +71,7 @@ public class UserServiceImpl implements UserService {
         user.setLevel(1);
         user.setExperience(0);
         user.setRole(0);
+        user.setMentorEnabled(0);
         user.setProvince(province);
         user.setCity(city);
         user.setDistrict(district);
@@ -171,6 +178,7 @@ public class UserServiceImpl implements UserService {
                 user.setLevel(1);
                 user.setExperience(0);
                 user.setRole(0);
+                user.setMentorEnabled(0);
                 user.setProvince(province);
                 user.setCity(city);
                 user.setDistrict(district);
@@ -219,5 +227,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateAvatar(Long id, String avatar) {
         userMapper.updateAvatar(id, avatar);
+    }
+
+    @Override
+    public java.util.Map<String, Object> getMentorStatus(Long userId) {
+        return mentorMatchingService.getStatus(userId);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    public void setMentorEnabled(Long userId, boolean enabled) {
+        if (userMapper.selectByIdForUpdate(userId) == null) throw new IllegalArgumentException("用户不存在");
+        if (enabled && !Boolean.TRUE.equals(getMentorStatus(userId).get("eligible"))) {
+            throw new IllegalArgumentException("近30天有效打卡至少24天（80%），且当前连续打卡至少7天后才能开启引领匹配");
+        }
+        userMapper.updateMentorEnabled(userId, enabled ? 1 : 0);
     }
 }

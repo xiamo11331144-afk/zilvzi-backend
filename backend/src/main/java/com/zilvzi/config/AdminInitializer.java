@@ -2,43 +2,56 @@ package com.zilvzi.config;
 
 import com.zilvzi.mapper.UserMapper;
 import com.zilvzi.pojo.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * 启动时自动创建管理员账号（如果不存在）
+ * Optionally creates the bootstrap administrator when explicitly configured.
  */
 @Component
 public class AdminInitializer implements CommandLineRunner {
+    private static final Logger log = LoggerFactory.getLogger(AdminInitializer.class);
 
     @Autowired
     private UserMapper userMapper;
 
+    @Value("${admin.bootstrap.username:admin}")
+    private String adminUsername;
+
+    @Value("${admin.bootstrap.password:}")
+    private String adminPassword;
+
     @Override
     public void run(String... args) {
-        String adminUsername = "admin";
-        String adminPassword = "admin123";
+        if (adminPassword == null || adminPassword.isBlank()) {
+            log.info("Admin bootstrap skipped: no bootstrap password is configured");
+            return;
+        }
+        if (adminUsername == null || adminUsername.isBlank()) {
+            throw new IllegalStateException("Admin bootstrap username must not be blank");
+        }
 
         User existing = userMapper.selectByUsername(adminUsername);
         if (existing == null) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             User admin = new User();
             admin.setUsername(adminUsername);
-            admin.setPassword(encoder.encode(adminPassword));
+            admin.setPassword(new BCryptPasswordEncoder().encode(adminPassword));
             admin.setNickname("管理员");
             admin.setRole(1);
             admin.setLevel(99);
             admin.setExperience(0);
             userMapper.insert(admin);
-            System.out.println("[Admin] 已自动创建管理员账号: " + adminUsername + " / " + adminPassword);
+            log.info("Bootstrap administrator created for configured username");
         } else if (existing.getRole() == null || existing.getRole() != 1) {
-            existing.setRole(1);
-            userMapper.updateAdmin(existing);
-            System.out.println("[Admin] 已将用户 " + adminUsername + " 提升为管理员");
+            throw new IllegalStateException(
+                    "Admin bootstrap username already belongs to a non-administrator; no role changes were made");
         } else {
-            System.out.println("[Admin] 管理员账号已存在: " + adminUsername);
+            log.info("Bootstrap administrator already exists");
         }
     }
 }

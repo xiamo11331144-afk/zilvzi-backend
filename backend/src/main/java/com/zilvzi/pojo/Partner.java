@@ -14,6 +14,7 @@ public class Partner {
     private Long userId;
     private Long partnerId;
     private Long goalId;
+    private String matchMode = "mutual"; // mutual: 共勉，lead: 接收方引领申请方
     private String status; // pending, accepted, rejected, blocked
     private String prevStatus; // 拉黑前的状态
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -10,6 +10,8 @@ import com.zilvzi.service.NotificationService;
 import com.zilvzi.utils.SensitiveWordFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -78,8 +80,9 @@ public class MessageController {
                                      @RequestParam(defaultValue = "1") Integer page,
                                      @RequestParam(defaultValue = "20") Integer size) {
         try {
-            Integer offset = (page - 1) * size;
-            List<Map> conversations = messageMapper.selectConversations(userId, offset, size);
+            int safeSize = safeSize(size, 20);
+            Integer offset = safeOffset(page, safeSize);
+            List<Map> conversations = messageMapper.selectConversations(userId, offset, safeSize);
             return Result.success(conversations);
         } catch (Exception e) {
             return Result.error(e.getMessage());
@@ -94,8 +97,9 @@ public class MessageController {
                                      @RequestParam(defaultValue = "1") Integer page,
                                      @RequestParam(defaultValue = "20") Integer size) {
         try {
-            Integer offset = (page - 1) * size;
-            List<Message> messages = messageMapper.selectByUserId(userId, offset, size);
+            int safeSize = safeSize(size, 20);
+            Integer offset = safeOffset(page, safeSize);
+            List<Message> messages = messageMapper.selectByUserId(userId, offset, safeSize);
             return Result.success(messages);
         } catch (Exception e) {
             return Result.error(e.getMessage());
@@ -108,11 +112,21 @@ public class MessageController {
                                      @RequestParam(defaultValue = "1") Integer page,
                                      @RequestParam(defaultValue = "50") Integer size) {
         try {
-            Integer offset = (page - 1) * size;
-            List<Message> messages = messageMapper.selectConversation(userId, partnerId, offset, size);
+            int safeSize = safeSize(size, 50);
+            Integer offset = safeOffset(page, safeSize);
+            List<Message> messages = new ArrayList<>(messageMapper.selectConversation(userId, partnerId, offset, safeSize));
 
-            // 自动标记该对话的所有未读消息为已读
-            messageMapper.markConversationAsRead(userId, partnerId);
+            List<Long> returnedUnreadInboundIds = new ArrayList<>();
+            for (Message message : messages) {
+                if (userId.equals(message.getToUserId())
+                        && (message.getIsRead() == null || message.getIsRead() == 0)) {
+                    returnedUnreadInboundIds.add(message.getId());
+                }
+            }
+            if (!returnedUnreadInboundIds.isEmpty()) {
+                messageMapper.markMessagesAsRead(userId, partnerId, returnedUnreadInboundIds);
+            }
+            Collections.reverse(messages);
 
             return Result.success(messages);
         } catch (Exception e) {
@@ -147,13 +161,12 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/unread/count")
-    public Result<?> getUnreadCount(@RequestAttribute("userId") Long userId) {
-        try {
-            Integer count = messageMapper.countUnread(userId);
-            return Result.success(count != null ? count : 0);
-        } catch (Exception e) {
-            return Result.error(e.getMessage());
-        }
+    private int safeSize(Integer size, int defaultSize) {
+        return size == null || size < 1 ? defaultSize : Math.min(size, 100);
+    }
+
+    private int safeOffset(Integer page, int size) {
+        long safePage = page == null || page < 1 ? 1L : page.longValue();
+        return (int) Math.min((safePage - 1L) * size, Integer.MAX_VALUE);
     }
 }

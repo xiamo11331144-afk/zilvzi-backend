@@ -5,6 +5,18 @@
   background: #F6F8FC;
 }
 
+.detail-error{padding:24rpx;margin-bottom:20rpx;background:#FFF0F0;border-radius:12rpx;color:#A33;font-size:26rpx;line-height:1.5}
+.detail-retry{display:block;margin-top:12rpx;color:#3578B8}
+.relation-mode{display:inline-block;margin:0 0 16rpx;padding:8rpx 14rpx;border-radius:8rpx;font-size:22rpx}
+.relation-mode.lead-mode{background:#FFF1B8;color:#875A00}
+.relation-mode.mutual-mode{background:#E8F2FF;color:#326D9E}
+.mentor-detail{padding:24rpx 28rpx}
+.mentor-detail-title{font-size:28rpx;font-weight:600;color:#303944;margin-bottom:12rpx}
+.mentor-detail-line{display:block;margin-top:8rpx;color:#626B76;font-size:24rpx;line-height:1.5}
+.lead-ready,.lead-unavailable{display:block;margin-top:14rpx;font-size:24rpx;line-height:1.5}
+.lead-ready{color:#287A4B}
+.lead-unavailable{color:#9B5C25}
+
 .loading-state {
   display: flex;
   justify-content: center;

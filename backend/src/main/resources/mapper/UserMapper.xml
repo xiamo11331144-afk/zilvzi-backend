@@ -25,8 +25,8 @@
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user (username, password, phone, email, nickname, avatar, bio, level, experience, role, openid, province, city, district, create_time, update_time)
-        VALUES (#{username}, #{password}, #{phone}, #{email}, #{nickname}, #{avatar}, #{bio}, #{level}, #{experience}, #{role}, #{openid}, #{province}, #{city}, #{district}, NOW(), NOW())
+        INSERT INTO user (username, password, phone, email, nickname, avatar, bio, level, experience, role, mentor_enabled, openid, province, city, district, create_time, update_time)
+        VALUES (#{username}, #{password}, #{phone}, #{email}, #{nickname}, #{avatar}, #{bio}, #{level}, #{experience}, #{role}, COALESCE(#{mentorEnabled}, 0), #{openid}, #{province}, #{city}, #{district}, NOW(), NOW())
     </insert>
 
     <update id="update">
@@ -149,30 +149,81 @@
         WHERE id = #{id}
     </update>
 
-    <!-- 搭子匹配候选用户：按目标类型 + 可选省份筛选，联查打卡率 -->
+    <update id="updateMentorEnabled">
+        UPDATE user SET mentor_enabled = #{enabled}, update_time = NOW() WHERE id = #{id}
+    </update>
+
+    <!-- MySQL 8：同一天多目标打卡只计一天，未来日期和未通过记录不计入。 -->
+    <sql id="mentorActivityCtes">
+        WITH approved_dates AS (
+            SELECT DISTINCT user_id, date FROM checkin
+            WHERE status = 'approved' AND date &lt;= CURDATE()
+        ), ranked_dates AS (
+            SELECT user_id, date,
+                   ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY date DESC) AS rn,
+                   MAX(date) OVER (PARTITION BY user_id) AS latest_date
+            FROM approved_dates
+        ), activity_stats AS (
+            SELECT user_id,
+                   SUM(CASE WHEN date &gt;= DATE_SUB(CURDATE(), INTERVAL 29 DAY) THEN 1 ELSE 0 END) AS approvedDays,
+                   ROUND(SUM(CASE WHEN date &gt;= DATE_SUB(CURDATE(), INTERVAL 29 DAY) THEN 1 ELSE 0 END) * 100.0 / 30, 1) AS checkinRate,
+                   SUM(CASE WHEN latest_date &gt;= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+                             AND DATEDIFF(latest_date, date) = rn - 1 THEN 1 ELSE 0 END) AS streak
+            FROM ranked_dates GROUP BY user_id
+        )
+    </sql>
+
+    <select id="selectMentorStats" resultType="java.util.HashMap">
+        <include refid="mentorActivityCtes"/>
+        SELECT COALESCE(a.approvedDays, 0) AS approvedDays,
+               COALESCE(a.checkinRate, 0) AS checkinRate, COALESCE(a.streak, 0) AS streak
+        FROM user u LEFT JOIN activity_stats a ON a.user_id = u.id
+        WHERE u.id = #{userId}
+    </select>
+
+    <select id="selectByIdForUpdate" resultType="User" flushCache="true" useCache="false">
+        SELECT * FROM user WHERE id = #{id} FOR UPDATE
+    </select>
+
+    <!-- 先筛资格、目标和关系，再排序限量；搜索和全部用户共用同一统计。 -->
     <select id="selectMatchCandidates" resultType="java.util.HashMap">
-        <![CDATA[
+        <include refid="mentorActivityCtes"/>
         SELECT u.id, u.nickname, u.avatar, u.level, u.province, u.city, u.district,
-               COALESCE(checkin_stats.totalCheckins, 0) as totalCheckins,
-               COALESCE(checkin_stats.totalDays, 0) as totalDays,
-               COALESCE(checkin_stats.checkinRate, 0) as checkinRate
+               u.mentor_enabled AS mentorEnabled,
+               COALESCE(a.approvedDays, 0) AS approvedDays,
+               COALESCE(a.checkinRate, 0) AS checkinRate, COALESCE(a.streak, 0) AS streak,
+               GREATEST(3 - COALESCE(slots.occupied, 0), 0) AS remainingSlots
         FROM user u
-        INNER JOIN goal g ON u.id = g.user_id AND g.status = 'active'
+        LEFT JOIN activity_stats a ON a.user_id = u.id
         LEFT JOIN (
-            SELECT c.user_id, 
-                   COUNT(*) as totalCheckins,
-                   COUNT(DISTINCT c.date) as totalDays,
-                   ROUND(COUNT(DISTINCT c.date) * 100.0 / GREATEST(DATEDIFF(CURDATE(), MIN(c.date)) + 1, 1), 1) as checkinRate
-            FROM checkin c
-            WHERE c.status = 'approved'
-            GROUP BY c.user_id
-        ) checkin_stats ON u.id = checkin_stats.user_id
+            SELECT partner_id, COUNT(*) AS occupied FROM partner
+            WHERE match_mode = 'lead' AND status IN ('pending', 'accepted') GROUP BY partner_id
+        ) slots ON slots.partner_id = u.id
         WHERE u.id != #{excludeUserId}
-          AND g.type = #{goalType}
-        ORDER BY
-            CASE WHEN u.province = #{province} THEN 0 ELSE 1 END,
-            checkinRate DESC
-        LIMIT 30
-        ]]>
+          AND NOT EXISTS (
+              SELECT 1 FROM partner p
+              WHERE ((p.user_id = #{excludeUserId} AND p.partner_id = u.id)
+                  OR (p.partner_id = #{excludeUserId} AND p.user_id = u.id))
+                AND p.status IN ('pending', 'accepted', 'blocked')
+          )
+        <if test="goalTypes != null and !goalTypes.isEmpty()">
+          AND EXISTS (SELECT 1 FROM goal g WHERE g.user_id = u.id AND g.status = 'active' AND g.type IN
+              <foreach collection="goalTypes" item="type" open="(" separator="," close=")">#{type}</foreach>
+          )
+        </if>
+        <if test="keyword != null and keyword != ''">
+          AND (u.phone = #{keyword} OR u.nickname LIKE CONCAT('%', #{keyword}, '%') OR u.username LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="requireMentor == 1">
+          AND u.mentor_enabled = 1 AND a.approvedDays &gt;= 24 AND a.streak &gt;= 7
+          AND a.checkinRate &gt; #{requesterRate} AND COALESCE(slots.occupied, 0) &lt; 3
+        </if>
+        ORDER BY CASE WHEN u.province = #{province} THEN 0 ELSE 1 END,
+                 <choose>
+                     <when test="requireMentor == 1">COALESCE(a.checkinRate, 0) DESC,</when>
+                     <otherwise>ABS(COALESCE(a.checkinRate, 0) - #{requesterRate}),</otherwise>
+                 </choose>
+                 u.id
+        LIMIT 60
     </select>
 </mapper>

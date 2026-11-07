@@ -147,6 +147,14 @@
   line-height: 1;
 }
 
+/* 分类与加载状态 */
+.category-tabs { display: flex; background: #fff; padding: 16rpx; }
+.category-tab { flex: 1; display: flex; justify-content: center; align-items: center; padding: 16rpx 0; color: #888; font-size: 28rpx; border-bottom: 4rpx solid transparent; }
+.category-tab.active { color: #4A90D9; border-bottom-color: #4A90D9; font-weight: 600; }
+.category-tip { padding: 16rpx 24rpx; color: #888; font-size: 24rpx; }
+.list-feedback { padding: 24rpx; text-align: center; color: #888; font-size: 26rpx; }
+.list-feedback.error { color: #D46B08; }
+
 /* 空状态 */
 .empty-state {
   display: flex;

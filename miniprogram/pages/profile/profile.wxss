@@ -171,6 +171,11 @@
 }
 
 /* 个人信息弹窗 */
+.mentor-setting{display:flex;align-items:center;justify-content:space-between;padding:20rpx 0;border-top:1rpx solid #f0f0f0}
+.mentor-setting-main{display:flex;flex-direction:column;gap:6rpx;min-width:0}
+.mentor-hint.error{color:#C74646}
+.mentor-retry{padding:12rpx 0;color:#3578B8;font-size:24rpx}
+
 .modal-mask {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;

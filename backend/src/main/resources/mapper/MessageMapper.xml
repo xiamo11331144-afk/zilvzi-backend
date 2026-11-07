@@ -60,7 +60,7 @@
         FROM message m LEFT JOIN user u ON m.from_user_id = u.id
         WHERE (m.from_user_id = #{userId} AND m.to_user_id = #{partnerId})
            OR (m.from_user_id = #{partnerId} AND m.to_user_id = #{userId})
-        ORDER BY m.create_time ASC LIMIT #{offset}, #{limit}
+        ORDER BY m.create_time DESC, m.id DESC LIMIT #{offset}, #{limit}
     </select>
 
     <select id="countUnread" resultType="Integer">
@@ -75,6 +75,15 @@
     <update id="markConversationAsRead">
         UPDATE message SET is_read = 1 
         WHERE to_user_id = #{userId} AND from_user_id = #{fromUserId} AND is_read = 0
+    </update>
+
+    <update id="markMessagesAsRead">
+        UPDATE message SET is_read = 1
+        WHERE to_user_id = #{userId} AND from_user_id = #{fromUserId} AND is_read = 0
+          AND id IN
+          <foreach collection="messageIds" item="messageId" open="(" separator="," close=")">
+              #{messageId}
+          </foreach>
     </update>
 
     <select id="selectById" resultMap="messageMap">

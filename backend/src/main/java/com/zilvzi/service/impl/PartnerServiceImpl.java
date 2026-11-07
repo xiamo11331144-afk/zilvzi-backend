@@ -9,6 +9,11 @@ import com.zilvzi.pojo.User;
 import com.zilvzi.service.NotificationService;
 import com.zilvzi.service.AchievementService;
 import com.zilvzi.service.PartnerService;
+import com.zilvzi.service.MentorMatchingService;
+import com.zilvzi.service.VipService;
+import com.zilvzi.exception.BusinessException;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +39,12 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Autowired
     private AchievementService achievementService;
+
+    @Autowired
+    private MentorMatchingService mentorMatchingService;
+
+    @Autowired
+    private VipService vipService;
 
     /** 将目标类型标准化为统一中文 */
     private String normalizeGoalType(String type) {
@@ -78,6 +89,7 @@ public class PartnerServiceImpl implements PartnerService {
                 map.put("avatar", partner.getAvatar());
                 map.put("goalId", p.getGoalId());
                 map.put("status", p.getStatus());
+                map.put("matchMode", p.getMatchMode());
                 List<String> goalTypes = goalsByUser.getOrDefault(partnerUserId, List.of()).stream()
                         .map(g -> normalizeGoalType(g.getType()))
                         .filter(t -> t != null && !t.isEmpty())
@@ -93,61 +105,34 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
     public List<Map<String, Object>> getMatchRecommendations(Long userId, String goalType, String keyword, String matchMode) {
-        // 获取当前用户信息
+        matchMode = MentorMatchingService.normalizeMode(matchMode);
         User currentUser = userMapper.selectById(userId);
         if (currentUser == null) return new ArrayList<>();
-
-        List<Map<String, Object>> candidates;
-
-        if (goalType != null && !goalType.isEmpty()) {
-            // 使用智能匹配候选查询：按目标类型 + 可选省份筛选，联查打卡率
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> matched = (List<Map<String, Object>>) (List<?>) userMapper.selectMatchCandidates(userId, goalType, currentUser.getProvince());
-            candidates = matched;
-        } else if (keyword != null && !keyword.trim().isEmpty()) {
-            // 关键词搜索走原有逻辑
-            List<User> users = userMapper.searchUsers(keyword.trim(), userId);
-            candidates = new ArrayList<>();
-            for (User u : users) {
-                Map<String, Object> m = new HashMap<>();
-                m.put("id", u.getId());
-                m.put("nickname", u.getNickname());
-                m.put("avatar", u.getAvatar());
-                m.put("level", u.getLevel());
-                m.put("province", u.getProvince());
-                m.put("city", u.getCity());
-                m.put("district", u.getDistrict());
-                m.put("checkinRate", 0);
-                candidates.add(m);
-            }
-        } else {
-            List<User> users = userMapper.selectAllExcept(userId);
-            candidates = new ArrayList<>();
-            for (User u : users) {
-                Map<String, Object> m = new HashMap<>();
-                m.put("id", u.getId());
-                m.put("nickname", u.getNickname());
-                m.put("avatar", u.getAvatar());
-                m.put("level", u.getLevel());
-                m.put("province", u.getProvince());
-                m.put("city", u.getCity());
-                m.put("district", u.getDistrict());
-                m.put("checkinRate", 0);
-                candidates.add(m);
-            }
+        double myCheckinRate = MentorMatchingService.number(userMapper.selectMentorStats(userId), "checkinRate");
+        List<String> goalTypes = null;
+        if (goalType != null && !goalType.isBlank()) {
+            goalTypes = switch (normalizeGoalType(goalType)) {
+                case "考试" -> List.of("exam", "考试", "考试备考");
+                case "学习" -> List.of("study", "学习", "学习提升");
+                case "运动" -> List.of("fitness", "运动", "健身", "健身运动", "锻炼", "体育");
+                case "阅读" -> List.of("reading", "阅读", "阅读计划");
+                case "技能" -> List.of("skill", "技能", "技能学习");
+                case "习惯" -> List.of("habit", "习惯", "习惯养成");
+                default -> List.of(goalType);
+            };
         }
-
-        // 排除已拉黑的用户
-        List<Partner> blocked = partnerMapper.selectBlockedByUserId(userId);
-        Set<Long> blockedIds = new HashSet<>();
-        for (Partner b : blocked) blockedIds.add(b.getPartnerId());
-
+        List<Map<String, Object>> candidates = userMapper.selectMatchCandidates(userId, goalTypes,
+                currentUser.getProvince(), keyword == null ? null : keyword.trim(),
+                "lead".equals(matchMode) ? 1 : 0, myCheckinRate);
         List<Map<String, Object>> result = new ArrayList<>();
-        double myCheckinRate = currentUser.getLevel() > 0 ? currentUser.getLevel() * 10.0 : 30.0; // 粗略估计
 
         for (Map<String, Object> c : candidates) {
+            Object mentorValue = c.get("mentorEnabled");
+            boolean mentorEnabled = (mentorValue instanceof Number
+                    && ((Number) mentorValue).intValue() == 1)
+                    || Boolean.TRUE.equals(mentorValue);
+            if ("lead".equals(matchMode) && !mentorEnabled) continue;
             Long candidateId = ((Number) c.get("id")).longValue();
-            if (blockedIds.contains(candidateId)) continue;
 
             int score = 0;
 
@@ -179,15 +164,7 @@ public class PartnerServiceImpl implements PartnerService {
 
             // 4. 偏好/等级 × 10
             int level = c.get("level") != null ? ((Number) c.get("level")).intValue() : 1;
-            score += Math.max(0, 10 - Math.abs(currentUser.getLevel() - level) * 2);
-
-            // 关系状态
-            String relationStatus = "none";
-            Partner existing = partnerMapper.selectByUserAndPartner(userId, candidateId);
-            if (existing != null) {
-                if ("accepted".equals(existing.getStatus())) relationStatus = "partner";
-                else if ("pending".equals(existing.getStatus())) relationStatus = "pending";
-            }
+            score += Math.max(0, 10 - Math.abs((currentUser.getLevel() == null ? 1 : currentUser.getLevel()) - level) * 2);
 
             Map<String, Object> map = new HashMap<>();
             map.put("id", candidateId);
@@ -197,9 +174,14 @@ public class PartnerServiceImpl implements PartnerService {
             map.put("province", candProvince);
             map.put("city", candCity);
             map.put("district", c.get("district"));
-            map.put("checkinRate", Math.round(candidateRate));
+            map.put("checkinRate", candidateRate);
+            map.put("approvedDays", c.get("approvedDays"));
+            map.put("streak", c.get("streak"));
+            map.put("remainingSlots", c.get("remainingSlots"));
+            map.put("mentorEligible", MentorMatchingService.isEligible(c));
+            map.put("mentorEnabled", mentorEnabled);
             map.put("matchScore", Math.min(score, 100));
-            map.put("relationStatus", relationStatus);
+            map.put("relationStatus", "none");
             result.add(map);
         }
 
@@ -208,47 +190,40 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
-    public void sendRequest(Long userId, Long partnerId, Long goalId) {
-        // 不能给自己发申请
-        if (userId.equals(partnerId)) {
-            throw new RuntimeException("不能给自己发送搭子申请");
-        }
-
-        // 检查是否被对方拉黑
-        List<Partner> allRecords = partnerMapper.selectAllByUserAndPartner(userId, partnerId);
-        for (Partner r : allRecords) {
-            if ("blocked".equals(r.getStatus()) && r.getUserId().equals(partnerId)) {
-                throw new RuntimeException("对方已将你拉黑，无法发送申请");
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    public void sendRequest(Long userId, Long partnerId, Long goalId, String matchMode) {
+        matchMode = MentorMatchingService.normalizeMode(matchMode);
+        mentorMatchingService.lockUsers(userId, partnerId);
+        if (goalId != null) {
+            Goal goal = goalMapper.selectById(goalId);
+            if (goal == null || !userId.equals(goal.getUserId()) || !"active".equals(goal.getStatus())) {
+                throw new IllegalArgumentException("只能关联自己的进行中目标");
             }
         }
-
-        // 查找已有的申请记录
-        Partner existing = partnerMapper.selectByUserAndPartner(userId, partnerId);
-        if (existing != null && !"blocked".equals(existing.getStatus())) {
-            if ("rejected".equals(existing.getStatus())) {
-                partnerMapper.updateStatus(existing.getId(), "pending");
-                notificationService.sendNotification(
-                    partnerId, userId, "partner_apply",
-                    "搭子申请", "想成为你的搭子",
-                    "partner", existing.getId()
-                );
-                return;
+        List<Partner> records = partnerMapper.selectAllByUserAndPartner(userId, partnerId);
+        for (Partner record : records) {
+            if ("blocked".equals(record.getStatus())) throw new IllegalArgumentException("存在拉黑关系，无法发送申请");
+            if ("pending".equals(record.getStatus()) || "accepted".equals(record.getStatus())) {
+                throw new IllegalArgumentException("已存在待处理申请或搭子关系");
             }
-            throw new RuntimeException("已发送申请或已是搭子");
         }
-
-        Partner partner = new Partner();
+        if ("lead".equals(matchMode)) {
+            if (!vipService.isVip(userId)) throw new BusinessException(40301, "VIP_REQUIRED");
+            mentorMatchingService.validateLead(userId, partnerId, null);
+        }
+        Partner partner = records.stream().filter(r -> "rejected".equals(r.getStatus()) && userId.equals(r.getUserId()))
+                .findFirst().orElseGet(() -> records.stream().filter(r -> "rejected".equals(r.getStatus()))
+                        .findFirst().orElseGet(Partner::new));
         partner.setUserId(userId);
         partner.setPartnerId(partnerId);
         partner.setGoalId(goalId);
+        partner.setMatchMode(matchMode);
         partner.setStatus("pending");
-        partnerMapper.insert(partner);
-
-        notificationService.sendNotification(
-            partnerId, userId, "partner_apply",
-            "搭子申请", "想成为你的搭子",
-            "partner", partner.getId()
-        );
+        if (partner.getId() == null) partnerMapper.insert(partner);
+        else if (partnerMapper.resetRequest(partner) != 1) throw new IllegalStateException("申请状态已变化，请刷新重试");
+        notificationService.sendNotification(partnerId, userId, "partner_apply",
+                "lead".equals(matchMode) ? "引领申请" : "搭子申请",
+                "lead".equals(matchMode) ? "希望由你引领，一起坚持打卡" : "想成为你的搭子", "partner", partner.getId());
     }
 
     @Override
@@ -277,6 +252,7 @@ public class PartnerServiceImpl implements PartnerService {
                     map.put("avatar", user.getAvatar());
                     map.put("goalId", p.getGoalId());
                     map.put("status", p.getStatus());
+                map.put("matchMode", p.getMatchMode());
                     result.add(map);
                 }
             }
@@ -286,48 +262,47 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
-    public void acceptRequest(Long requestId) {
-        Partner partner = partnerMapper.selectById(requestId);
-        if (partner == null) {
-            throw new RuntimeException("申请不存在");
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    public void acceptRequest(Long userId, Long requestId) {
+        Partner partner = lockRequest(userId, requestId);
+        if ("lead".equals(partner.getMatchMode())) {
+            // 当前 pending 已预占一个名额；核验时排除自身，防止3/3时无法接受。
+            mentorMatchingService.validateLead(partner.getUserId(), partner.getPartnerId(), requestId);
         }
-        if (!"pending".equals(partner.getStatus())) {
-            throw new RuntimeException("该申请已被处理");
+        if (partnerMapper.updatePendingStatus(requestId, "accepted") != 1) {
+            throw new IllegalStateException("申请已被处理，请刷新");
         }
-
-        partnerMapper.updateStatus(requestId, "accepted");
-
-        // 通知申请者：搭子同意了你的申请
-        User acceptor = userMapper.selectById(partner.getPartnerId());
-        notificationService.sendNotification(
-            partner.getUserId(), partner.getPartnerId(), "partner_accept",
-            "申请已通过", acceptor.getNickname() + " 同意了你的搭子申请",
-            "partner", requestId
-        );
-
-        // 搭子关系建立，双方都检查社交勋章
+        User acceptor = userMapper.selectById(userId);
+        notificationService.sendNotification(partner.getUserId(), userId, "partner_accept",
+                "申请已通过", acceptor.getNickname() + " 同意了你的搭子申请", "partner", requestId);
         achievementService.checkSocialAchievements(partner.getUserId());
         achievementService.checkSocialAchievements(partner.getPartnerId());
     }
 
     @Override
-    public void rejectRequest(Long requestId) {
-        Partner partner = partnerMapper.selectById(requestId);
-        if (partner == null) {
-            throw new RuntimeException("申请不存在");
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    public void rejectRequest(Long userId, Long requestId) {
+        Partner partner = lockRequest(userId, requestId);
+        if (partnerMapper.updatePendingStatus(requestId, "rejected") != 1) {
+            throw new IllegalStateException("申请已被处理，请刷新");
         }
-        if (!"pending".equals(partner.getStatus())) {
-            throw new RuntimeException("该申请已被处理");
+        User rejector = userMapper.selectById(userId);
+        notificationService.sendNotification(partner.getUserId(), userId, "partner_reject",
+                "申请被拒绝", rejector.getNickname() + " 拒绝了你的搭子申请", "partner", requestId);
+    }
+
+    private Partner lockRequest(Long userId, Long requestId) {
+        Partner beforeLock = partnerMapper.selectById(requestId);
+        if (beforeLock == null || !userId.equals(beforeLock.getPartnerId())) {
+            throw new IllegalArgumentException("申请不存在或无权操作");
         }
-        partnerMapper.updateStatus(requestId, "rejected");
-        
-        // 通知申请者：搭子拒绝了你的申请
-        User rejector = userMapper.selectById(partner.getPartnerId());
-        notificationService.sendNotification(
-            partner.getUserId(), partner.getPartnerId(), "partner_reject",
-            "申请被拒绝", rejector.getNickname() + " 拒绝了你的搭子申请",
-            "partner", requestId
-        );
+        mentorMatchingService.lockUsers(beforeLock.getUserId(), beforeLock.getPartnerId());
+        Partner current = partnerMapper.selectById(requestId);
+        if (current == null || !userId.equals(current.getPartnerId()) || !"pending".equals(current.getStatus())
+                || !beforeLock.getUserId().equals(current.getUserId())) {
+            throw new IllegalArgumentException("申请已被处理，请刷新");
+        }
+        return current;
     }
 
     @Override
@@ -340,10 +315,15 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void removePartner(Long userId, Long partnerId) {
+        mentorMatchingService.lockUsers(userId, partnerId);
         Partner partner = partnerMapper.selectByUserAndPartner(userId, partnerId);
         if (partner == null) {
             throw new RuntimeException("搭子关系不存在");
+        }
+        if ("blocked".equals(partner.getStatus())) {
+            throw new IllegalArgumentException("存在拉黑关系，请由拉黑方先解除拉黑");
         }
         
         partnerMapper.deleteById(partner.getId());
@@ -356,7 +336,9 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void blockPartner(Long userId, Long partnerId) {
+        mentorMatchingService.lockUsers(userId, partnerId);
         if (userId.equals(partnerId)) {
             throw new RuntimeException("不能拉黑自己");
         }
@@ -368,7 +350,8 @@ public class PartnerServiceImpl implements PartnerService {
             if (r.getUserId().equals(userId) && r.getPartnerId().equals(partnerId)) {
                 existingRecord = r;
             }
-            if (!r.getUserId().equals(userId) && "pending".equals(r.getStatus())) {
+            if (!r.getUserId().equals(userId) && ("pending".equals(r.getStatus())
+                    || ("lead".equals(r.getMatchMode()) && "accepted".equals(r.getStatus())))) {
                 partnerMapper.updateStatus(r.getId(), "rejected");
             }
         }
@@ -389,12 +372,18 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void unblockPartner(Long userId, Long partnerId) {
+        mentorMatchingService.lockUsers(userId, partnerId);
         List<Partner> allRecords = partnerMapper.selectAllByUserAndPartner(userId, partnerId);
         for (Partner partner : allRecords) {
             if ("blocked".equals(partner.getStatus()) && partner.getUserId().equals(userId)) {
                 String prev = partner.getPrevStatus();
-                if (prev != null && ("accepted".equals(prev) || "pending".equals(prev))) {
+                if ("lead".equals(partner.getMatchMode())) {
+                    // 拉黑已释放名额，解黑不自动恢复引领关系；需重新申请并核验。
+                    partnerMapper.updateStatus(partner.getId(), "rejected");
+                    partnerMapper.updatePrevStatus(partner.getId(), null);
+                } else if (prev != null && ("accepted".equals(prev) || "pending".equals(prev))) {
                     // 恢复拉黑前的状态
                     partnerMapper.updateStatus(partner.getId(), prev);
                 } else {

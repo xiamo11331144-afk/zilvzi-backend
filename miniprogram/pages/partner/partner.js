@@ -1,8 +1,12 @@
 const app = getApp()
 const request = require('../../utils/request')
+const badges = require('../../utils/badges')
+const { handleVipRequired } = require('../../utils/vip')
 
 Page({
   data: {
+    badgeCounts: badges.emptyCounts(),
+    badgeError: '',
     currentTab: 'my',
     myPartners: [],
     matchList: [],
@@ -11,7 +15,13 @@ Page({
     goalTypes: ['全部', '学习', '运动', '阅读', '早起', '饮食'],
     selectedType: '全部',
     searchKeyword: '',
-    matchMode: 'mutual' // mutual=共勉型, lead=引领型
+    matchMode: 'mutual',
+    matchLoading: false,
+    matchError: '',
+    requestsLoading: false,
+    requestsError: '',
+    applying: {},
+    requestActions: {}
   },
 
   onLoad() {
@@ -22,14 +32,19 @@ Page({
     }
   },
 
+  onHide() { badges.unbind(this) },
+  onUnload() { badges.unbind(this) },
+
   onShow() {
+    badges.bind(this)
     if (app.globalData.isLoggedIn) {
       this.loadMyPartners()
       this.loadRequests()
       this.loadBlockedPartners()
-      this.loadAllBadges()
     }
   },
+
+  openVip() { wx.navigateTo({ url: '/pages/vip/vip?from=match' }) },
 
   switchTab(e) {
     const tab = e.currentTarget.dataset.tab
@@ -43,7 +58,10 @@ Page({
     try {
       const res = await request.get('/api/partner/list')
       if (res.code === 200 && res.data) {
-        this.setData({ myPartners: res.data })
+        this.setData({ myPartners: res.data.map(item => ({
+          ...item,
+          relationMatchMode: item.matchMode === 'lead' ? 'lead' : (item.matchMode === 'mutual' ? 'mutual' : 'legacy')
+        })) })
       }
     } catch (err) {
       console.log('加载搭子失败', err)
@@ -51,21 +69,38 @@ Page({
   },
 
   async loadMatchList() {
+    const requestId = (this._matchRequestId || 0) + 1
+    this._matchRequestId = requestId
+    this.setData({ matchLoading: true, matchError: '', matchList: [] })
+    const goalType = this.data.selectedType === '全部' ? '' : this.data.selectedType
+    const keyword = this.data.searchKeyword || ''
+    const matchMode = this.data.matchMode
     try {
-      const goalType = this.data.selectedType === '全部' ? '' : this.data.selectedType
-      const keyword = this.data.searchKeyword || ''
-      const matchMode = this.data.matchMode
-      console.log('[Partner] loadMatchList:', { goalType, keyword, matchMode })
-      wx.showLoading({ title: '匹配中...' })
       const res = await request.get('/api/partner/match', { goalType, keyword, matchMode })
-      wx.hideLoading()
-      if (res.code === 200 && res.data) {
-        console.log('[Partner] 匹配结果:', res.data.length, '人')
-        this.setData({ matchList: res.data })
-      }
+      if (requestId !== this._matchRequestId) return
+      if (res.code !== 200 || !Array.isArray(res.data)) throw new Error(res.message || '推荐列表加载失败')
+      this.setData({ matchList: res.data.map(item => ({
+        ...item,
+        mentorEnabled: item.mentorEnabled === true || item.mentorEnabled === 1,
+        mentorEligible: item.mentorEligible === true,
+        leadDataComplete: (item.mentorEnabled === true || item.mentorEnabled === 1)
+          && item.mentorEligible === true
+          && item.approvedDays !== null && item.approvedDays !== undefined && Number.isFinite(Number(item.approvedDays))
+          && item.checkinRate !== null && item.checkinRate !== undefined && Number.isFinite(Number(item.checkinRate))
+          && item.streak !== null && item.streak !== undefined && Number.isFinite(Number(item.streak))
+          && item.remainingSlots !== null && item.remainingSlots !== undefined && Number.isFinite(Number(item.remainingSlots)),
+        leadCanApply: (item.mentorEnabled === true || item.mentorEnabled === 1)
+          && item.mentorEligible === true
+          && Number(item.approvedDays) >= 24 && Number(item.checkinRate) >= 80
+          && Number(item.streak) >= 7 && Number(item.remainingSlots) > 0
+          && item.checkinRate !== null && item.checkinRate !== undefined && Number.isFinite(Number(item.checkinRate))
+      })) })
     } catch (err) {
-      wx.hideLoading()
-      console.log('加载推荐失败', err)
+      if (requestId !== this._matchRequestId) return
+      this.setData({ matchError: err.message || '推荐列表加载失败' })
+      wx.showToast({ title: err.message || '推荐列表加载失败', icon: 'none' })
+    } finally {
+      if (requestId === this._matchRequestId) this.setData({ matchLoading: false })
     }
   },
 
@@ -87,20 +122,21 @@ Page({
   },
 
   async loadRequests() {
+    this.setData({ requestsLoading: true, requestsError: '' })
     try {
       const res = await request.get('/api/partner/requests')
-      if (res.code === 200 && res.data) {
-        this.setData({ requests: res.data })
-        // 设置搭子TabBar角标（待处理申请数）
-        const pendingCount = res.data.filter(r => r.status === 'pending').length
-        if (pendingCount > 0) {
-          wx.setTabBarBadge({ index: 1, text: String(pendingCount) })
-        } else {
-          wx.removeTabBarBadge({ index: 1 })
-        }
-      }
+      if (res.code !== 200 || !Array.isArray(res.data)) throw new Error(res.message || '申请列表加载失败')
+      const requests = res.data.map(item => ({
+        ...item,
+        matchMode: item.matchMode === 'lead' ? 'lead' : (item.matchMode === 'mutual' ? 'mutual' : 'legacy')
+      }))
+      this.setData({ requests })
+      badges.refresh(true)
     } catch (err) {
-      console.log('加载申请失败', err)
+      this.setData({ requestsError: err.message || '申请列表加载失败' })
+      wx.showToast({ title: err.message || '申请列表加载失败', icon: 'none' })
+    } finally {
+      this.setData({ requestsLoading: false })
     }
   },
 
@@ -113,15 +149,16 @@ Page({
     const id = e.currentTarget.dataset.id
     const partner = this.data.myPartners.find(p => p.id === id)
     const partnerId = partner ? partner.partnerId : id
+    const mode = partner ? partner.relationMatchMode : 'legacy'
     wx.navigateTo({
-      url: `/pages/partner-detail/partner-detail?id=${partnerId}`
+      url: `/pages/partner-detail/partner-detail?id=${partnerId}&source=relation&relationMatchMode=${mode}`
     })
   },
 
   viewMatchDetail(e) {
     const userId = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: `/pages/partner-detail/partner-detail?id=${userId}&source=match`
+      url: `/pages/partner-detail/partner-detail?id=${userId}&source=match&matchMode=${this.data.matchMode}`
     })
   },
 
@@ -139,43 +176,66 @@ Page({
 
   async sendRequest(e) {
     const partnerId = e.currentTarget.dataset.id
+    const matchMode = e.currentTarget.dataset.mode || this.data.matchMode
+    const candidate = this.data.matchList.find(item => String(item.id) === String(partnerId))
+    if (this.data.applying[partnerId]) return
+    if (matchMode === 'lead' && (!candidate || candidate.leadCanApply !== true)) {
+      wx.showToast({ title: '引领资格或名额数据未确认，请刷新后重试', icon: 'none' })
+      return
+    }
+    this.setData({ [`applying.${partnerId}`]: true, matchList: this.data.matchList.map(item => String(item.id) === String(partnerId) ? { ...item, applying: true } : item) })
     try {
-      const res = await request.post('/api/partner/apply', { partnerId })
-      if (res.code === 200) {
-        wx.showToast({ title: '申请已发送', icon: 'success' })
-        this.loadMatchList()
-      } else {
-        wx.showToast({ title: res.message || '发送失败', icon: 'none' })
-      }
+      const res = await request.post('/api/partner/apply', { partnerId, matchMode })
+      if (handleVipRequired(res)) return
+      if (res.code !== 200) throw new Error(res.message || '发送失败')
+      wx.showToast({ title: '申请已发送', icon: 'success' })
+      await Promise.all([this.loadMatchList(), this.loadRequests()])
     } catch (err) {
       wx.showToast({ title: err.message || '发送失败', icon: 'none' })
+      if (matchMode === 'lead') this.loadMatchList()
+    } finally {
+      this.setData({ [`applying.${partnerId}`]: false, matchList: this.data.matchList.map(item => String(item.id) === String(partnerId) ? { ...item, applying: false } : item) })
     }
+  },
+
+  setRequestBusy(requestId, busy) {
+    this.setData({
+      [`requestActions.${requestId}`]: busy,
+      requests: this.data.requests.map(item => String(item.id) === String(requestId) ? { ...item, actionBusy: busy } : item)
+    })
   },
 
   async acceptRequest(e) {
     const requestId = e.currentTarget.dataset.id
+    if (this.data.requestActions[requestId]) return
+    this.setRequestBusy(requestId, true)
     try {
       const res = await request.put(`/api/partner/accept/${requestId}`)
-      if (res.code === 200) {
-        wx.showToast({ title: '已同意', icon: 'success' })
-        this.loadRequests()
-        this.loadMyPartners()
-      }
+      if (res.code !== 200) throw new Error(res.message || '操作失败')
+      wx.showToast({ title: '已同意', icon: 'success' })
+      await Promise.all([this.loadRequests(), this.loadMyPartners()])
     } catch (err) {
-      wx.showToast({ title: err.message || '操作失败', icon: 'none' })
+      wx.showToast({ title: err.message || '操作失败，请刷新后重试', icon: 'none' })
+      this.loadRequests()
+    } finally {
+      this.setRequestBusy(requestId, false)
     }
   },
 
   async rejectRequest(e) {
     const requestId = e.currentTarget.dataset.id
+    if (this.data.requestActions[requestId]) return
+    this.setRequestBusy(requestId, true)
     try {
       const res = await request.put(`/api/partner/reject/${requestId}`)
-      if (res.code === 200) {
-        wx.showToast({ title: '已拒绝', icon: 'success' })
-        this.loadRequests()
-      }
+      if (res.code !== 200) throw new Error(res.message || '操作失败')
+      wx.showToast({ title: '已拒绝', icon: 'success' })
+      await this.loadRequests()
     } catch (err) {
-      wx.showToast({ title: err.message || '操作失败', icon: 'none' })
+      wx.showToast({ title: err.message || '操作失败，请刷新后重试', icon: 'none' })
+      this.loadRequests()
+    } finally {
+      this.setRequestBusy(requestId, false)
     }
   },
 
@@ -209,39 +269,7 @@ Page({
     })
   },
 
-  // 加载所有Tab角标
-  async loadAllBadges() {
-    try {
-      const notiRes = await request.get('/api/notification/unread/count')
-      if (notiRes.code === 200) {
-        if (notiRes.data > 0) {
-          wx.setTabBarBadge({ index: 0, text: String(notiRes.data > 99 ? '99+' : notiRes.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 0 })
-        }
-      }
-    } catch (err) {}
-    try {
-      const circleRes = await request.get('/api/notification/unread/count/comment')
-      if (circleRes.code === 200) {
-        if (circleRes.data > 0) {
-          wx.setTabBarBadge({ index: 2, text: String(circleRes.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 2 })
-        }
-      }
-    } catch (err) {}
-    try {
-      const msgRes = await request.get('/api/notification/unread/count/private_message')
-      if (msgRes.code === 200) {
-        if (msgRes.data > 0) {
-          wx.setTabBarBadge({ index: 3, text: String(msgRes.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 3 })
-        }
-      }
-    } catch (err) {}
-  },
+  retryBadges() { return badges.refresh(true) },
 
   // 加载拉黑列表
   async loadBlockedPartners() {

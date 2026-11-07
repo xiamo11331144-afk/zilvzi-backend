@@ -11,7 +11,7 @@
  Target Server Version : 80045 (8.0.45)
  File Encoding         : 65001
 
- Date: 23/06/2026 18:24:04
+ Date: 07/11/2026 13:44:24
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `achievement`  (
   UNIQUE INDEX `uk_user_medal`(`user_id` ASC, `medal_name` ASC) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `achievement_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '成就表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '成就表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for ai_chat_history
@@ -60,7 +60,7 @@ CREATE TABLE `checkin`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '打卡ID',
   `user_id` bigint NOT NULL COMMENT '用户ID',
   `goal_id` bigint NOT NULL COMMENT '目标ID',
-  `task_id` bigint NULL DEFAULT NULL COMMENT '计划任务ID',
+  `task_id` bigint NULL DEFAULT NULL,
   `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '打卡内容/备注',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '打卡图片',
   `checkin_time` datetime NULL DEFAULT NULL COMMENT '打卡时间',
@@ -72,15 +72,17 @@ CREATE TABLE `checkin`  (
   `review_time` datetime NULL DEFAULT NULL COMMENT '审核时间',
   `review_comment` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '审核评语',
   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_user_task_date`(`user_id` ASC, `task_id` ASC, `date` ASC) USING BTREE,
   UNIQUE INDEX `uk_task_date`(`task_id` ASC, `date` ASC) USING BTREE,
-  INDEX `idx_user_goal_date`(`user_id` ASC, `goal_id` ASC, `date` ASC) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_goal_id`(`goal_id` ASC) USING BTREE,
-  INDEX `idx_task_id`(`task_id` ASC) USING BTREE,
   INDEX `idx_date`(`date` ASC) USING BTREE,
+  INDEX `idx_user_goal_date`(`user_id` ASC, `goal_id` ASC, `date` ASC) USING BTREE,
+  INDEX `idx_task_id`(`task_id` ASC) USING BTREE,
+  INDEX `idx_mentor_activity`(`status` ASC, `user_id` ASC, `date` ASC) USING BTREE,
   CONSTRAINT `checkin_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `checkin_ibfk_2` FOREIGN KEY (`goal_id`) REFERENCES `goal` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '打卡记录表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 926 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '打卡记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for circle
@@ -156,7 +158,7 @@ CREATE TABLE `file_upload`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `file_upload_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件上传记录表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文件上传记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for goal
@@ -179,7 +181,7 @@ CREATE TABLE `goal`  (
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_status`(`status` ASC) USING BTREE,
   CONSTRAINT `goal_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '目标表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '目标表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for like_record
@@ -207,6 +209,8 @@ CREATE TABLE `message`  (
   `from_user_id` bigint NOT NULL,
   `to_user_id` bigint NOT NULL,
   `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'text',
+  `related_id` bigint NULL DEFAULT NULL,
   `is_read` int NULL DEFAULT 0,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
@@ -214,7 +218,7 @@ CREATE TABLE `message`  (
   INDEX `idx_from_to`(`from_user_id` ASC, `to_user_id` ASC) USING BTREE,
   CONSTRAINT `message_ibfk_1` FOREIGN KEY (`from_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `message_ibfk_2` FOREIGN KEY (`to_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '私信表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '私信表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for notification
@@ -235,7 +239,7 @@ CREATE TABLE `notification`  (
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_is_read`(`is_read` ASC) USING BTREE,
   CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '消息通知表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 357 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '消息通知表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for partner
@@ -246,6 +250,7 @@ CREATE TABLE `partner`  (
   `user_id` bigint NOT NULL COMMENT '用户ID',
   `partner_id` bigint NOT NULL COMMENT '搭子ID',
   `goal_id` bigint NULL DEFAULT NULL COMMENT '关联目标ID',
+  `match_mode` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'mutual' COMMENT 'mutual共勉；lead接收方引领申请方',
   `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'pending' COMMENT '状态: pending,accepted,rejected,blocked',
   `prev_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -254,10 +259,11 @@ CREATE TABLE `partner`  (
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_partner_id`(`partner_id` ASC) USING BTREE,
   INDEX `goal_id`(`goal_id` ASC) USING BTREE,
+  INDEX `idx_mentor_capacity`(`partner_id` ASC, `match_mode` ASC, `status` ASC) USING BTREE,
   CONSTRAINT `partner_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `partner_ibfk_2` FOREIGN KEY (`partner_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `partner_ibfk_3` FOREIGN KEY (`goal_id`) REFERENCES `goal` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '搭子关系表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 69 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '搭子关系表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for plan
@@ -282,7 +288,7 @@ CREATE TABLE `plan`  (
   INDEX `idx_goal_id`(`goal_id` ASC) USING BTREE,
   CONSTRAINT `plan_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `plan_ibfk_2` FOREIGN KEY (`goal_id`) REFERENCES `goal` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '计划表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '计划表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for plan_task
@@ -307,7 +313,7 @@ CREATE TABLE `plan_task`  (
   INDEX `idx_day_number`(`day_number` ASC) USING BTREE,
   INDEX `idx_task_date`(`task_date` ASC) USING BTREE,
   CONSTRAINT `plan_task_ibfk_1` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 223 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '计划任务表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 270 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '计划任务表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for plan_template
@@ -407,11 +413,13 @@ CREATE TABLE `user`  (
   `level` int NULL DEFAULT 1 COMMENT '等级',
   `experience` int NULL DEFAULT 0 COMMENT '经验值',
   `role` int NULL DEFAULT 0 COMMENT '角色: 0-普通用户 1-管理员',
+  `mentor_enabled` tinyint NOT NULL DEFAULT 0 COMMENT '是否开启认证引领者匹配: 0-否 1-是',
   `openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '微信openid',
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `province` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '省份',
   `city` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '城市',
+  `district` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE,
   UNIQUE INDEX `phone`(`phone` ASC) USING BTREE,
@@ -420,6 +428,37 @@ CREATE TABLE `user`  (
   INDEX `idx_phone`(`phone` ASC) USING BTREE,
   INDEX `idx_email`(`email` ASC) USING BTREE,
   INDEX `idx_openid`(`openid` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 127 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for vip_membership
+-- ----------------------------
+DROP TABLE IF EXISTS `vip_membership`;
+CREATE TABLE `vip_membership`  (
+  `user_id` bigint NOT NULL,
+  `vip_until` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`user_id`) USING BTREE,
+  CONSTRAINT `fk_vip_membership_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for vip_order
+-- ----------------------------
+DROP TABLE IF EXISTS `vip_order`;
+CREATE TABLE `vip_order`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `user_id` bigint NOT NULL,
+  `price_fen` int NOT NULL,
+  `duration_days` int NOT NULL,
+  `payment_channel` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `status` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `create_time` datetime NOT NULL,
+  `confirmed_time` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_vip_order_no`(`order_no` ASC) USING BTREE,
+  INDEX `idx_vip_order_user_created`(`user_id` ASC, `create_time` ASC) USING BTREE,
+  CONSTRAINT `fk_vip_order_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

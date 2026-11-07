@@ -19,6 +19,16 @@ public interface NotificationService {
      */
     List<Notification> getUserNotifications(Long userId, Integer page, Integer size);
 
+    Map<String, Object> getUserNotifications(Long userId, Integer page, Integer size, String category);
+
+    Integer getUnreadCountForCategory(Long userId, String category);
+
+    void markAllAsReadByCategory(Long userId, String category);
+
+    void clearAllByCategory(Long userId, String category);
+
+    Map<String, Object> getBadges(Long userId);
+
     /**
      * 获取未读数量
      */

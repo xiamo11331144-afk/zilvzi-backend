@@ -2,6 +2,8 @@ package com.zilvzi.service;
 
 import com.zilvzi.pojo.User;
 
+import java.util.Map;
+
 /**
  * 用户Service接口
  */
@@ -51,4 +53,8 @@ public interface UserService {
      * 更新用户头像
      */
     void updateAvatar(Long id, String avatar);
+
+    Map<String, Object> getMentorStatus(Long userId);
+
+    void setMentorEnabled(Long userId, boolean enabled);
 }

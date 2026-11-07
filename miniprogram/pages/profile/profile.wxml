@@ -56,9 +56,16 @@ module.exports = { format: format };
     </view>
   </view>
 
+  <view class="badge-feedback" wx:if="{{badgeError}}" bindtap="retryBadges">消息未读数更新失败，点击重试</view>
+
   <!-- 功能菜单 -->
   <view class="menu-section">
     <view class="menu-group">
+      <view class="menu-item" bindtap="openVip">
+        <view class="menu-icon" style="background: #B88627; font-size: 22rpx;">VIP</view>
+        <view class="menu-text"><view>VIP 会员</view><view style="font-size: 23rpx; color: #777; margin-top: 8rpx;">{{vipSummary}}</view></view>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-item" bindtap="showInfo">
         <view class="menu-icon" style="background: #4A90D9;">👤</view>
         <text class="menu-text">个人信息</text>
@@ -77,11 +84,13 @@ module.exports = { format: format };
       <view class="menu-item" bindtap="goToPage" data-url="/pages/notification/notification">
         <view class="menu-icon" style="background: #FAAD14;">🔔</view>
         <text class="menu-text">消息通知</text>
+        <text class="unread-badge" wx:if="{{badgeCounts.notificationUnread > 0}}">{{badgeCounts.notificationUnread > 99 ? '99+' : badgeCounts.notificationUnread}}</text>
         <text class="menu-arrow">›</text>
       </view>
       <view class="menu-item" bindtap="goToPage" data-url="/pages/message/message">
         <view class="menu-icon" style="background: #13C2C2;">💬</view>
         <text class="menu-text">我的私信</text>
+        <text class="unread-badge" wx:if="{{badgeCounts.privateUnread > 0}}">{{badgeCounts.privateUnread > 99 ? '99+' : badgeCounts.privateUnread}}</text>
         <text class="menu-arrow">›</text>
       </view>
     </view>
@@ -135,7 +144,22 @@ module.exports = { format: format };
         <text class="info-label">用户ID</text>
         <text class="info-value">{{userInfo.id}}</text>
       </view>
-      <button class="btn-primary" bindtap="hideInfo">关闭</button>
+      <view class="mentor-setting">
+          <view class="mentor-setting-main">
+            <text class="info-label">认证引领者</text>
+            <text class="mentor-hint" wx:if="{{mentorStatusLoading}}">正在加载资格状态...</text>
+            <text class="mentor-hint error" wx:elif="{{mentorStatusError}}">{{mentorStatusError}}</text>
+            <block wx:elif="{{mentorStatus}}">
+              <text class="mentor-hint">近30天 {{mentorStatus.approvedDays === null ? '--' : mentorStatus.approvedDays}} / 30 天（至少24天，80%）</text>
+              <text class="mentor-hint">连续打卡 {{mentorStatus.streak === null ? '--' : mentorStatus.streak}} / {{mentorStatus.requiredDays || 7}} 天（今天或昨天起算）</text>
+              <text class="mentor-hint" wx:if="{{mentorStatus.capacity !== null}}">引领名额 {{mentorStatus.occupiedSlots === null ? '--' : mentorStatus.occupiedSlots}} / {{mentorStatus.capacity}} · 剩余 {{mentorStatus.remainingSlots === null ? '--' : mentorStatus.remainingSlots}} · 待处理 {{mentorStatus.pendingCount === null ? '--' : mentorStatus.pendingCount}} · 已接受 {{mentorStatus.acceptedCount === null ? '--' : mentorStatus.acceptedCount}}</text>
+            </block>
+            <text class="mentor-hint" wx:else>认证状态尚未加载</text>
+          </view>
+          <switch color="#4A90D9" checked="{{mentorStatus && mentorStatus.enabled === true}}" disabled="{{mentorSaving || mentorStatusLoading || !mentorStatus || (!mentorStatus.enabled && mentorStatus.eligible !== true)}}" bindchange="onMentorSwitch" />
+       </view>
+       <view wx:if="{{mentorStatusError}}" class="mentor-retry" bindtap="loadMentorStatus">重新加载状态</view>
+        <button class="btn-primary" bindtap="hideInfo">关闭</button>
     </view>
   </view>
 </view>

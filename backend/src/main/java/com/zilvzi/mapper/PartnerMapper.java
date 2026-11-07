@@ -19,6 +19,8 @@ public interface PartnerMapper {
      */
     List<Partner> selectByPartnerId(@Param("partnerId") Long partnerId);
 
+    int countPendingReceivedRequests(@Param("partnerId") Long partnerId);
+
     /**
      * 查询两人之间是否存在关系
      */
@@ -53,4 +55,11 @@ public interface PartnerMapper {
     List<Partner> selectByUserAsPartner(@Param("partnerId") Long partnerId);
 
     List<Partner> selectBlockedByUserId(@Param("userId") Long userId);
+    int resetRequest(Partner partner);
+
+    int updatePendingStatus(@Param("id") Long id, @Param("status") String status);
+
+    java.util.Map<String, Object> selectMentorCapacity(@Param("mentorId") Long mentorId,
+                                                      @Param("excludeRequestId") Long excludeRequestId);
+
 }

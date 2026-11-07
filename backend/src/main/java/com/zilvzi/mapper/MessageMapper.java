@@ -12,6 +12,8 @@ public interface MessageMapper {
     Integer countUnread(@Param("userId") Long userId);
     int markAsRead(@Param("id") Long id);
     int markConversationAsRead(@Param("userId") Long userId, @Param("fromUserId") Long fromUserId);
+    int markMessagesAsRead(@Param("userId") Long userId, @Param("fromUserId") Long fromUserId,
+                           @Param("messageIds") List<Long> messageIds);
     Message selectById(@Param("id") Long id);
     int updateContent(Message message);
     List<Map> selectConversations(@Param("userId") Long userId, @Param("offset") Integer offset, @Param("limit") Integer limit);

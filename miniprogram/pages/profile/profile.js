@@ -1,68 +1,52 @@
 const app = getApp()
 const request = require('../../utils/request')
+const badges = require('../../utils/badges')
+const { formatVipUntil } = require('../../utils/vip')
 
 Page({
   data: {
+    badgeCounts: badges.emptyCounts(),
+    badgeError: '',
     isLoggedIn: false,
     userInfo: {},
     stats: { checkinDays: 0, partners: 0, medals: 0, circles: 0 },
     showInfoModal: false,
-    regionValue: []
+    regionValue: [],
+    mentorStatus: null,
+    mentorStatusLoading: false,
+    mentorStatusError: '',
+    mentorSaving: false,
+    vipSummary: '会员状态待查询'
   },
 
   onLoad() { this.checkLoginStatus() },
+  onHide() { badges.unbind(this) },
+  onUnload() { badges.unbind(this) },
+
   onShow() {
+    badges.bind(this)
     this.checkLoginStatus()
-    if (this.data.isLoggedIn) { this.loadUserInfo(); this.loadStats(); this.loadUnreadCount(); this.loadAllBadges() }
+    if (this.data.isLoggedIn) { this.loadUserInfo(); this.loadStats(); this.loadMentorStatus(); this.loadVipStatus() }
+    else this.setData({ vipSummary: '登录后查看会员状态' })
   },
 
-  async loadUnreadCount() {
-    try {
-      const res = await request.get('/api/notification/unread/count/private_message')
-      if (res.code === 200 && res.data !== undefined) {
-        if (res.data > 0) {
-          wx.setTabBarBadge({ index: 3, text: String(res.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 3 })
-        }
-      }
-    } catch (err) {}
+  openVip() {
+    wx.navigateTo({ url: this.data.isLoggedIn ? '/pages/vip/vip' : '/pages/login/login' })
   },
 
-  // 加载所有Tab角标
-  async loadAllBadges() {
+  async loadVipStatus() {
+    this.setData({ vipSummary: '正在查询会员状态…' })
     try {
-      const notiRes = await request.get('/api/notification/unread/count')
-      if (notiRes.code === 200) {
-        if (notiRes.data > 0) {
-          wx.setTabBarBadge({ index: 0, text: String(notiRes.data > 99 ? '99+' : notiRes.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 0 })
-        }
-      }
-    } catch (err) {}
-    try {
-      const partnerRes = await request.get('/api/partner/requests')
-      if (partnerRes.code === 200 && partnerRes.data) {
-        const pendingCount = partnerRes.data.filter(r => r.status === 'pending').length
-        if (pendingCount > 0) {
-          wx.setTabBarBadge({ index: 1, text: String(pendingCount) })
-        } else {
-          wx.removeTabBarBadge({ index: 1 })
-        }
-      }
-    } catch (err) {}
-    try {
-      const circleRes = await request.get('/api/notification/unread/count/comment')
-      if (circleRes.code === 200) {
-        if (circleRes.data > 0) {
-          wx.setTabBarBadge({ index: 2, text: String(circleRes.data) })
-        } else {
-          wx.removeTabBarBadge({ index: 2 })
-        }
-      }
-    } catch (err) {}
+      const res = await request.get('/api/vip/status')
+      if (res.code !== 200 || !res.data) throw new Error(res.message || '会员状态查询失败')
+      this.setData({ vipSummary: res.data.isVip === true
+        ? `VIP 有效至 ${formatVipUntil(res.data.vipUntil)}` : '当前非 VIP · 共勉匹配免费' })
+    } catch (err) {
+      this.setData({ vipSummary: '会员状态查询失败，点击进入重试' })
+    }
   },
+
+  retryBadges() { return badges.refresh(true) },
 
   checkLoginStatus() {
     const isLoggedIn = app.globalData.isLoggedIn
@@ -96,6 +80,77 @@ Page({
         circles: getValue(results[3]).length
       }})
     } catch (err) {}
+  },
+
+  async loadMentorStatus() {
+    if (this.data.mentorStatusLoading) return
+    this.setData({ mentorStatusLoading: true, mentorStatusError: '', mentorStatus: null })
+    try {
+      const res = await request.get('/api/user/mentor/status')
+      if (res.code !== 200 || !res.data) throw new Error(res.message || '认证状态暂不可用')
+      const d = res.data
+      const asNumber = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value) : null
+      const requiredDays = asNumber(d.requiredDays) || 7
+      const requiredApprovedDays = asNumber(d.requiredApprovedDays) || 24
+      const requiredRate = asNumber(d.requiredRate) || 80
+      const approvedDays = asNumber(d.approvedDays)
+      const checkinRate = asNumber(d.checkinRate)
+      const streak = asNumber(d.streak)
+      const eligible = (d.eligible === true || d.eligible === 1)
+        && approvedDays !== null && approvedDays >= requiredApprovedDays
+        && checkinRate !== null && checkinRate >= requiredRate
+        && streak !== null && streak >= requiredDays
+      const status = {
+        enabled: d.enabled === true || d.enabled === 1,
+        eligible,
+        approvedDays,
+        checkinRate,
+        streak,
+        requiredDays,
+        requiredApprovedDays,
+        requiredRate,
+        capacity: asNumber(d.capacity),
+        occupiedSlots: asNumber(d.occupiedSlots),
+        remainingSlots: asNumber(d.remainingSlots),
+        pendingCount: asNumber(d.pendingCount),
+        acceptedCount: asNumber(d.acceptedCount)
+      }
+      this.setData({ mentorStatus: status })
+    } catch (err) {
+      this.setData({ mentorStatusError: err.message || '认证状态加载失败' })
+      wx.showToast({ title: err.message || '认证状态加载失败', icon: 'none' })
+    } finally {
+      this.setData({ mentorStatusLoading: false })
+    }
+  },
+
+  async onMentorSwitch(e) {
+    const current = this.data.mentorStatus
+    if (this.data.mentorSaving || !current) return
+    const enabled = !!e.detail.value
+    if (enabled && current.eligible !== true) {
+      this.setData({ mentorStatus: { ...current, enabled: current.enabled === true } })
+      wx.showToast({ title: '暂不符合开启条件', icon: 'none' })
+      return
+    }
+    this.setData({ mentorSaving: true, mentorStatus: { ...current, enabled } })
+    try {
+      const res = await request.put('/api/user/mentor', { enabled })
+      if (res.code !== 200 || !res.data) throw new Error(res.message || '设置失败')
+      const d = res.data
+      this.setData({ mentorStatus: {
+        ...current,
+        ...d,
+        enabled: d.enabled === true || d.enabled === 1,
+        eligible: d.eligible === true || d.eligible === 1
+      } })
+      wx.showToast({ title: enabled ? '已开启引领' : '已关闭引领', icon: 'success' })
+    } catch (err) {
+      this.setData({ mentorStatus: current })
+      wx.showToast({ title: err.message || '设置失败', icon: 'none' })
+    } finally {
+      this.setData({ mentorSaving: false })
+    }
   },
 
   editProfile() {
@@ -215,7 +270,8 @@ Page({
       title: '提示', content: '确定要退出登录吗？',
       success: (res) => {
         if (res.confirm) {
-          app.globalData.isLoggedIn = false; app.globalData.token = null; app.globalData.userInfo = null
+          app.globalData.isLoggedIn = false; app.globalData.token = null; app.globalData.userInfo = null; app.globalData.userId = null
+          badges.reset()
           wx.removeStorageSync('token'); wx.removeStorageSync('userInfo')
           this.setData({ isLoggedIn: false, userInfo: {} })
           wx.showToast({ title: '已退出', icon: 'success' })

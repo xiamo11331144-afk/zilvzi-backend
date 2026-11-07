@@ -7,10 +7,6 @@ import com.zilvzi.mapper.NotificationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 消息通知Controller
  */
@@ -30,16 +26,19 @@ public class NotificationController {
     @GetMapping("/list")
     public Result<?> getNotifications(@RequestAttribute("userId") Long userId,
                                       @RequestParam(defaultValue = "1") Integer page,
-                                      @RequestParam(defaultValue = "20") Integer size) {
+                                      @RequestParam(defaultValue = "20") Integer size,
+                                      @RequestParam(required = false) String category) {
         try {
-            List<Notification> notifications = notificationService.getUserNotifications(userId, page, size);
-            Integer unreadCount = notificationService.getUnreadCount(userId);
+            return Result.success(notificationService.getUserNotifications(userId, page, size, category));
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 
-            Map<String, Object> result = new HashMap<>();
-            result.put("list", notifications);
-            result.put("unreadCount", unreadCount);
-
-            return Result.success(result);
+    @GetMapping("/badges")
+    public Result<?> getBadges(@RequestAttribute("userId") Long userId) {
+        try {
+            return Result.success(notificationService.getBadges(userId));
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }
@@ -93,9 +92,11 @@ public class NotificationController {
      * 标记所有已读
      */
     @PutMapping("/read/all")
-    public Result<?> markAllAsRead(@RequestAttribute("userId") Long userId) {
+    public Result<?> markAllAsRead(@RequestAttribute("userId") Long userId,
+                                   @RequestParam(required = false) String category) {
         try {
-            notificationService.markAllAsRead(userId);
+            if (category == null) notificationService.markAllAsRead(userId);
+            else notificationService.markAllAsReadByCategory(userId, category);
             return Result.success("已全部标记已读");
         } catch (Exception e) {
             return Result.error(e.getMessage());
@@ -119,10 +120,12 @@ public class NotificationController {
      * 清除所有通知
      */
     @DeleteMapping("/clear")
-    public Result<?> clearAll(@RequestAttribute("userId") Long userId) {
+    public Result<?> clearAll(@RequestAttribute("userId") Long userId,
+                              @RequestParam(required = false) String category) {
         try {
-            notificationService.clearAll(userId);
-            return Result.success("已清除全部通知");
+            if (category == null) notificationService.clearAll(userId);
+            else notificationService.clearAllByCategory(userId, category);
+            return Result.success("已清除通知");
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

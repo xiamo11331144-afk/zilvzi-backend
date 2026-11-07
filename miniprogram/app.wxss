@@ -185,3 +185,26 @@ page {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* 消息入口共用样式 */
+.unread-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32rpx;
+  height: 36rpx;
+  padding: 0 10rpx;
+  margin: 0 12rpx;
+  border-radius: 24rpx;
+  background: #FF4D4F;
+  color: #fff;
+  font-size: 22rpx;
+  line-height: 36rpx;
+  flex-shrink: 0;
+}
+.badge-feedback { padding: 16rpx 24rpx; color: #B07820; font-size: 24rpx; background: #FFF7E6; }
+.unread-entry { display: flex; align-items: center; justify-content: space-between; margin: 24rpx; padding: 24rpx; border-radius: 20rpx; background: #fff; }
+.unread-entry-title { display: block; font-size: 30rpx; font-weight: 600; }
+.unread-entry-desc { display: block; font-size: 24rpx; color: #888; }
+.unread-entry-right { display: flex; align-items: center; color: #B8BCC8; }
+.requests-header { display: flex; align-items: center; padding: 12rpx 0 20rpx; font-weight: 600; }

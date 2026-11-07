@@ -26,20 +26,28 @@ module.exports = { format: format };
     <view class="tab-item {{currentTab === 'match' ? 'active' : ''}}" bindtap="switchTab" data-tab="match">匹配推荐</view>
   </view>
 
+  <view class="badge-feedback" wx:if="{{badgeError}}" bindtap="retryBadges">申请数量更新失败，点击重试</view>
+
   <!-- 申请列表 -->
-  <view class="request-section" wx:if="{{requests.length > 0}}">
-    <view class="requests-header">收到的申请 ({{requests.length}})</view>
+  <view class="request-section" wx:if="{{requests.length > 0 || requestsLoading || requestsError || badgeCounts.pendingRequests > 0}}">
+    <view class="requests-header">搭子申请 <text class="unread-badge" wx:if="{{badgeCounts.pendingRequests > 0}}">{{badgeCounts.pendingRequests > 99 ? '99+' : badgeCounts.pendingRequests}}</text><text wx:if="{{badgeCounts.pendingRequests > 0}}"> 待处理</text></view>
+    <view class="section-feedback" wx:if="{{requestsLoading}}">加载申请中...</view>
+     <view class="section-feedback error" wx:if="{{requestsError}}" bindtap="loadRequests">{{requestsError}}，点击重试</view>
+
     <view class="request-card" wx:for="{{requests}}" wx:key="id">
       <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
       <view class="request-body">
         <text class="request-text">{{item.nickname}} 邀请你成为搭子</text>
-        <text class="request-status rejected" wx:if="{{item.status === 'rejected'}}">已拒绝</text>
+        <text class="request-mode lead-mode" wx:if="{{item.matchMode === 'lead'}}">认证引领申请</text>
+         <text class="request-mode mutual-mode" wx:elif="{{item.matchMode === 'mutual'}}">共勉申请</text>
+         <text class="request-mode legacy-mode" wx:else>旧版申请</text>
+         <text class="request-status rejected" wx:if="{{item.status === 'rejected'}}">已拒绝</text>
       </view>
       <view class="request-btns">
         <!-- pending 状态：显示同意/拒绝/拉黑 -->
         <block wx:if="{{item.status === 'pending'}}">
-          <view class="btn-accept" bindtap="acceptRequest" data-id="{{item.id}}">同意</view>
-          <view class="btn-reject" bindtap="rejectRequest" data-id="{{item.id}}">拒绝</view>
+          <view class="btn-accept {{item.actionBusy ? 'disabled' : ''}}" bindtap="acceptRequest" data-id="{{item.id}}">{{item.actionBusy ? '处理中...' : '同意'}}</view>
+          <view class="btn-reject {{item.actionBusy ? 'disabled' : ''}}" bindtap="rejectRequest" data-id="{{item.id}}">{{item.actionBusy ? '处理中...' : '拒绝'}}</view>
           <view class="btn-block" bindtap="blockUser" data-id="{{item.userId}}">拉黑</view>
         </block>
         <!-- rejected 状态：仅显示拉黑 -->
@@ -58,6 +66,8 @@ module.exports = { format: format };
         <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
         <view class="partner-info">
           <text class="partner-name">{{item.nickname}}</text>
+           <text class="request-mode lead-mode" wx:if="{{item.relationMatchMode === 'lead'}}">引领关系</text>
+           <text class="request-mode mutual-mode" wx:if="{{item.relationMatchMode === 'mutual'}}">共勉关系</text>
         </view>
       </view>
       <view class="partner-actions">
@@ -74,6 +84,8 @@ module.exports = { format: format };
         <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
         <view class="blocked-info">
           <text class="partner-name">{{item.nickname}}</text>
+           <text class="request-mode lead-mode" wx:if="{{item.relationMatchMode === 'lead'}}">引领关系</text>
+           <text class="request-mode mutual-mode" wx:if="{{item.relationMatchMode === 'mutual'}}">共勉关系</text>
         </view>
         <view class="btn-unblock" bindtap="unblockUser" data-id="{{item.partnerId}}">解除拉黑</view>
       </view>
@@ -87,7 +99,7 @@ module.exports = { format: format };
   <!-- 匹配推荐 -->
   <view class="match-section" wx:if="{{currentTab === 'match'}}">
     <view class="search-bar card">
-      <input class="search-input" placeholder="输入手机号或昵称搜索搭子" value="{{searchKeyword}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="doSearch" />
+      <input class="search-input" placeholder="输入手机号、昵称或用户名搜索搭子" value="{{searchKeyword}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="doSearch" />
       <text class="search-btn" bindtap="doSearch">搜索</text>
     </view>
     <!-- 匹配模式切换 -->
@@ -103,6 +115,10 @@ module.exports = { format: format };
       </view>
     </view>
     <view class="match-list">
+       <view wx:if="{{matchMode === 'lead'}}" class="lead-tip" bindtap="openVip">新引领申请需要 VIP，点击查看会员。免费用户可浏览和处理收到的申请；共勉匹配免费。</view>
+       <view wx:if="{{matchMode === 'lead'}}" class="lead-tip">引领条件：近30天至少24/30天（80%）且连续打卡7天；候选需更强且有空余名额</view>
+       <view class="section-feedback" wx:if="{{matchLoading}}">正在加载推荐...</view>
+       <view class="section-feedback error" wx:if="{{matchError}}" bindtap="loadMatchList">{{matchError}}，点击重试</view>
       <view wx:if="{{matchList.length > 0}}" style="padding:8rpx 0 16rpx;font-size:24rpx;color:#999;">
         当前：{{matchMode === 'mutual' ? '共勉型' : '引领型'}}模式
         <text wx:if="{{selectedType !== '全部'}}"> · {{selectedType}}</text>
@@ -113,6 +129,11 @@ module.exports = { format: format };
           <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
           <view class="match-info">
             <text class="match-name">{{item.nickname}}</text>
+             <text wx:if="{{matchMode === 'lead' && item.leadDataComplete}}" class="mentor-badge">认证引领者 · 连续{{item.streak}}天 · 余{{item.remainingSlots}}名额</text>
+             <text wx:elif="{{matchMode === 'lead'}}" class="mentor-unknown">引领资格数据待确认</text>
+
+
+
             <text class="match-score">匹配度 {{item.matchScore}}%</text>
             <view wx:if="{{item.province || item.checkinRate > 0}}" style="display:flex;gap:12rpx;margin-top:6rpx;align-items:center;">
               <text wx:if="{{item.province}}" style="font-size:24rpx;color:#666;">📍{{loc.format(item.province, item.city, item.district)}}</text>
@@ -122,11 +143,13 @@ module.exports = { format: format };
           <view class="btn-outline-sm disabled" wx:if="{{item.relationStatus === 'partner'}}">已是搭子</view>
           <view class="btn-outline-sm disabled" wx:elif="{{item.relationStatus === 'pending'}}">已申请</view>
           <view class="btn-outline-sm disabled" wx:elif="{{item.relationStatus === 'blocked'}}">无法申请</view>
-          <view class="btn-primary-sm" wx:else catchtap="sendRequest" data-id="{{item.id}}">申请搭子</view>
+          <view class="btn-outline-sm disabled" wx:elif="{{item.applying}}">发送中...</view>
+          <view class="btn-outline-sm disabled" wx:elif="{{matchMode === 'lead' && !item.leadCanApply}}">资格/名额未确认</view>
+          <view class="btn-primary-sm" wx:else catchtap="sendRequest" data-id="{{item.id}}" data-mode="{{matchMode}}">申请搭子</view>
         </view>
       </view>
     </view>
-    <view class="empty-state" wx:if="{{matchList.length === 0}}">
+    <view class="empty-state" wx:if="{{matchList.length === 0 && !matchLoading && !matchError}}">
       <text>暂无推荐用户</text>
     </view>
   </view>

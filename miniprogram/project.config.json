@@ -39,7 +39,7 @@
     "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "3.3.4",
+  "libVersion": "3.16.0",
   "appid": "wx16943d53dd2ba764",
   "projectname": "自律搭子",
   "condition": {},

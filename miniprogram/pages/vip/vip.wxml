@@ -1,0 +1,51 @@
+<view class="vip-page">
+  <view class="card warning">
+    <text class="title">尚未接入真实支付</text>
+    <text class="line">本页不发起真实付款，不会扣款。只有服务端明确开启开发测试时，才显示模拟开通入口。</text>
+  </view>
+
+  <view class="card" wx:if="{{loading}}"><text>正在查询会员状态…</text></view>
+  <view class="card error" wx:if="{{error}}">
+    <text class="line">{{error}}</text>
+    <button size="mini" bindtap="loadMembership" disabled="{{loading || busy}}">重新查询</button>
+    <button size="mini" bindtap="goLogin">前往登录</button>
+  </view>
+
+  <view class="card" wx:if="{{status}}">
+    <text class="title">{{status.isVip ? 'VIP 有效' : '当前非 VIP'}}</text>
+    <text class="line" wx:if="{{untilText}}">{{status.isVip ? '有效期至' : '上次有效期至'}}：{{untilText}}</text>
+    <text class="line" wx:else>尚无会员有效期</text>
+    <text class="line">会员状态和有效期由服务器确认。</text>
+  </view>
+
+  <view class="card">
+    <text class="title">VIP 权益与规则</text>
+    <text class="line">可发起新的引领型搭子申请，仍需满足原有匹配条件、审核与名额要求。</text>
+    <text class="line">共勉型申请免费；免费用户可浏览、接收和处理引领申请。</text>
+    <text class="line">到期仅限制发起新引领申请。已发出的申请继续按原规则处理，已建立的关系及打卡功能继续有效。</text>
+    <text class="line">仅一种固定期限套餐，不自动续费。</text>
+  </view>
+
+  <view class="card" wx:if="{{plan}}">
+    <text class="title">VIP 套餐 · {{plan.durationDays}} 天</text>
+    <block wx:if="{{plan.mockEnabled}}">
+      <text class="line">测试金额：¥{{priceText}}（仅订单测试数据，不扣款）</text>
+      <text class="line warning-text">模拟确认会写入此开发环境的会员有效期，请仅在测试账号上使用。</text>
+      <button class="primary" bindtap="createTestOrder" disabled="{{loading || busy || !!order}}" loading="{{busy}}">创建测试订单（不扣款）</button>
+    </block>
+    <text class="line" wx:else>当前环境未开启模拟开通；真实支付渠道尚未接入，暂不可开通。</text>
+  </view>
+
+  <view class="card" wx:if="{{order}}">
+    <text class="title">测试订单</text>
+    <text class="line order-number">订单号：{{order.orderNo}}</text>
+    <text class="line">{{order.status === 'TEST_CONFIRMED' ? '已模拟确认，未发生真实付款' : (order.status === 'PENDING' ? '待模拟确认' : '请查询服务器订单状态')}}</text>
+    <text class="line">订单金额：{{order.priceFen}} 分（测试数据，不扣款）</text>
+    <text class="line">订单期限：{{order.durationDays}} 天</text>
+    <button class="primary" wx:if="{{order.status === 'PENDING' && plan && plan.mockEnabled}}" bindtap="confirmTestOrder" disabled="{{loading || busy}}" loading="{{busy}}">模拟确认开通（不扣款）</button>
+    <button bindtap="loadMembership" disabled="{{loading || busy}}">查询订单与会员状态</button>
+  </view>
+
+  <view class="card notice" wx:if="{{notice}}"><text class="line">{{notice}}</text></view>
+  <button bindtap="goBack">{{fromMatch ? '返回原匹配场景' : '返回'}}</button>
+</view>

@@ -1,0 +1,27 @@
+# Copy to backend/application-local.yml, then fill in your own values.
+# The copied local file is ignored by Git and imported automatically from the
+# repository root or backend working directory. Never commit real credentials.
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/zilvzi?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai"
+    username: root
+    password: ""
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: ""
+
+jwt:
+  # Set JWT_SECRET in your IDE/environment to a random value of at least 32 bytes.
+  secret: "${JWT_SECRET}"
+
+admin:
+  bootstrap:
+    username: "${ADMIN_BOOTSTRAP_USERNAME:admin}"
+    # Empty means no administrator is created or promoted.
+    password: "${ADMIN_BOOTSTRAP_PASSWORD:}"
+
+# Optional cloud services: configure the environment variables documented in README.
+# To test VIP in dev, use IDEA program arguments:
+# --spring.profiles.active=dev --vip.payment.channel=mock --vip.mock-payment.enabled=true
