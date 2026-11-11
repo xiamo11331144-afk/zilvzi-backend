@@ -195,6 +195,79 @@ for (const [label, pagePath] of [['列表', 'miniprogram/pages/partner/partner.j
   })
 }
 
+test('引领列表在80%边界采信服务端资格，缺失数据或无名额不放行', async () => {
+  const base = { id: 20, mentorEnabled: 1, mentorEligible: true, approvedDays: 24, checkinRate: 80, streak: 7, remainingSlots: 1 }
+  for (const [patch, expected] of [
+    [{}, true], [{ mentorEligible: false }, false], [{ mentorEnabled: 0 }, false],
+    [{ remainingSlots: 0 }, false], [{ checkinRate: null }, false], [{ streak: '' }, false],
+    [{ mentorEligible: undefined }, false],
+    // 客户端不复制资格阈值；异常统计的资格判定和最终提交由服务端负责。
+    [{ approvedDays: 23, checkinRate: 76.7 }, true]
+  ]) {
+    const { page } = pageHarness('miniprogram/pages/partner/partner.js', { get: async () => success([{ ...base, ...patch }]) })
+    await page.loadMatchList()
+    assert.equal(page.data.matchList[0].leadCanApply, expected, JSON.stringify(patch))
+  }
+})
+
+test('个人页与列表一样使用服务端eligible，保留资格阈值供展示', async () => {
+  for (const eligible of [true, false]) {
+    const { page } = pageHarness('miniprogram/pages/profile/profile.js', { get: async () => success({
+      eligible, enabled: false, approvedDays: 24, checkinRate: 80, streak: 7,
+      requiredApprovedDays: 24, requiredRate: 80, requiredDays: 7
+    }) })
+    await page.loadMentorStatus()
+    assert.equal(page.data.mentorStatus.eligible, eligible)
+    assert.equal(page.data.mentorStatus.requiredRate, 80)
+  }
+})
+
+test('个人页区分开启、暂停和名额状态，并在刷新后恢复推荐', async () => {
+  let data = { enabled: true, eligible: false, approvedDays: 24, checkinRate: 80, streak: 0, remainingSlots: 2, capacity: 3, unmetRequirements: ['当前连续有效打卡不足7天'], recommendationState: 'ineligible' }
+  const { page } = pageHarness('miniprogram/pages/profile/profile.js', { get: async () => success(data) })
+  await page.loadMentorStatus()
+  assert.equal(page.data.mentorStatus.enabled, true)
+  assert.equal(page.data.mentorStatus.stateLabel, '资格不足，暂停推荐')
+  assert.match(page.data.mentorStatus.unmetRequirements.join(), /连续/)
+  data = { ...data, eligible: true, streak: 7, unmetRequirements: [], recommendationState: 'available' }
+  await page.loadMentorStatus()
+  assert.equal(page.data.mentorStatus.stateLabel, '可被引领推荐')
+  data = { ...data, remainingSlots: 0, recommendationState: 'full' }
+  await page.loadMentorStatus()
+  assert.equal(page.data.mentorStatus.stateLabel, '名额已满，暂停推荐')
+  data = { ...data, remainingSlots: null, recommendationState: undefined }
+  await page.loadMentorStatus()
+  assert.equal(page.data.mentorStatus.stateLabel, '推荐状态待确认')
+})
+
+test('开关使用服务端最新资格结果，保存失败恢复原状态', async () => {
+  let fail = false
+  const initial = { enabled: false, eligible: true, approvedDays: 24, checkinRate: 80, streak: 7, remainingSlots: 2 }
+  const { page } = pageHarness('miniprogram/pages/profile/profile.js', {
+    get: async () => success(initial),
+    put: async () => { if (fail) throw new Error('网络失败'); return success({ ...initial, enabled: true, eligible: false, streak: 0, recommendationState: 'ineligible' }) }
+  })
+  await page.loadMentorStatus()
+  await page.onMentorSwitch({ detail: { value: true } })
+  assert.equal(page.data.mentorStatus.stateLabel, '资格不足，暂停推荐')
+  fail = true
+  await page.onMentorSwitch({ detail: { value: false } })
+  assert.equal(page.data.mentorStatus.enabled, true)
+  assert.equal(page.data.mentorStatus.stateLabel, '资格不足，暂停推荐')
+  assert.equal(page.data.mentorSaving, false)
+})
+
+test('状态刷新失败清除旧推荐结论，匹配页可直接进入个人页', async () => {
+  const { page } = pageHarness('miniprogram/pages/profile/profile.js', { get: async () => { throw new Error('网络失败') } })
+  page.setData({ mentorStatus: { stateLabel: '可被引领推荐' } })
+  await page.loadMentorStatus()
+  assert.equal(page.data.mentorStatus, null)
+  assert.equal(page.data.mentorStatusError, '网络失败')
+  const match = pageHarness('miniprogram/pages/partner/partner.js')
+  match.page.openMentorSettings()
+  assert.equal(match.calls.navigate[0].url, '/pages/profile/profile')
+})
+
 test('会员页返回原页面，不重建匹配参数', () => {
   const { page, calls } = pageHarness(vipPath)
   page.goBack()

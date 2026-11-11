@@ -18,7 +18,7 @@ docs/                     功能说明与架构图
 .agents/                  项目开发约定及消息角标测试
 ```
 
-IDE 设置、编译输出、缓存、个人 Word 文档及一次性文档工具不属于运行所需内容。整理时已保存在原电脑的本地归档目录，不上传到仓库。
+IDE 设置、编译输出、验证缓存、个人 Word 文档、一次性文档工具和旧归档已统一移入 [本地归档_项目杂项_20261111](<本地归档_项目杂项_20261111/整理说明.md>)，各项原路径见其中的 `归档清单.json`。归档目录已由现有 Git 忽略规则排除，不上传到仓库。源码、测试、功能与架构文档及本机运行配置保留原位；后续 Maven 构建会重新生成 `backend/target/`，运行隔离构建准备脚本会重新生成 `.verification/`。
 
 ## 环境要求
 
@@ -41,6 +41,8 @@ CREATE DATABASE zilvzi DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 3. `backend/sql/2026-11-07_vip_membership.sql`：会员有效期与订单表。
 
 执行前选中 `zilvzi` 数据库。以上三个增量脚本会检查已存在的字段、索引或表，支持重复执行。Redis 启动即可，无需导入 SQL。
+
+[历史审核任务修复脚本](<backend/sql/2026-11-10_checkin_review_completion.sql>)用于修复旧版将 pending/rejected 打卡任务提前标记完成的数据，不属于常规初始化。已有业务库应先备份并暂停打卡和审核写入，先执行脚本中事务前的临时表及影响范围查询，人工确认后再继续更新。脚本只撤回没有 approved 打卡的相关任务完成标记，并重算受影响计划的完成天数；不会撤销已发放的历史成就。新库无此历史问题无需执行。本次未向实际业务库执行此脚本。
 
 `mentor_test_user_11_seed.sql` / `mentor_test_user_11_cleanup.sql` 是针对固定测试用户的开发辅助脚本，可能改变该用户的测试目标和打卡；不属于初始化步骤，不在真实业务库执行。
 
@@ -72,6 +74,7 @@ $env:DB_PASSWORD = '<填写本机数据库密码>'
 | 首次管理员 | `ADMIN_BOOTSTRAP_USERNAME`、`ADMIN_BOOTSTRAP_PASSWORD` |
 | AI | `AI_API_URL`、`AI_API_KEY`、`AI_MODEL` |
 | 微信登录 | `WECHAT_APP_ID`、`WECHAT_SECRET` |
+| 短信/邮件验证码桥接 | `VERIFICATION_DELIVERY_URL`、`VERIFICATION_DELIVERY_TOKEN` |
 | 阿里云 OSS | `ALIYUN_OSS_ENDPOINT`、`ALIYUN_OSS_ACCESS_KEY_ID`、`ALIYUN_OSS_ACCESS_KEY_SECRET`、`ALIYUN_OSS_BUCKET_NAME`、`ALIYUN_OSS_URL_PREFIX` |
 | 阿里云 OCR | `ALIYUN_OCR_ACCESS_KEY_ID`、`ALIYUN_OCR_ACCESS_KEY_SECRET` |
 
@@ -114,8 +117,7 @@ mvn spring-boot:run
 小程序测试与静态检查在仓库根目录执行：
 
 ```powershell
-node --test scripts/vip-miniprogram.test.cjs
-node --test .agents/tests/notification-badges.test.cjs
+node --test scripts/checkin-regression.test.cjs scripts/vip-miniprogram.test.cjs scripts/admin-xss-regression.test.cjs scripts/login-business-errors.test.cjs .agents/tests/notification-badges.test.cjs
 node scripts/prepare-vip-verification.cjs
 ```
 
@@ -125,5 +127,6 @@ node scripts/prepare-vip-verification.cjs
 
 - 不提交 `application-local.yml`、`.env`、私钥、真实令牌或数据库备份；本地配置及构建输出已列入 `.gitignore`。
 - `.env` 不会由 Spring Boot 自动加载；使用系统/IDE 环境变量或上述本机 YAML 文件。
-- 项目当前验证码仍为演示实现，会写入 Redis 并打印到后端控制台；公开部署前需要接入真实短信或邮件服务，并清理敏感日志。
+- 验证码需要 `VERIFICATION_DELIVERY_URL`（HTTPS）及 `VERIFICATION_DELIVERY_TOKEN`。后端向该桥接服务发送 Bearer 认证的 JSON：`target`、`type`（`phone` / `email`）、`code`、`expiresInSeconds: 300`；服务必须在短信/邮件服务商接受投递后返回 HTTP 2xx 和 `{"accepted":true}`。后端才将验证码保存到 Redis，保存 300 秒。缺失配置、超时或拒绝投递都会返回明确失败；不会打印验证码或微信会话响应。实际短信/邮件账户由部署方配置，自动测试未调用真实服务。
+- PDF 使用随应用打包的 Droid Sans Fallback 中文字体，支持长文本换行和多页导出；不支持的字符显示 Unicode 编码。字体来自 [Android 4.4 AOSP](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-4.4_r1/data/fonts/DroidSansFallback.ttf)，Apache 2.0 许可见 [字体许可](<backend/src/main/resources/DroidSansFallback-NOTICE.txt>)。
 - 本次整理未连接或迁移实际数据库，未调用真实支付，也未启动线上服务。

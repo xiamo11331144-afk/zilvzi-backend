@@ -115,13 +115,16 @@ Page({
   },
 
   async loadCheckedDates() {
+    const year = this.data.currentYear
+    const month = this.data.currentMonth
+    const requestSeq = (this._checkedDatesRequestSeq || 0) + 1
+    this._checkedDatesRequestSeq = requestSeq
+
     try {
-      const now = new Date()
-      const res = await request.get('/api/checkin/dates', {
-        year: now.getFullYear(),
-        month: now.getMonth() + 1
-      })
-      if (res.code === 200 && res.data) {
+      const res = await request.get('/api/checkin/dates', { year, month })
+      const isLatestRequest = requestSeq === this._checkedDatesRequestSeq
+      const isDisplayedMonth = year === this.data.currentYear && month === this.data.currentMonth
+      if (isLatestRequest && isDisplayedMonth && res.code === 200 && res.data) {
         this.setData({ checkedDates: res.data })
         this.initCalendar()
       }
@@ -134,18 +137,25 @@ Page({
     try {
       const res = await request.get('/api/checkin/today')
       if (res.code === 200 && res.data) {
-        const tasks = res.data.map(t => ({
-          id: t.id,
-          goalId: t.goalId,
-          name: t.taskName || '未命名任务',
-          type: t.taskType || '学习',
-          description: t.taskDescription || '',
-          duration: t.taskDuration || '',
-          checked: t.completed === 1,
-          streakBreak: t.completed === -1,
-          checkTime: ''
-        }))
-        const hasUnchecked = tasks.some(t => !t.checked && !t.streakBreak)
+        const tasks = res.data.map(t => {
+          const checkinStatus = t.checkinStatus || ''
+          const checked = checkinStatus === 'approved' || (!checkinStatus && t.completed === 1)
+          return {
+            id: t.id,
+            goalId: t.goalId,
+            name: t.taskName || '未命名任务',
+            type: t.taskType || '学习',
+            description: t.taskDescription || '',
+            duration: t.taskDuration || '',
+            checkinStatus,
+            checked,
+            pending: checkinStatus === 'pending',
+            rejected: checkinStatus === 'rejected',
+            streakBreak: t.completed === -1 && checkinStatus !== 'rejected',
+            checkTime: ''
+          }
+        })
+        const hasUnchecked = tasks.some(t => !t.checked && !t.pending && !t.streakBreak)
         this.setData({ todayTasks: tasks, hasUnchecked })
       }
     } catch (err) {
@@ -221,10 +231,19 @@ Page({
 
   async doCheckin(e) {
     const taskId = e.currentTarget.dataset.id
+    const task = this.data.todayTasks.find(item => item.id === taskId)
+    if (task && (task.pending || task.checked || task.streakBreak)) return
     try {
       const res = await request.post('/api/checkin/do', { taskId })
       if (res.code === 200) {
-        wx.showToast({ title: '打卡成功', icon: 'success' })
+        const status = res.data && res.data.status
+        if (status === 'approved') {
+          wx.showToast({ title: '打卡已通过', icon: 'success' })
+        } else if (status === 'pending') {
+          wx.showToast({ title: '已提交，等待审核', icon: 'none' })
+        } else {
+          wx.showToast({ title: '已提交，请稍后刷新状态', icon: 'none' })
+        }
         this.loadTodayTasks()
         this.loadCheckedDates()
         this.loadStats()
@@ -235,24 +254,38 @@ Page({
   },
 
   async batchCheckin() {
-    const unchecked = this.data.todayTasks.filter(t => !t.checked && !t.streakBreak)
+    const unchecked = this.data.todayTasks.filter(t => !t.checked && !t.pending && !t.streakBreak)
     if (unchecked.length === 0) {
       wx.showToast({ title: '没有可打卡的任务', icon: 'none' })
       return
     }
-    const failed = []
+    let approved = 0
+    let pending = 0
+    let failed = 0
     for (const task of unchecked) {
       try {
-        await request.post('/api/checkin/do', { taskId: task.id })
+        const res = await request.post('/api/checkin/do', { taskId: task.id })
+        if (res.code === 200 && res.data && res.data.status === 'approved') {
+          approved++
+        } else if (res.code === 200 && res.data && res.data.status === 'pending') {
+          pending++
+        } else {
+          failed++
+        }
       } catch (err) {
-        failed.push(task.name)
+        failed++
       }
     }
-    if (failed.length > 0) {
-      wx.showToast({ title: `${failed.length}个任务打卡失败`, icon: 'none' })
+    if (pending > 0) {
+      wx.showToast({ title: `已提交${pending}个，等待审核`, icon: 'none' })
+    } else if (failed > 0) {
+      wx.showToast({ title: `${failed}个任务打卡失败`, icon: 'none' })
     } else {
-      wx.showToast({ title: '打卡完成', icon: 'success' })
+      wx.showToast({ title: '打卡已通过', icon: 'success' })
       this.setData({ showSuccess: true })
+    }
+    if (pending > 0 && failed > 0) {
+      wx.showToast({ title: `${pending}个待审核，${failed}个失败`, icon: 'none' })
     }
     this.loadTodayTasks()
     this.loadCheckedDates()

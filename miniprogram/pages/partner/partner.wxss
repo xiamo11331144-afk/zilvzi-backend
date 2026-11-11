@@ -39,6 +39,7 @@
 .filter-tags{display:flex;flex-wrap:wrap;gap:12rpx}
 .filter-tags .tag{padding:10rpx 22rpx;background:#F6F8FC;border-radius:24rpx;font-size:26rpx;color:#666}
 .filter-tags .tag.active{background:#4A90D9;color:#fff}
+.lead-tip{font-size:24rpx;color:#737B86;line-height:1.7;margin-bottom:16rpx;word-break:break-all}
 .match-list{margin-top:8rpx}
 .match-item{margin-bottom:16rpx}
 .match-top{display:flex;align-items:center;gap:16rpx}

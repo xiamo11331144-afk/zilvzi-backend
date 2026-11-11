@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="2500" viewBox="0 0 2800 2500"><rect width="100%" height="100%" fill="white"/>
+<text x="1400.0" y="80.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="44" font-weight="700">圈子话题与回复 E-R 图</text>
+<text x="1400.0" y="130.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">下划线为主键；实线为物理外键联系，虚线为逻辑联系；0..n表示可无或多条</text>
+<polyline points="2200.0,705.0 2200.0,1845.0" fill="none" stroke="#333" stroke-width="3"/>
+<polygon points="2085.0,1275.0 2200.0,1204.0 2315.0,1275.0 2200.0,1346.0" fill="white" stroke="#222" stroke-width="3"/>
+<text x="2200.0" y="1275.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">设有话题</text>
+<text x="2200.0" y="1310.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F24</text>
+<rect x="2195.0" y="946.0" width="30.0" height="38" fill="white"/>
+<text x="2210.0" y="973.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</text>
+<rect x="2181.5" y="1516.0" width="57.0" height="38" fill="white"/>
+<text x="2210.0" y="1543.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</text>
+<polyline points="700.0,650.0 1350,650 1350,1320 2200,1320 2200.0,1845.0" fill="none" stroke="#333" stroke-width="3"/>
+<polygon points="1262.5,1320.0 1377.5,1249.0 1492.5,1320.0 1377.5,1391.0" fill="white" stroke="#222" stroke-width="3"/>
+<text x="1377.5" y="1320.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">发起话题</text>
+<text x="1377.5" y="1355.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F25</text>
+<rect x="1345.0" y="629.75" width="30.0" height="38" fill="white"/>
+<text x="1360.0" y="656.75" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</text>
+<rect x="2032.75" y="1276.0" width="57.0" height="38" fill="white"/>
+<text x="2061.25" y="1303.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</text>
+<polyline points="2050.0,1900.0 700.0,1900.0" fill="none" stroke="#333" stroke-width="3"/>
+<polygon points="1260.0,1900.0 1375.0,1829.0 1490.0,1900.0 1375.0,1971.0" fill="white" stroke="#222" stroke-width="3"/>
+<text x="1375.0" y="1900.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">包含回复</text>
+<text x="1375.0" y="1935.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F26</text>
+<rect x="1707.5" y="1856.0" width="30.0" height="38" fill="white"/>
+<text x="1722.5" y="1883.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</text>
+<rect x="1019.0" y="1856.0" width="57.0" height="38" fill="white"/>
+<text x="1047.5" y="1883.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</text>
+<polyline points="550.0,705.0 550.0,1845.0" fill="none" stroke="#333" stroke-width="3"/>
+<polygon points="435.0,1275.0 550.0,1204.0 665.0,1275.0 550.0,1346.0" fill="white" stroke="#222" stroke-width="3"/>
+<text x="550.0" y="1275.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">发表回复</text>
+<text x="550.0" y="1310.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F27</text>
+<rect x="545.0" y="946.0" width="30.0" height="38" fill="white"/>
+<text x="560.0" y="973.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</text>
+<rect x="531.5" y="1516.0" width="57.0" height="38" fill="white"/>
+<text x="560.0" y="1543.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</text>
+<polyline points="550,650 420.0,440" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="420.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="420.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">用户编号</text>
+<polyline points="550,650 680.0,440" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="680.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="680.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">昵称</text>
+<polyline points="550,650 420.0,860" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="420.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="420.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">等级</text>
+<polyline points="550,650 680.0,860" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="680.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="680.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">引领开关</text>
+<rect x="400.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3"/>
+<text x="550.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">用户</text>
+<text x="550.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">user</text>
+<polyline points="2200,650 2070.0,440" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="2070.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="2070.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">圈子编号</text>
+<polyline points="2200,650 2330.0,440" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="2330.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="2330.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">圈子名称</text>
+<polyline points="2200,650 2470,860" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="2470" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="2470.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">圈子简介</text>
+<rect x="2050.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3"/>
+<text x="2200.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">圈子</text>
+<text x="2200.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">circle</text>
+<polyline points="550,1900 420.0,1690" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="420.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="420.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">回复编号</text>
+<polyline points="550,1900 680.0,1690" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="680.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="680.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">回复内容</text>
+<polyline points="550,1900 820,2110" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="820" cy="2110" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="820.0" y="2123.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">回复时间</text>
+<rect x="400.0" y="1845.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3"/>
+<text x="550.0" y="1901.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">话题回复</text>
+<text x="550.0" y="1936.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">topic_reply</text>
+<polyline points="2200,1900 2070.0,1690" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="2070.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="2070.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">话题编号</text>
+<polyline points="2200,1900 2330.0,1690" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="2330.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="2330.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">话题标题</text>
+<polyline points="2200,1900 2470,2110" fill="none" stroke="#333" stroke-width="3"/>
+<ellipse cx="2470" cy="2110" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3"/>
+<text x="2470.0" y="2123.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">话题内容</text>
+<rect x="2050.0" y="1845.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3"/>
+<text x="2200.0" y="1901.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">话题</text>
+<text x="2200.0" y="1936.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">topic</text>
+<text x="1400.0" y="2429.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">矩形＝实体　菱形＝联系　椭圆＝主要属性；属性从当前DDL选取，外键字段以联系表达。</text>
+<text x="1400.0" y="2474.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">基数为实际可选性：父端1或0..1，子端0..n；SQL结构核对，未连接实际数据库。</text>
+</svg>

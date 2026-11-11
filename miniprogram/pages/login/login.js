@@ -13,6 +13,9 @@ Page({
     avatar: '',
     code: '',
     codeSent: false,
+    sendingCode: false,
+    submitting: false,
+    wechatLoggingIn: false,
     countdown: 60,
     agreed: false,
     timer: null,
@@ -99,8 +102,20 @@ Page({
     })
   },
 
+  ensureBusinessSuccess(res, fallback) {
+    if (!res || res.code !== 200) {
+      throw new Error((res && res.message) || fallback)
+    }
+    return res
+  },
+
+  clearCodeTimer() {
+    if (this.data.timer) clearInterval(this.data.timer)
+    this.setData({ timer: null, codeSent: false, countdown: 60 })
+  },
+
   async sendCode() {
-    if (this.data.codeSent) return
+    if (this.data.codeSent || this.data.sendingCode) return
 
     const { loginType, phone, email } = this.data
     
@@ -114,24 +129,29 @@ Page({
       return
     }
 
+    this.setData({ sendingCode: true })
     try {
       const target = loginType === 'phone' ? phone : email
-      await request.post('/api/user/sendCode', { target, type: loginType })
-      wx.showToast({ title: '验证码已发送', icon: 'success' })
+      const res = await request.post('/api/user/sendCode', { target, type: loginType })
+      this.ensureBusinessSuccess(res, '验证码发送失败')
+      wx.showToast({ title: res.message || '验证码已发送', icon: 'success' })
       this.setData({ codeSent: true })
       this.startCountdown()
     } catch (err) {
       wx.showToast({ title: err.message || '发送失败', icon: 'none' })
+    } finally {
+      this.setData({ sendingCode: false })
     }
   },
 
   startCountdown() {
+    if (this.data.timer) clearInterval(this.data.timer)
     let countdown = 60
     const timer = setInterval(() => {
       countdown--
       if (countdown <= 0) {
         clearInterval(timer)
-        this.setData({ codeSent: false, countdown: 60 })
+        this.setData({ timer: null, codeSent: false, countdown: 60 })
       } else {
         this.setData({ countdown })
       }
@@ -140,24 +160,31 @@ Page({
   },
 
   async wechatLogin() {
+    if (this.data.wechatLoggingIn) return
+    this.setData({ wechatLoggingIn: true })
     try {
       const loginRes = await wx.login()
       const res = await request.post('/api/user/login/wechat', { code: loginRes.code, province: this.data.province, city: this.data.city, district: this.data.district })
-      
+      this.ensureBusinessSuccess(res, '微信登录失败')
+      if (!res.data || !res.data.token || !res.data.userInfo) throw new Error('登录信息不完整，请重试')
       this.saveLoginInfo(res.data)
     } catch (err) {
       wx.showToast({ title: err.message || '登录失败', icon: 'none' })
+    } finally {
+      this.setData({ wechatLoggingIn: false })
     }
   },
 
   async submit() {
     const { mode, loginType, phone, email, username, password, nickname, code, agreed } = this.data
 
+    if (this.data.submitting) return
     if (!agreed) {
       wx.showToast({ title: '请同意用户协议', icon: 'none' })
       return
     }
 
+    this.setData({ submitting: true })
     wx.showLoading({ title: mode === 'login' ? '登录中...' : '注册中...' })
 
     try {
@@ -188,15 +215,15 @@ Page({
         res = await request.post('/api/user/login', params)
       }
 
-      wx.hideLoading()
-      
-      if (res.code === 200) {
-        wx.showToast({ title: mode === 'login' ? '登录成功' : '注册成功', icon: 'success' })
-        this.saveLoginInfo(res.data)
-      }
+      this.ensureBusinessSuccess(res, mode === 'login' ? '登录失败' : '注册失败')
+      if (!res.data || !res.data.token || !res.data.userInfo) throw new Error('登录信息不完整，请重试')
+      wx.showToast({ title: mode === 'login' ? '登录成功' : '注册成功', icon: 'success' })
+      this.saveLoginInfo(res.data)
     } catch (err) {
-      wx.hideLoading()
       wx.showToast({ title: err.message || '操作失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+      this.setData({ submitting: false })
     }
   },
 

@@ -63,7 +63,21 @@ public class PlanServiceImpl implements PlanService {
      * 快速返回给用户，展示阶段划分
      */
     @Override
+    @Transactional(isolation = org.springframework.transaction.annotation.Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public Plan generatePlan(Long userId, Long goalId, Map<String, Object> params) {
+        // 锁定稳定存在的用户行，避免无目标/无计划时并发创建重复数据。
+        if (userMapper.selectByIdForUpdate(userId) == null) {
+            throw new IllegalArgumentException("用户不存在");
+        }
+        if (goalId != null) {
+            Goal goal = goalMapper.selectById(goalId);
+            if (goal == null || !userId.equals(goal.getUserId())) {
+                throw new RuntimeException("目标不存在或无权操作");
+            }
+            if (!"active".equals(goal.getStatus())) {
+                throw new RuntimeException("目标已结束，无法生成计划");
+            }
+        }
         String goalType = (String) params.get("goalType");
         String goalName = (String) params.get("goalName");
         String examDate = (String) params.get("examDate");
@@ -132,6 +146,9 @@ public class PlanServiceImpl implements PlanService {
         // 二次去重：基于 goalId 检查是否已有活跃计划（防止名称不匹配导致的漏检）
         if (goalId != null) {
             Plan existingByGoal = planMapper.selectByGoalId(goalId);
+            if (existingByGoal != null && !userId.equals(existingByGoal.getUserId())) {
+                throw new RuntimeException("目标关联的计划归属异常");
+            }
             if (existingByGoal != null && "active".equals(existingByGoal.getStatus())) {
                 System.out.println("[Plan] ✅ 命中goalId去重: 已存在活跃计划 id=" + existingByGoal.getId()
                         + " goalId=" + goalId + "，直接返回");
@@ -223,9 +240,9 @@ public class PlanServiceImpl implements PlanService {
      * 用户进入某阶段时调用
      */
     @Override
-    @Transactional
+    @Transactional(isolation = org.springframework.transaction.annotation.Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public List<PlanTask> generatePhaseTasks(Long planId, Integer phase) {
-        Plan plan = planMapper.selectById(planId);
+        Plan plan = planMapper.selectByIdForUpdate(planId);
         if (plan == null) {
             throw new RuntimeException("计划不存在");
         }
@@ -279,7 +296,6 @@ public class PlanServiceImpl implements PlanService {
                 System.out.println("[Parse] 解析到" + tasks.size() + "个任务");
                 
                 if (!tasks.isEmpty()) {
-                    planTaskMapper.batchInsert(tasks);
                     allTasks.addAll(tasks);
                     success = true;
                     break;
@@ -297,8 +313,9 @@ public class PlanServiceImpl implements PlanService {
         if (!success) {
             System.out.println("[Default] 使用默认任务");
             allTasks = generateDefaultPhaseTasks(planId, phaseInfo.startDay, phaseInfo.endDay);
-            planTaskMapper.batchInsert(allTasks);
         }
+        // 数据库错误必须向外传播并回滚，不能进入 AI 重试或默认任务分支。
+        planTaskMapper.batchInsert(allTasks);
 
         // 更新当前阶段
         plan.setCurrentPhase(phase);

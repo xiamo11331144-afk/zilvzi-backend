@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1740" height="2985" viewBox="0 0 1740 2985"><rect width="100%" height="100%" fill="white"/>
+<text x="574.0" y="59" font-family="Microsoft YaHei, sans-serif" font-size="37" fill="#20374b" font-weight="700">E-R 分图：圈子、动态、话题与互动</text>
+<text x="604.0" y="101" font-family="Microsoft YaHei, sans-serif" font-size="23" fill="#20374b" font-weight="400">基线 SQL + 正式增量 · 21 表全量模型 · 2026-11-07</text>
+<text x="512.0" y="142" font-family="Microsoft YaHei, sans-serif" font-size="22" fill="#20374b" font-weight="400">实线 FK = 数据库外键；虚线 LR = 逻辑关联；基数顺序：父实体 : 子实体</text>
+<rect x="30" y="175" width="826" height="650" rx="11" fill="white" stroke="#bfccd8" stroke-width="2"/>
+<text x="52" y="216" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#20374b" font-weight="700">圈子  /  circle</text>
+<rect x="55.0" y="240" width="786.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="426.5" y="271" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">user</text>
+<text x="426.0" y="301" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="448.0,318 448.0,412" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="397.0" y="325" width="102.0" height="25" fill="white"/>
+<text x="400.0" y="344" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F04 1 : 0..N</text>
+<rect x="402.0" y="358" width="92.0" height="25" fill="white"/>
+<text x="405.0" y="377" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">creator_id</text>
+<rect x="52" y="415" width="782" height="380" rx="11" fill="#f5f8fb" stroke="#8b9db0" stroke-width="2"/>
+<text x="68" y="449" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">PK   id  (NOT NULL)</text>
+<text x="68" y="481" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK creator_id → user.id  [NN]</text>
+<text x="68" y="513" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">      name</text>
+<text x="55" y="816" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#64798c" font-weight="400">SQL L91 · 10字段；展示主键/关联/主要属性</text>
+<rect x="880" y="175" width="826" height="650" rx="11" fill="white" stroke="#bfccd8" stroke-width="2"/>
+<text x="902" y="216" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#20374b" font-weight="700">圈子成员  /  circle_member</text>
+<rect x="905.0" y="240" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="1073.0" y="271" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">circle</text>
+<text x="1077.0" y="301" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="1099.0,318 1099.0,412" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="1048.0" y="325" width="102.0" height="25" fill="white"/>
+<text x="1051.0" y="344" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F05 1 : 0..N</text>
+<rect x="1061.0" y="358" width="76.0" height="25" fill="white"/>
+<text x="1064.0" y="377" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">circle_id</text>
+<rect x="1303.0" y="240" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="1475.5" y="271" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">user</text>
+<text x="1475.0" y="301" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="1497.0,318 1497.0,412" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="1446.0" y="325" width="102.0" height="25" fill="white"/>
+<text x="1449.0" y="344" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F06 1 : 0..N</text>
+<rect x="1463.5" y="358" width="67.0" height="25" fill="white"/>
+<text x="1466.5" y="377" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">user_id</text>
+<rect x="902" y="415" width="782" height="380" rx="11" fill="#f5f8fb" stroke="#8b9db0" stroke-width="2"/>
+<text x="918" y="449" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">PK   id  (NOT NULL)</text>
+<text x="918" y="481" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK circle_id → circle.id  [NN]</text>
+<text x="918" y="513" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK user_id → user.id  [NN]</text>
+<text x="918" y="545" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">      role</text>
+<text x="918" y="577" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">      status</text>
+<text x="918" y="609" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">UQ  (circle_id, user_id)</text>
+<text x="905" y="816" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#64798c" font-weight="400">SQL L111 · 6字段；展示主键/关联/主要属性</text>
+<rect x="30" y="850" width="826" height="650" rx="11" fill="white" stroke="#bfccd8" stroke-width="2"/>
+<text x="52" y="891" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#20374b" font-weight="700">动态  /  post</text>
+<rect x="55.0" y="915" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="227.5" y="946" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">user</text>
+<text x="227.0" y="976" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="249.0,993 249.0,1087" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="198.0" y="1000" width="102.0" height="25" fill="white"/>
+<text x="201.0" y="1019" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F22 1 : 0..N</text>
+<rect x="215.5" y="1033" width="67.0" height="25" fill="white"/>
+<text x="218.5" y="1052" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">user_id</text>
+<rect x="453.0" y="915" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="621.0" y="946" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">circle</text>
+<text x="625.0" y="976" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="647.0,993 647.0,1087" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="586.5" y="1000" width="121.0" height="25" fill="white"/>
+<text x="589.5" y="1019" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F23 0..1 : 0..N</text>
+<rect x="609.0" y="1033" width="76.0" height="25" fill="white"/>
+<text x="612.0" y="1052" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">circle_id</text>
+<rect x="52" y="1090" width="782" height="380" rx="11" fill="#f5f8fb" stroke="#8b9db0" stroke-width="2"/>
+<text x="68" y="1124" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">PK   id  (NOT NULL)</text>
+<text x="68" y="1156" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK user_id → user.id  [NN]</text>
+<text x="68" y="1188" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK circle_id → circle.id  [NULL]</text>
+<text x="68" y="1220" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">      content</text>
+<text x="55" y="1491" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#64798c" font-weight="400">SQL L346 · 8字段；展示主键/关联/主要属性</text>
+<rect x="880" y="850" width="826" height="650" rx="11" fill="white" stroke="#bfccd8" stroke-width="2"/>
+<text x="902" y="891" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#20374b" font-weight="700">评论  /  comment</text>
+<rect x="905.0" y="915" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="1077.5" y="946" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">user</text>
+<text x="1077.0" y="976" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="1099.0,993 1099.0,1087" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="1048.0" y="1000" width="102.0" height="25" fill="white"/>
+<text x="1051.0" y="1019" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F07 1 : 0..N</text>
+<rect x="1065.5" y="1033" width="67.0" height="25" fill="white"/>
+<text x="1068.5" y="1052" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">user_id</text>
+<rect x="1303.0" y="915" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="1475.0" y="946" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">post</text>
+<text x="1475.0" y="976" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="1497.0,993 1497.0,1087" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="1446.0" y="1000" width="102.0" height="25" fill="white"/>
+<text x="1449.0" y="1019" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F08 1 : 0..N</text>
+<rect x="1462.5" y="1033" width="69.0" height="25" fill="white"/>
+<text x="1465.5" y="1052" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">post_id</text>
+<rect x="902" y="1090" width="782" height="380" rx="11" fill="#f5f8fb" stroke="#8b9db0" stroke-width="2"/>
+<text x="918" y="1124" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">PK   id  (NOT NULL)</text>
+<text x="918" y="1156" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK user_id → user.id  [NN]</text>
+<text x="918" y="1188" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK post_id → post.id  [NN]</text>
+<text x="918" y="1220" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">      content</text>
+<text x="905" y="1491" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#64798c" font-weight="400">SQL L130 · 5字段；展示主键/关联/主要属性</text>
+<rect x="30" y="1525" width="826" height="650" rx="11" fill="white" stroke="#bfccd8" stroke-width="2"/>
+<text x="52" y="1566" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#20374b" font-weight="700">点赞  /  like_record</text>
+<rect x="55.0" y="1590" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="227.5" y="1621" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">user</text>
+<text x="227.0" y="1651" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="249.0,1668 249.0,1762" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="198.0" y="1675" width="102.0" height="25" fill="white"/>
+<text x="201.0" y="1694" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F11 1 : 0..N</text>
+<rect x="215.5" y="1708" width="67.0" height="25" fill="white"/>
+<text x="218.5" y="1727" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">user_id</text>
+<rect x="453.0" y="1590" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="625.0" y="1621" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">post</text>
+<text x="625.0" y="1651" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="647.0,1668 647.0,1762" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="596.0" y="1675" width="102.0" height="25" fill="white"/>
+<text x="599.0" y="1694" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F12 1 : 0..N</text>
+<rect x="612.5" y="1708" width="69.0" height="25" fill="white"/>
+<text x="615.5" y="1727" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">post_id</text>
+<rect x="52" y="1765" width="782" height="380" rx="11" fill="#f5f8fb" stroke="#8b9db0" stroke-width="2"/>
+<text x="68" y="1799" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">PK   id  (NOT NULL)</text>
+<text x="68" y="1831" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK user_id → user.id  [NN]</text>
+<text x="68" y="1863" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK post_id → post.id  [NN]</text>
+<text x="68" y="1895" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">UQ  (user_id, post_id)</text>
+<text x="55" y="2166" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#64798c" font-weight="400">SQL L190 · 4字段；展示主键/关联/主要属性</text>
+<rect x="880" y="1525" width="826" height="650" rx="11" fill="white" stroke="#bfccd8" stroke-width="2"/>
+<text x="902" y="1566" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#20374b" font-weight="700">话题  /  topic</text>
+<rect x="905.0" y="1590" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="1073.0" y="1621" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">circle</text>
+<text x="1077.0" y="1651" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="1099.0,1668 1099.0,1762" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="1048.0" y="1675" width="102.0" height="25" fill="white"/>
+<text x="1051.0" y="1694" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F24 1 : 0..N</text>
+<rect x="1061.0" y="1708" width="76.0" height="25" fill="white"/>
+<text x="1064.0" y="1727" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">circle_id</text>
+<rect x="1303.0" y="1590" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="1475.5" y="1621" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">user</text>
+<text x="1475.0" y="1651" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="1497.0,1668 1497.0,1762" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="1446.0" y="1675" width="102.0" height="25" fill="white"/>
+<text x="1449.0" y="1694" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F25 1 : 0..N</text>
+<rect x="1463.5" y="1708" width="67.0" height="25" fill="white"/>
+<text x="1466.5" y="1727" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">user_id</text>
+<rect x="902" y="1765" width="782" height="380" rx="11" fill="#f5f8fb" stroke="#8b9db0" stroke-width="2"/>
+<text x="918" y="1799" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">PK   id  (NOT NULL)</text>
+<text x="918" y="1831" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK circle_id → circle.id  [NN]</text>
+<text x="918" y="1863" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK user_id → user.id  [NN]</text>
+<text x="918" y="1895" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">      title</text>
+<text x="905" y="2166" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#64798c" font-weight="400">SQL L367 · 8字段；展示主键/关联/主要属性</text>
+<rect x="30" y="2200" width="826" height="650" rx="11" fill="white" stroke="#bfccd8" stroke-width="2"/>
+<text x="52" y="2241" font-family="Microsoft YaHei, sans-serif" font-size="27" fill="#20374b" font-weight="700">话题回复  /  topic_reply</text>
+<rect x="55.0" y="2265" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="224.0" y="2296" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">topic</text>
+<text x="227.0" y="2326" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="249.0,2343 249.0,2437" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="198.0" y="2350" width="102.0" height="25" fill="white"/>
+<text x="201.0" y="2369" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F26 1 : 0..N</text>
+<rect x="211.5" y="2383" width="75.0" height="25" fill="white"/>
+<text x="214.5" y="2402" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">topic_id</text>
+<rect x="453.0" y="2265" width="388.0" height="78" rx="11" fill="#edf5fb" stroke="#3c7299" stroke-width="2"/>
+<text x="625.5" y="2296" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#20374b" font-weight="700">user</text>
+<text x="625.0" y="2326" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#20374b" font-weight="400">PK id</text>
+<polyline points="647.0,2343 647.0,2437" fill="none" stroke="#3c7299" stroke-width="2"/>
+<rect x="596.0" y="2350" width="102.0" height="25" fill="white"/>
+<text x="599.0" y="2369" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">F27 1 : 0..N</text>
+<rect x="613.5" y="2383" width="67.0" height="25" fill="white"/>
+<text x="616.5" y="2402" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#3c7299" font-weight="400">user_id</text>
+<rect x="52" y="2440" width="782" height="380" rx="11" fill="#f5f8fb" stroke="#8b9db0" stroke-width="2"/>
+<text x="68" y="2474" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">PK   id  (NOT NULL)</text>
+<text x="68" y="2506" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK topic_id → topic.id  [NN]</text>
+<text x="68" y="2538" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">FK user_id → user.id  [NN]</text>
+<text x="68" y="2570" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">      content</text>
+<text x="55" y="2841" font-family="Microsoft YaHei, sans-serif" font-size="18" fill="#64798c" font-weight="400">SQL L387 · 5字段；展示主键/关联/主要属性</text>
+<text x="422.5" y="2911" font-family="Microsoft YaHei, sans-serif" font-size="22" fill="#20374b" font-weight="400">父实体小框是同名表的引用，不是新增实体；完整字段和所有关系见 Mermaid / 数据字典。</text>
+<text x="406.0078125" y="2949" font-family="Microsoft YaHei, sans-serif" font-size="21" fill="#20374b" font-weight="400">LR基数是非空/可空字段的业务模型；未建立外键，数据库不保证目标存在。POLY不画成固定外键。</text>
+</svg>

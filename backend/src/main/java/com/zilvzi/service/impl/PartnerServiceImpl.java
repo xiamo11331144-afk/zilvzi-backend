@@ -307,6 +307,15 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
     public void remindPartner(Long userId, Long partnerId) {
+        if (userId.equals(partnerId)) {
+            throw new IllegalArgumentException("不能提醒自己");
+        }
+        List<Partner> records = partnerMapper.selectAllByUserAndPartner(userId, partnerId);
+        boolean blocked = records.stream().anyMatch(record -> "blocked".equals(record.getStatus()));
+        boolean accepted = records.stream().anyMatch(record -> "accepted".equals(record.getStatus()));
+        if (blocked || !accepted) {
+            throw new IllegalArgumentException("仅可提醒未互相拉黑的已接受搭子");
+        }
         notificationService.sendNotification(
             partnerId, userId, "checkin_remind",
             "打卡提醒", "提醒你记得打卡哦~",
@@ -357,9 +366,11 @@ public class PartnerServiceImpl implements PartnerService {
         }
         
         if (existingRecord != null) {
-            // 保存拉黑前的状态（用于解黑恢复）
-            partnerMapper.updatePrevStatus(existingRecord.getId(), existingRecord.getStatus());
-            partnerMapper.updateStatus(existingRecord.getId(), "blocked");
+            if (!"blocked".equals(existingRecord.getStatus())) {
+                // 保存拉黑前的状态；重复拉黑不能覆盖第一次记录的状态。
+                partnerMapper.updatePrevStatus(existingRecord.getId(), existingRecord.getStatus());
+                partnerMapper.updateStatus(existingRecord.getId(), "blocked");
+            }
         } else {
             // 没有记录，新建一条拉黑记录
             Partner blockRecord = new Partner();

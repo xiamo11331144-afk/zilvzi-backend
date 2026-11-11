@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2280" height="2740" viewBox="0 0 2280 2740"><rect width="100%" height="100%" fill="white"/>
+<text x="1140" y="68" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="43" font-weight="700" fill="#19334a">打卡提交与搭子审核业务流程</text>
+<text x="1140" y="114" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" fill="#19334a">当前源码实现 · 2026-11-07 · 普通打卡与审核通过共享 approved 状态</text>
+<rect x="900.0" y="155" width="480" height="70" rx="16" fill="#f0f5fa" stroke="#9ab0c4" stroke-width="2"/>
+<text x="1140" y="196.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">用户登录后选择目标 / 任务</text>
+<polyline points="1140,225 1140,260" fill="none" stroke="#326b92" stroke-width="3"/><polygon points="1140,260 1134.1587248653702,246.18408508995674 1145.8412751346298,246.18408508995674" fill="#326b92"/>
+<rect x="740.0" y="260" width="800" height="120" rx="16" fill="#f0f5fa" stroke="#9ab0c4" stroke-width="2"/>
+<text x="1140" y="307.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">POST /api/checkin/do</text>
+<text x="1140" y="345.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">提交 taskId（优先）或 goalId；可携带凭证</text>
+<polyline points="1140,380 1140,420" fill="none" stroke="#326b92" stroke-width="3"/><polygon points="1140,420 1134.1587248653702,406.18408508995674 1145.8412751346298,406.18408508995674" fill="#326b92"/>
+<polygon points="1140,420 1555.0,510.0 1140,600 725.0,510.0" fill="#fff8e9" stroke="#b79551" stroke-width="2"/>
+<text x="1140" y="479.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">参数及当前入口校验通过？</text>
+<text x="1140" y="516.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">任务：归属 / 完成状态 / 日期</text>
+<text x="1140" y="553.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">目标：当日是否已有记录</text>
+<rect x="105.0" y="440" width="470" height="125" rx="16" fill="#fff0ee" stroke="#a74442" stroke-width="2"/>
+<text x="340" y="489.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">返回错误，结束本次请求</text>
+<text x="340" y="527.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">不创建新打卡记录</text>
+<polyline points="725,510 575,510" fill="none" stroke="#a74442" stroke-width="3"/><polygon points="575,510 588.8159149100433,504.15872486537023 588.8159149100433,515.8412751346298" fill="#a74442"/>
+<text x="645" y="496" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#a74442">否</text>
+<polyline points="1140,600 1140,650" fill="none" stroke="#326b92" stroke-width="3"/><polygon points="1140,650 1134.1587248653702,636.1840850899567 1145.8412751346298,636.1840850899567" fill="#326b92"/>
+<text x="1190" y="633" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#326b92">是</text>
+<rect x="690.0" y="650" width="900" height="125" rx="16" fill="#f0f5fa" stroke="#9ab0c4" stroke-width="2"/>
+<text x="1140" y="699.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">仅任务入口：先置 completed = 1（断卡重置图标）</text>
+<text x="1140" y="737.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">尝试刷新计划完成天数；目标入口跳过此步</text>
+<polyline points="1140,775 1140,810" fill="none" stroke="#326b92" stroke-width="3"/><polygon points="1140,810 1134.1587248653702,796.1840850899567 1145.8412751346298,796.1840850899567" fill="#326b92"/>
+<polygon points="1140,810 1540.0,890.0 1140,970 740.0,890.0" fill="#fff8e9" stroke="#b79551" stroke-width="2"/>
+<text x="1140" y="878.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">任务入口已存在同任务同日期记录？</text>
+<text x="1140" y="915.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">目标入口已有记录已在前面拒绝</text>
+<rect x="105.0" y="825" width="470" height="135" rx="16" fill="#eef1f6" stroke="#9ab0c4" stroke-width="2"/>
+<text x="340" y="879.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">直接返回原记录，结束</text>
+<text x="340" y="917.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">不新建，不重复触发奖励</text>
+<polyline points="740,890 575,890" fill="none" stroke="#326b92" stroke-width="3"/><polygon points="575,890 588.8159149100433,884.1587248653702 588.8159149100433,895.8412751346298" fill="#326b92"/>
+<text x="650" y="875" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#326b92">是</text>
+<polyline points="1140,970 1140,1010" fill="none" stroke="#326b92" stroke-width="3"/><polygon points="1140,1010 1134.1587248653702,996.1840850899567 1145.8412751346298,996.1840850899567" fill="#326b92"/>
+<text x="1260" y="1000" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#326b92">否 / 目标入口</text>
+<polygon points="1140,1010 1555.0,1097.5 1140,1185 725.0,1097.5" fill="#fff8e9" stroke="#b79551" stroke-width="2"/>
+<text x="1140" y="1085.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">存在已接受且目标类别匹配的搭子？</text>
+<text x="1140" y="1122.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">由后端重新判定，类别做标准化</text>
+<polyline points="725,1097 510,1097 510,1240" fill="none" stroke="#27694e" stroke-width="3"/><polygon points="510,1240 504.15872486537023,1226.1840850899566 515.8412751346298,1226.1840850899566" fill="#27694e"/>
+<text x="630" y="1081" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#27694e">否</text>
+<polyline points="1555,1097 1730,1097 1730,1240" fill="none" stroke="#97631f" stroke-width="3"/><polygon points="1730,1240 1724.1587248653702,1226.1840850899566 1735.8412751346298,1226.1840850899566" fill="#97631f"/>
+<text x="1630" y="1081" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#97631f">是</text>
+<rect x="120.0" y="1240" width="780" height="150" rx="16" fill="#eef8f2" stroke="#27694e" stroke-width="2"/>
+<text x="510" y="1284" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="29" font-weight="700" fill="#27694e">① 普通打卡</text>
+<text x="510" y="1327" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">新建记录：status = approved</text>
+<text x="510" y="1365" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">普通打卡直接生效，无需搭子审核</text>
+<polyline points="510,1390 510,1440" fill="none" stroke="#27694e" stroke-width="3"/><polygon points="510,1440 504.15872486537023,1426.1840850899566 515.8412751346298,1426.1840850899566" fill="#27694e"/>
+<rect x="120.0" y="1440" width="780" height="155" rx="16" fill="#eef8f2" stroke="#27694e" stroke-width="2"/>
+<text x="510" y="1485.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">按 approved 重算目标连续 / 累计天数</text>
+<text x="510" y="1523.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">调用成就检查；用户存在时增加 10 经验</text>
+<text x="510" y="1561.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">满足条件时解锁勋章</text>
+<polyline points="510,1595 510,1645" fill="none" stroke="#27694e" stroke-width="3"/><polygon points="510,1645 504.15872486537023,1631.1840850899566 515.8412751346298,1631.1840850899566" fill="#27694e"/>
+<rect x="185.0" y="1645" width="650" height="75" rx="16" fill="#eef8f2" stroke="#27694e" stroke-width="2"/>
+<text x="510" y="1688.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">返回 approved；本次普通打卡结束</text>
+<rect x="1305.0" y="1240" width="850" height="150" rx="16" fill="#fff8e9" stroke="#97631f" stroke-width="2"/>
+<text x="1730" y="1284" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="29" font-weight="700" fill="#97631f">② 待审核打卡</text>
+<text x="1730" y="1327" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">新建记录：status = pending；保存凭证字段</text>
+<text x="1730" y="1365" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">通知匹配搭子，并写入打卡凭证私信</text>
+<polyline points="1730,1390 1730,1435" fill="none" stroke="#97631f" stroke-width="3"/><polygon points="1730,1435 1724.1587248653702,1421.1840850899566 1735.8412751346298,1421.1840850899566" fill="#97631f"/>
+<rect x="1305.0" y="1435" width="850" height="120" rx="16" fill="#fff8e9" stroke="#97631f" stroke-width="2"/>
+<text x="1730" y="1482.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">返回 pending，提交请求结束；等待另一请求</text>
+<text x="1730" y="1520.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">此时不更新目标打卡统计、不加经验</text>
+<polyline points="1730,1555 1730,1600" fill="none" stroke="#97631f" stroke-width="3" stroke-dasharray="10 8"/><polygon points="1730,1600 1724.1587248653702,1586.1840850899566 1735.8412751346298,1586.1840850899566" fill="#97631f"/>
+<text x="1880" y="1590" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#97631f">异步人工审核</text>
+<rect x="1305.0" y="1600" width="850" height="120" rx="16" fill="#f0f5fa" stroke="#9ab0c4" stroke-width="2"/>
+<text x="1730" y="1647.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">搭子查看待审列表或凭证私信后提交结果</text>
+<text x="1730" y="1685.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">POST /api/checkin/review · approved / comment</text>
+<polyline points="1730,1720 1730,1760" fill="none" stroke="#326b92" stroke-width="3"/><polygon points="1730,1760 1724.1587248653702,1746.1840850899566 1735.8412751346298,1746.1840850899566" fill="#326b92"/>
+<polygon points="1730,1760 2165.0,1845.0 1730,1930 1295.0,1845.0" fill="#fff8e9" stroke="#b79551" stroke-width="2"/>
+<text x="1730" y="1833.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">记录存在、仍 pending，且审核校验通过？</text>
+<text x="1730" y="1870.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">权限检查存在局限，详见核对说明</text>
+<rect x="230.0" y="1780" width="760" height="120" rx="16" fill="#fff0ee" stroke="#a74442" stroke-width="2"/>
+<text x="610" y="1827.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">返回错误，当前审核请求不改变记录状态</text>
+<text x="610" y="1865.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">例如：记录不存在、已审核、未通过权限检查</text>
+<polyline points="1295,1845 990,1845" fill="none" stroke="#a74442" stroke-width="3"/><polygon points="990,1845 1003.8159149100433,1839.1587248653702 1003.8159149100433,1850.8412751346298" fill="#a74442"/>
+<text x="1150" y="1830" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#a74442">否</text>
+<polyline points="1730,1930 1730,1970" fill="none" stroke="#326b92" stroke-width="3"/><polygon points="1730,1970 1724.1587248653702,1956.1840850899566 1735.8412751346298,1956.1840850899566" fill="#326b92"/>
+<text x="1780" y="1961" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#326b92">是</text>
+<polygon points="1730,1970 2030.0,2030.0 1730,2090 1430.0,2030.0" fill="#fff8e9" stroke="#b79551" stroke-width="2"/>
+<text x="1730" y="2036.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">approved 为 true？</text>
+<polyline points="1430,2030 1070,2030 1070,2150" fill="none" stroke="#27694e" stroke-width="3"/><polygon points="1070,2150 1064.1587248653702,2136.1840850899566 1075.8412751346298,2136.1840850899566" fill="#27694e"/>
+<text x="1245" y="2013" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#27694e">是：通过</text>
+<polyline points="2030,2030 2030,2150" fill="none" stroke="#a74442" stroke-width="3"/><polygon points="2030,2150 2024.1587248653702,2136.1840850899566 2035.8412751346298,2136.1840850899566" fill="#a74442"/>
+<text x="2130" y="2083" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#a74442">否：驳回</text>
+<rect x="670.0" y="2150" width="800" height="205" rx="16" fill="#eef8f2" stroke="#27694e" stroke-width="2"/>
+<text x="1070" y="2194" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="29" font-weight="700" fill="#27694e">③ 审核通过</text>
+<text x="1070" y="2237" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">status = approved；记录审核人 / 时间 / 评语</text>
+<text x="1070" y="2275" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">尝试更新凭证私信；重算目标打卡统计</text>
+<text x="1070" y="2313" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">检查成就、增加 10 经验并通知提交者</text>
+<text x="1070" y="2351" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">返回 approved；审核请求结束</text>
+<rect x="1675.0" y="2150" width="570" height="205" rx="16" fill="#fff0ee" stroke="#a74442" stroke-width="2"/>
+<text x="1960" y="2194" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="29" font-weight="700" fill="#a74442">④ 审核驳回</text>
+<text x="1960" y="2237" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">status = rejected；记录审核信息</text>
+<text x="1960" y="2275" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">尝试更新凭证私信并通知提交者</text>
+<text x="1960" y="2313" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">不加经验，不计 approved 天数</text>
+<text x="1960" y="2351" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400" fill="#19334a">返回 rejected；审核请求结束</text>
+<rect x="85.0" y="2410" width="2110" height="220" rx="16" fill="#f7f8fa" stroke="#708396" stroke-width="2"/>
+<text x="1140" y="2453" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="28" font-weight="700" fill="#19334a">实现边界（是现有行为，不能按理想流程补画）</text>
+<text x="1140" y="2493" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#19334a">待审核及驳回时，关联任务仍可能 completed = 1；驳回不会自动回滚任务，也没有完整的修改重提闭环。</text>
+<text x="1140" y="2529" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#19334a">普通打卡与审核通过都写 approved；“普通”不是第四种数据库状态。日历日期查询未过滤审核状态。</text>
+<text x="1140" y="2565" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#19334a">审核 SQL 未以 pending 为更新条件，也未做原子抢占；不能据此宣称并发审核“先到先得”已保证。</text>
+<text x="1140" y="2601" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#19334a">仅为当前源码流程核对；未进行真实接口、数据库或微信端运行验收。实线为本次请求，虚线为跨请求等待。</text>
+</svg>

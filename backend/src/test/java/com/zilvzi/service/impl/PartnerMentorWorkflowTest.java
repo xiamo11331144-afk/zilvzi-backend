@@ -222,6 +222,40 @@ class PartnerMentorWorkflowTest {
         assertEquals(10L,reverse.getPartnerId());
         assertEquals("rejected",reverse.getStatus());
     }
+    @Test void remindersRequireAnAcceptedUnblockedRelationship() {
+        Partner accepted=request("accepted","mutual");
+        when(partners.selectAllByUserAndPartner(10L,20L)).thenReturn(List.of(accepted));
+        service.remindPartner(10L,20L);
+        verify(notifications).sendNotification(20L,10L,"checkin_remind","打卡提醒","提醒你记得打卡哦~",null,null);
+
+        Partner blocked=request("blocked","mutual");
+        when(partners.selectAllByUserAndPartner(10L,20L)).thenReturn(List.of(accepted,blocked));
+        assertThrows(IllegalArgumentException.class,()->service.remindPartner(10L,20L));
+        verify(notifications,times(1)).sendNotification(anyLong(),anyLong(),anyString(),anyString(),anyString(),any(),any());
+    }
+    @Test void remindersDoNotGoToUnrelatedOrPendingUsers() {
+        when(partners.selectAllByUserAndPartner(10L,20L)).thenReturn(List.of(request("pending","mutual")));
+        assertThrows(IllegalArgumentException.class,()->service.remindPartner(10L,20L));
+        verifyNoInteractions(notifications);
+    }
+    @Test void repeatedBlockPreservesOriginalPreviousStatusAndUnblockCanRestoreIt() {
+        Partner record=request("accepted","mutual");
+        when(partners.selectAllByUserAndPartner(10L,20L)).thenReturn(List.of(record));
+
+        service.blockPartner(10L,20L);
+
+        verify(partners).updatePrevStatus(99L,"accepted");
+        verify(partners).updateStatus(99L,"blocked");
+        record.setStatus("blocked");
+        record.setPrevStatus("accepted");
+        service.blockPartner(10L,20L);
+
+        verify(partners,times(1)).updatePrevStatus(99L,"accepted");
+        verify(partners,times(1)).updateStatus(99L,"blocked");
+        service.unblockPartner(10L,20L);
+        verify(partners).updateStatus(99L,"accepted");
+    }
+
     @ParameterizedTest @ValueSource(strings={"accepted","pending"})
     void unblockingLeadDoesNotRestoreReleasedCapacity(String previousStatus) {
         Partner blocked=request("blocked","lead");blocked.setPrevStatus(previousStatus);

@@ -1,0 +1,452 @@
+{
+  "width": 3500,
+  "height": 2800,
+  "entities": [
+    {
+      "table": "user",
+      "x": 500,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "用户编号"
+        ],
+        [
+          "nickname",
+          "昵称"
+        ],
+        [
+          "level",
+          "等级"
+        ],
+        [
+          "mentor_enabled",
+          "引领开关"
+        ]
+      ]
+    },
+    {
+      "table": "goal",
+      "x": 1750,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "目标编号"
+        ],
+        [
+          "name",
+          "目标名称"
+        ],
+        [
+          "type",
+          "目标类别"
+        ],
+        [
+          "status",
+          "状态"
+        ]
+      ]
+    },
+    {
+      "table": "plan",
+      "x": 3000,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "计划编号"
+        ],
+        [
+          "name",
+          "计划名称"
+        ],
+        [
+          "total_days",
+          "计划天数"
+        ],
+        [
+          "status",
+          "状态"
+        ]
+      ]
+    },
+    {
+      "table": "partner",
+      "x": 500,
+      "y": 2100,
+      "attributes": [
+        [
+          "id",
+          "关系编号"
+        ],
+        [
+          "match_mode",
+          "匹配模式"
+        ],
+        [
+          "status",
+          "关系状态"
+        ],
+        [
+          "create_time",
+          "创建时间"
+        ]
+      ]
+    },
+    {
+      "table": "checkin",
+      "x": 1750,
+      "y": 2100,
+      "attributes": [
+        [
+          "id",
+          "打卡编号"
+        ],
+        [
+          "date",
+          "打卡日期"
+        ],
+        [
+          "status",
+          "审核状态"
+        ],
+        [
+          "proof_image",
+          "凭证图片"
+        ]
+      ]
+    },
+    {
+      "table": "plan_task",
+      "x": 3000,
+      "y": 2100,
+      "attributes": [
+        [
+          "id",
+          "任务编号"
+        ],
+        [
+          "task_date",
+          "任务日期"
+        ],
+        [
+          "task_name",
+          "任务名称"
+        ],
+        [
+          "completed",
+          "完成标志"
+        ]
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "F02",
+      "parent": "user",
+      "child": "checkin",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          591.6666666666666,
+          705.0
+        ],
+        [
+          1000,
+          950
+        ],
+        [
+          1000,
+          1550
+        ],
+        [
+          2100,
+          1550
+        ],
+        [
+          2100,
+          1950
+        ],
+        [
+          1878.3333333333333,
+          2045.0
+        ]
+      ],
+      "diamond": [
+        1276.1386607413676,
+        1550.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F03",
+      "parent": "goal",
+      "child": "checkin",
+      "column": "goal_id",
+      "kind": "FK",
+      "route": [
+        [
+          1750.0,
+          705.0
+        ],
+        [
+          1750.0,
+          2045.0
+        ]
+      ],
+      "diamond": [
+        1750.0,
+        1375.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F10",
+      "parent": "user",
+      "child": "goal",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          650.0,
+          650.0
+        ],
+        [
+          1600.0,
+          650.0
+        ]
+      ],
+      "diamond": [
+        1125.0,
+        650.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F16",
+      "parent": "user",
+      "child": "partner",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          500.0,
+          705.0
+        ],
+        [
+          500.0,
+          2045.0
+        ]
+      ],
+      "diamond": [
+        500.0,
+        1375.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F17",
+      "parent": "user",
+      "child": "partner",
+      "column": "partner_id",
+      "kind": "FK",
+      "route": [
+        [
+          350.0,
+          650.0
+        ],
+        [
+          240,
+          650
+        ],
+        [
+          240,
+          2100
+        ],
+        [
+          350.0,
+          2100.0
+        ]
+      ],
+      "diamond": [
+        240.0,
+        1375.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F18",
+      "parent": "goal",
+      "child": "partner",
+      "column": "goal_id",
+      "kind": "FK",
+      "route": [
+        [
+          1600.0,
+          680.0
+        ],
+        [
+          1500,
+          700
+        ],
+        [
+          1400,
+          1000
+        ],
+        [
+          1400,
+          1200
+        ],
+        [
+          760,
+          1200
+        ],
+        [
+          760,
+          2100
+        ],
+        [
+          650.0,
+          2100.0
+        ]
+      ],
+      "diamond": [
+        1133.606975336103,
+        1200.0
+      ],
+      "cardinality": "0..1 : 0..N"
+    },
+    {
+      "id": "F19",
+      "parent": "user",
+      "child": "plan",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          500.0,
+          595.0
+        ],
+        [
+          500,
+          240
+        ],
+        [
+          3000,
+          240
+        ],
+        [
+          3000.0,
+          595.0
+        ]
+      ],
+      "diamond": [
+        1750.0,
+        240.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F20",
+      "parent": "goal",
+      "child": "plan",
+      "column": "goal_id",
+      "kind": "FK",
+      "route": [
+        [
+          1900.0,
+          650.0
+        ],
+        [
+          2850.0,
+          650.0
+        ]
+      ],
+      "diamond": [
+        2375.0,
+        650.0
+      ],
+      "cardinality": "0..1 : 0..N"
+    },
+    {
+      "id": "F21",
+      "parent": "plan",
+      "child": "plan_task",
+      "column": "plan_id",
+      "kind": "FK",
+      "route": [
+        [
+          3000.0,
+          705.0
+        ],
+        [
+          3000.0,
+          2045.0
+        ]
+      ],
+      "diamond": [
+        3000.0,
+        1375.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "L02",
+      "parent": "plan_task",
+      "child": "checkin",
+      "column": "task_id",
+      "kind": "LR",
+      "route": [
+        [
+          2850.0,
+          2100.0
+        ],
+        [
+          1900.0,
+          2100.0
+        ]
+      ],
+      "diamond": [
+        2375.0,
+        2100.0
+      ],
+      "cardinality": "0..1 : 0..N"
+    },
+    {
+      "id": "L03",
+      "parent": "user",
+      "child": "checkin",
+      "column": "partner_id",
+      "kind": "LR",
+      "route": [
+        [
+          350.0,
+          650.0
+        ],
+        [
+          100,
+          650
+        ],
+        [
+          100,
+          2580
+        ],
+        [
+          1750,
+          2580
+        ],
+        [
+          1750.0,
+          2155.0
+        ]
+      ],
+      "diamond": [
+        643.2000000000003,
+        2580.0
+      ],
+      "cardinality": "0..1 : 0..N"
+    }
+  ]
+}

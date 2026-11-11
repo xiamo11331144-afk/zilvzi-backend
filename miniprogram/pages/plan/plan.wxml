@@ -236,15 +236,19 @@
           </view>
           <view class="task-list">
             <view class="task-item" wx:for="{{item.tasks}}" wx:key="id" wx:for-item="task">
-              <view class="task-check {{task.completed === 1 ? 'checked' : ''}} {{task.completed === -1 ? 'streak-break' : ''}}" 
-                    bindtap="completeTask" data-id="{{task.id}}">
+              <view class="task-check {{task.completed === 1 ? 'checked' : ''}} {{task.pending ? 'pending' : ''}} {{task.completed === -1 ? 'streak-break' : ''}}"
+                    bindtap="{{task.pending || task.completed === 1 || task.completed === -1 ? '' : 'completeTask'}}" data-id="{{task.id}}">
                 <text wx:if="{{task.completed === 1}}">✓</text>
+                <text wx:if="{{task.pending}}">…</text>
                 <text wx:if="{{task.completed === -1}}">✕</text>
               </view>
               <view class="task-icon" style="background: {{task.color}};">{{task.icon}}</view>
               <view class="task-info">
                 <text class="task-name {{task.completed === 1 ? 'done' : ''}} {{task.completed === -1 ? 'streak-break-name' : ''}}">{{task.name}}</text>
                 <text class="task-desc">{{task.description}}</text>
+                <text wx:if="{{task.pending}}" style="font-size:22rpx;color:#faad14;">待审核</text>
+                <text wx:elif="{{task.rejected}}" style="font-size:22rpx;color:#ff4d4f;">已驳回，可重新提交</text>
+                <text wx:elif="{{task.checkinStatus === 'approved'}}" style="font-size:22rpx;color:#52c41a;">已通过</text>
               </view>
               <text class="task-duration">{{task.duration}}</text>
             </view>
@@ -286,15 +290,19 @@
             </view>
             <view class="task-list">
               <view class="task-item" wx:for="{{dayItem.tasks}}" wx:key="id" wx:for-item="task">
-                <view class="task-check {{task.completed === 1 ? 'checked' : ''}} {{task.completed === -1 ? 'streak-break' : ''}}" 
-                      bindtap="completeTask" data-id="{{task.id}}">
+                <view class="task-check {{task.completed === 1 ? 'checked' : ''}} {{task.pending ? 'pending' : ''}} {{task.completed === -1 ? 'streak-break' : ''}}"
+                      bindtap="{{task.pending || task.completed === 1 || task.completed === -1 ? '' : 'completeTask'}}" data-id="{{task.id}}">
                   <text wx:if="{{task.completed === 1}}">✓</text>
+                  <text wx:if="{{task.pending}}">…</text>
                   <text wx:if="{{task.completed === -1}}">✕</text>
                 </view>
                 <view class="task-icon" style="background: {{task.color}};">{{task.icon}}</view>
                 <view class="task-info">
                   <text class="task-name {{task.completed === 1 ? 'done' : ''}} {{task.completed === -1 ? 'streak-break-name' : ''}}">{{task.name}}</text>
                   <text class="task-desc">{{task.description}}</text>
+                  <text wx:if="{{task.pending}}" style="font-size:22rpx;color:#faad14;">待审核</text>
+                  <text wx:elif="{{task.rejected}}" style="font-size:22rpx;color:#ff4d4f;">已驳回，可重新提交</text>
+                  <text wx:elif="{{task.checkinStatus === 'approved'}}" style="font-size:22rpx;color:#52c41a;">已通过</text>
                 </view>
                 <text class="task-duration">{{task.duration}}</text>
               </view>

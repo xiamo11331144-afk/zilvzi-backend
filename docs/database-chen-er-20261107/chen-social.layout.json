@@ -1,0 +1,352 @@
+{
+  "width": 3500,
+  "height": 2780,
+  "entities": [
+    {
+      "table": "user",
+      "x": 500,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "用户编号"
+        ],
+        [
+          "nickname",
+          "昵称"
+        ],
+        [
+          "level",
+          "等级"
+        ],
+        [
+          "mentor_enabled",
+          "引领开关"
+        ]
+      ]
+    },
+    {
+      "table": "circle",
+      "x": 1750,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "圈子编号"
+        ],
+        [
+          "name",
+          "圈子名称"
+        ],
+        [
+          "description",
+          "圈子简介"
+        ]
+      ]
+    },
+    {
+      "table": "circle_member",
+      "x": 3000,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "成员记录编号"
+        ],
+        [
+          "role",
+          "成员角色"
+        ],
+        [
+          "status",
+          "加入状态"
+        ]
+      ]
+    },
+    {
+      "table": "post",
+      "x": 1750,
+      "y": 2050,
+      "attributes": [
+        [
+          "id",
+          "动态编号"
+        ],
+        [
+          "content",
+          "动态内容"
+        ],
+        [
+          "images",
+          "图片"
+        ]
+      ]
+    },
+    {
+      "table": "comment",
+      "x": 500,
+      "y": 2050,
+      "attributes": [
+        [
+          "id",
+          "评论编号"
+        ],
+        [
+          "content",
+          "评论内容"
+        ],
+        [
+          "create_time",
+          "评论时间"
+        ]
+      ]
+    },
+    {
+      "table": "like_record",
+      "x": 3000,
+      "y": 2050,
+      "attributes": [
+        [
+          "id",
+          "点赞编号"
+        ],
+        [
+          "create_time",
+          "点赞时间"
+        ]
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "F04",
+      "parent": "user",
+      "child": "circle",
+      "column": "creator_id",
+      "kind": "FK",
+      "route": [
+        [
+          650.0,
+          650.0
+        ],
+        [
+          1600.0,
+          650.0
+        ]
+      ],
+      "diamond": [
+        1125.0,
+        650.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F05",
+      "parent": "circle",
+      "child": "circle_member",
+      "column": "circle_id",
+      "kind": "FK",
+      "route": [
+        [
+          1900.0,
+          650.0
+        ],
+        [
+          2850.0,
+          650.0
+        ]
+      ],
+      "diamond": [
+        2375.0,
+        650.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F06",
+      "parent": "user",
+      "child": "circle_member",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          500.0,
+          595.0
+        ],
+        [
+          500,
+          240
+        ],
+        [
+          3000,
+          240
+        ],
+        [
+          3000.0,
+          595.0
+        ]
+      ],
+      "diamond": [
+        1750.0,
+        240.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F07",
+      "parent": "user",
+      "child": "comment",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          500.0,
+          705.0
+        ],
+        [
+          500.0,
+          1995.0
+        ]
+      ],
+      "diamond": [
+        500.0,
+        1350.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F08",
+      "parent": "post",
+      "child": "comment",
+      "column": "post_id",
+      "kind": "FK",
+      "route": [
+        [
+          1600.0,
+          2050.0
+        ],
+        [
+          650.0,
+          2050.0
+        ]
+      ],
+      "diamond": [
+        1125.0,
+        2050.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F11",
+      "parent": "user",
+      "child": "like_record",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          350.0,
+          650.0
+        ],
+        [
+          130,
+          650
+        ],
+        [
+          130,
+          2560
+        ],
+        [
+          3000,
+          2560
+        ],
+        [
+          3000.0,
+          2105.0
+        ]
+      ],
+      "diamond": [
+        1818.4999999999998,
+        2560.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F12",
+      "parent": "post",
+      "child": "like_record",
+      "column": "post_id",
+      "kind": "FK",
+      "route": [
+        [
+          1900.0,
+          2050.0
+        ],
+        [
+          2850.0,
+          2050.0
+        ]
+      ],
+      "diamond": [
+        2375.0,
+        2050.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F22",
+      "parent": "user",
+      "child": "post",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          650.0,
+          650.0
+        ],
+        [
+          1030,
+          650
+        ],
+        [
+          1030,
+          1370
+        ],
+        [
+          1750,
+          1370
+        ],
+        [
+          1750.0,
+          1995.0
+        ]
+      ],
+      "diamond": [
+        1152.5,
+        1370.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F23",
+      "parent": "circle",
+      "child": "post",
+      "column": "circle_id",
+      "kind": "FK",
+      "route": [
+        [
+          1750.0,
+          705.0
+        ],
+        [
+          1750.0,
+          1995.0
+        ]
+      ],
+      "diamond": [
+        1750.0,
+        1350.0
+      ],
+      "cardinality": "0..1 : 0..N"
+    }
+  ]
+}

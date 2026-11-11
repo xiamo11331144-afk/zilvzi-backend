@@ -23,6 +23,7 @@ public class PlanTask {
     private String taskColor;
     private Integer sortOrder;
     private Integer completed; // -1-断卡/过期未完成 0-未完成 1-已完成
+    private String checkinStatus; // 关联打卡审核状态，仅查询返回，不持久化至 plan_task
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
     

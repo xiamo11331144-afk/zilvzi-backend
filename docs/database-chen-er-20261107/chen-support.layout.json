@@ -1,0 +1,232 @@
+{
+  "width": 3500,
+  "height": 2900,
+  "entities": [
+    {
+      "table": "user",
+      "x": 1750,
+      "y": 1450,
+      "attributes": [
+        [
+          "id",
+          "用户编号"
+        ],
+        [
+          "nickname",
+          "昵称"
+        ],
+        [
+          "level",
+          "等级"
+        ],
+        [
+          "mentor_enabled",
+          "引领开关"
+        ]
+      ]
+    },
+    {
+      "table": "achievement",
+      "x": 500,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "成就编号"
+        ],
+        [
+          "medal_name",
+          "勋章名称"
+        ],
+        [
+          "unlock_time",
+          "解锁时间"
+        ]
+      ]
+    },
+    {
+      "table": "ai_chat_history",
+      "x": 1750,
+      "y": 550,
+      "attributes": [
+        [
+          "id",
+          "消息编号"
+        ],
+        [
+          "role",
+          "消息角色"
+        ],
+        [
+          "session_type",
+          "会话类型"
+        ]
+      ]
+    },
+    {
+      "table": "file_upload",
+      "x": 3000,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "文件编号"
+        ],
+        [
+          "file_name",
+          "文件名称"
+        ],
+        [
+          "related_type",
+          "关联类型"
+        ]
+      ]
+    },
+    {
+      "table": "vip_membership",
+      "x": 650,
+      "y": 2350,
+      "attributes": [
+        [
+          "user_id",
+          "用户编号"
+        ],
+        [
+          "vip_until",
+          "会员到期时间"
+        ]
+      ]
+    },
+    {
+      "table": "vip_order",
+      "x": 2850,
+      "y": 2350,
+      "attributes": [
+        [
+          "id",
+          "订单编号"
+        ],
+        [
+          "order_no",
+          "订单号"
+        ],
+        [
+          "status",
+          "订单状态"
+        ]
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "F01",
+      "parent": "user",
+      "child": "achievement",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          1664.0625,
+          1395.0
+        ],
+        [
+          585.9375,
+          705.0
+        ]
+      ],
+      "diamond": [
+        1125.0,
+        1050.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F09",
+      "parent": "user",
+      "child": "file_upload",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          1835.9375,
+          1395.0
+        ],
+        [
+          2914.0625,
+          705.0
+        ]
+      ],
+      "diamond": [
+        2375.0,
+        1050.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F28",
+      "parent": "user",
+      "child": "vip_membership",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          1682.7777777777778,
+          1505.0
+        ],
+        [
+          717.2222222222222,
+          2295.0
+        ]
+      ],
+      "diamond": [
+        1200.0,
+        1900.0
+      ],
+      "cardinality": "1 : 0..1"
+    },
+    {
+      "id": "F29",
+      "parent": "user",
+      "child": "vip_order",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          1817.2222222222222,
+          1505.0
+        ],
+        [
+          2782.777777777778,
+          2295.0
+        ]
+      ],
+      "diamond": [
+        2300.0,
+        1900.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "L01",
+      "parent": "user",
+      "child": "ai_chat_history",
+      "column": "user_id",
+      "kind": "LR",
+      "route": [
+        [
+          1750.0,
+          1395.0
+        ],
+        [
+          1750.0,
+          605.0
+        ]
+      ],
+      "diamond": [
+        1750.0,
+        1000.0
+      ],
+      "cardinality": "1 : 0..N"
+    }
+  ]
+}

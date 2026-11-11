@@ -1,0 +1,1266 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="7000" height="8610" viewBox="0 0 7000 8610"><rect width="100%" height="100%" fill="white"/>
+<text x="3500" y="95" text-anchor="middle" font-family="Microsoft YaHei" font-size="58">数据库 E-R 总图（传统实体—联系表示法）</text>
+<text x="3500" y="165" text-anchor="middle" font-family="Microsoft YaHei" font-size="32">21个实体 · 29个物理外键联系 · 4个逻辑联系；各分区中的同名实体表示同一实体</text>
+<g transform="translate(0,210)">
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" width="100%" height="100%" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="80.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="44" font-weight="700">系统核心业务 E-R 图（实体—联系—属性）</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="130.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">下划线为主键；实线为物理外键联系，虚线为逻辑联系；0..n表示可无或多条</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="591.6666666666666,705.0 1000,950 1000,1550 2100,1550 2100,1950 1878.3333333333333,2045.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1161.1386607413676,1550.0 1276.1386607413676,1479.0 1391.1386607413676,1550.0 1276.1386607413676,1621.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1276.1386607413676" y="1550.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">提交</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1276.1386607413676" y="1585.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F02</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="995.0" y="1134.1457335288146" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1010.0" y="1161.1457335288146" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2018.326010077843" y="1506.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2046.826010077843" y="1533.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750.0,705.0 1750.0,2045.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1635.0,1375.0 1750.0,1304.0 1865.0,1375.0 1750.0,1446.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="1375.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">记录</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="1410.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F03</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1745.0" y="996.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1760.0" y="1023.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1731.5" y="1666.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1760.0" y="1693.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="650.0,650.0 1600.0,650.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1010.0,650.0 1125.0,579.0 1240.0,650.0 1125.0,721.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1125.0" y="650.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">设定</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1125.0" y="685.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F10</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="882.5" y="606.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="897.5" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1344.0" y="606.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1372.5" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500.0,705.0 500.0,2045.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="385.0,1375.0 500.0,1304.0 615.0,1375.0 500.0,1446.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="1375.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">申请方</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="1410.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F16</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="495.0" y="996.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="510.0" y="1023.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="481.5" y="1666.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="510.0" y="1693.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="350.0,650.0 240,650 240,2100 350.0,2100.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="125.0,1375.0 240.0,1304.0 355.0,1375.0 240.0,1446.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="240.0" y="1375.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">接收方</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="240.0" y="1410.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F17</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="235.0" y="913.5" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="250.0" y="940.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="221.5" y="1748.5" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="250.0" y="1775.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1600.0,680.0 1500,700 1400,1000 1400,1200 760,1200 760,2100 650.0,2100.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1018.606975336103,1200.0 1133.606975336103,1129.0 1248.606975336103,1200.0 1133.606975336103,1271.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1133.606975336103" y="1200.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">关联目标</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1133.606975336103" y="1235.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F18</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1382.0" y="1104.8438827834798" width="56.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1410.0" y="1131.8438827834798" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="741.5" y="1598.9479609278267" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="770.0" y="1625.9479609278267" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500.0,595.0 500,240 3000,240 3000.0,595.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1635.0,240.0 1750.0,169.0 1865.0,240.0 1750.0,311.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="240.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">制定</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="275.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F19</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="942.5" y="196.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="957.5" y="223.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2534.0" y="196.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2562.5" y="223.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1900.0,650.0 2850.0,650.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2260.0,650.0 2375.0,579.0 2490.0,650.0 2375.0,721.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="650.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">关联计划</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="685.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F20</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2119.5" y="606.0" width="56.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2147.5" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2594.0" y="606.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2622.5" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000.0,705.0 3000.0,2045.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2885.0,1375.0 3000.0,1304.0 3115.0,1375.0 3000.0,1446.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="1375.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">包含任务</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="1410.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F21</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2995.0" y="996.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3010.0" y="1023.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2981.5" y="1666.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3010.0" y="1693.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2850.0,2100.0 1900.0,2100.0" fill="none" stroke="#333" stroke-width="3" stroke-dasharray="13 9" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2260.0,2100.0 2375.0,2029.0 2490.0,2100.0 2375.0,2171.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="2100.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">对应任务</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="2135.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">L02 逻辑</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2594.5" y="2056.0" width="56.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2622.5" y="2083.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2119.0" y="2056.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2147.5" y="2083.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="350.0,650.0 100,650 100,2580 1750,2580 1750.0,2155.0" fill="none" stroke="#333" stroke-width="3" stroke-dasharray="13 9" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="528.2000000000003,2580.0 643.2000000000003,2509.0 758.2000000000003,2580.0 643.2000000000003,2651.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="643.2000000000003" y="2580.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">审核</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="643.2000000000003" y="2615.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">L03 逻辑</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="82.0" y="1419.75" width="56.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="110.0" y="1446.75" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1092.75" y="2536.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1121.25" y="2563.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 370.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="370.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="370.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">用户编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 630.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="630.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="630.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">昵称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 370.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="370.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="370.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">等级</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 630.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="630.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="630.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">引领开关</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="350.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">用户</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">user</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,650 1620.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1620.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1620.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">目标编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,650 1880.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1880.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1880.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">目标名称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,650 1620.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1620.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1620.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">目标类别</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,650 1880.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1880.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1880.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">状态</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1600.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">目标</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">goal</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 2870.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2870.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2870.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">计划编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 3130.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3130.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3130.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">计划名称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 2870.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2870.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2870.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">计划天数</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 3130.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3130.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3130.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">状态</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2850.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">计划</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">plan</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,2100 370.0,1890" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="370.0" cy="1890" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="370.0" y="1903.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">关系编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,2100 630.0,1890" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="630.0" cy="1890" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="630.0" y="1903.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">匹配模式</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,2100 370.0,2310" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="370.0" cy="2310" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="370.0" y="2323.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">关系状态</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,2100 630.0,2310" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="630.0" cy="2310" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="630.0" y="2323.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">创建时间</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="350.0" y="2045.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="2101.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">搭子关系</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="2136.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">partner</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,2100 1620.0,1890" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1620.0" cy="1890" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1620.0" y="1903.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">打卡编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,2100 1880.0,1890" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1880.0" cy="1890" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1880.0" y="1903.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">打卡日期</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,2100 1620.0,2310" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1620.0" cy="2310" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1620.0" y="2323.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">审核状态</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,2100 1880.0,2310" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1880.0" cy="2310" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1880.0" y="2323.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">凭证图片</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1600.0" y="2045.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2101.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">打卡记录</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2136.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">checkin</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,2100 2870.0,1890" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2870.0" cy="1890" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2870.0" y="1903.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">任务编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,2100 3130.0,1890" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3130.0" cy="1890" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3130.0" y="1903.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">任务日期</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,2100 2870.0,2310" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2870.0" cy="2310" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2870.0" y="2323.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">任务名称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,2100 3130.0,2310" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3130.0" cy="2310" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3130.0" y="2323.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">完成标志</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2850.0" y="2045.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="2101.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">计划任务</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="2136.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">plan_task</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2729.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">矩形＝实体　菱形＝联系　椭圆＝主要属性；属性从当前DDL选取，外键字段以联系表达。</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2774.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">基数为实际可选性：父端1或0..1，子端0..n；SQL结构核对，未连接实际数据库。</ns0:text>
+
+</g>
+<g transform="translate(3500,210)">
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" width="100%" height="100%" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="80.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="44" font-weight="700">圈子与动态互动 E-R 图</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="130.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">下划线为主键；实线为物理外键联系，虚线为逻辑联系；0..n表示可无或多条</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="650.0,650.0 1600.0,650.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1010.0,650.0 1125.0,579.0 1240.0,650.0 1125.0,721.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1125.0" y="650.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">创建</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1125.0" y="685.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F04</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="882.5" y="606.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="897.5" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1344.0" y="606.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1372.5" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1900.0,650.0 2850.0,650.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2260.0,650.0 2375.0,579.0 2490.0,650.0 2375.0,721.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="650.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">包含成员</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="685.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F05</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2132.5" y="606.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2147.5" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2594.0" y="606.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2622.5" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500.0,595.0 500,240 3000,240 3000.0,595.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1635.0,240.0 1750.0,169.0 1865.0,240.0 1750.0,311.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="240.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">加入圈子</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="275.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F06</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="942.5" y="196.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="957.5" y="223.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2534.0" y="196.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2562.5" y="223.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500.0,705.0 500.0,1995.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="385.0,1350.0 500.0,1279.0 615.0,1350.0 500.0,1421.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="1350.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">发表评论</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="1385.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F07</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="495.0" y="983.5" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="510.0" y="1010.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="481.5" y="1628.5" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="510.0" y="1655.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1600.0,2050.0 650.0,2050.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1010.0,2050.0 1125.0,1979.0 1240.0,2050.0 1125.0,2121.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1125.0" y="2050.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">收到评论</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1125.0" y="2085.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F08</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1357.5" y="2006.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1372.5" y="2033.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="869.0" y="2006.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="897.5" y="2033.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="350.0,650.0 130,650 130,2560 3000,2560 3000.0,2105.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1703.4999999999998,2560.0 1818.4999999999998,2489.0 1933.4999999999998,2560.0 1818.4999999999998,2631.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1818.4999999999998" y="2560.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">执行点赞</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1818.4999999999998" y="2595.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F11</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="125.0" y="1749.75" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="140.0" y="1776.75" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2072.75" y="2516.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2101.25" y="2543.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1900.0,2050.0 2850.0,2050.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2260.0,2050.0 2375.0,1979.0 2490.0,2050.0 2375.0,2121.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="2050.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">获得点赞</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="2085.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F12</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2132.5" y="2006.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2147.5" y="2033.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2594.0" y="2006.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2622.5" y="2033.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="650.0,650.0 1030,650 1030,1370 1750,1370 1750.0,1995.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1037.5,1370.0 1152.5,1299.0 1267.5,1370.0 1152.5,1441.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1152.5" y="1370.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">发布动态</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1152.5" y="1405.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F22</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1025.0" y="837.25" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1040.0" y="864.25" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1731.5" y="1339.75" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1760.0" y="1366.75" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750.0,705.0 1750.0,1995.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1635.0,1350.0 1750.0,1279.0 1865.0,1350.0 1750.0,1421.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="1350.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">收录动态</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="1385.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F23</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1732.0" y="983.5" width="56.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1760.0" y="1010.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1731.5" y="1628.5" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1760.0" y="1655.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 370.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="370.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="370.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">用户编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 630.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="630.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="630.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">昵称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 370.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="370.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="370.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">等级</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 630.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="630.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="630.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">引领开关</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="350.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">用户</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">user</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,650 1620.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1620.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1620.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">圈子编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,650 1880.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1880.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1880.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">圈子名称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,650 2020,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2020" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2020.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">圈子简介</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1600.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">圈子</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">circle</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 2870.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2870.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2870.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">成员记录编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 3130.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3130.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3130.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">成员角色</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 3270,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3270" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3270.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">加入状态</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2850.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">圈子成员</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">circle_member</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,2050 1620.0,1840" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1620.0" cy="1840" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1620.0" y="1853.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">动态编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,2050 1880.0,1840" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1880.0" cy="1840" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1880.0" y="1853.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">动态内容</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,2050 2020,2260" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2020" cy="2260" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2020.0" y="2273.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">图片</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1600.0" y="1995.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2051.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">动态</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2086.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">post</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,2050 370.0,1840" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="370.0" cy="1840" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="370.0" y="1853.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">评论编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,2050 630.0,1840" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="630.0" cy="1840" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="630.0" y="1853.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">评论内容</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,2050 770,2260" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="770" cy="2260" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="770.0" y="2273.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">评论时间</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="350.0" y="1995.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="2051.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">评论</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="2086.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">comment</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,2050 2870.0,1840" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2870.0" cy="1840" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2870.0" y="1853.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">点赞编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,2050 3130.0,1840" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3130.0" cy="1840" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3130.0" y="1853.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">点赞时间</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2850.0" y="1995.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="2051.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">点赞记录</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="2086.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">like_record</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2709.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">矩形＝实体　菱形＝联系　椭圆＝主要属性；属性从当前DDL选取，外键字段以联系表达。</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2754.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">基数为实际可选性：父端1或0..1，子端0..n；SQL结构核对，未连接实际数据库。</ns0:text>
+
+</g>
+<g transform="translate(0,3010)">
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" width="100%" height="100%" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1400.0" y="80.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="44" font-weight="700">圈子话题与回复 E-R 图</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1400.0" y="130.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">下划线为主键；实线为物理外键联系，虚线为逻辑联系；0..n表示可无或多条</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2200.0,705.0 2200.0,1845.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2085.0,1275.0 2200.0,1204.0 2315.0,1275.0 2200.0,1346.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2200.0" y="1275.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">设有话题</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2200.0" y="1310.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F24</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2195.0" y="946.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2210.0" y="973.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2181.5" y="1516.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2210.0" y="1543.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="700.0,650.0 1350,650 1350,1320 2200,1320 2200.0,1845.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1262.5,1320.0 1377.5,1249.0 1492.5,1320.0 1377.5,1391.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1377.5" y="1320.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">发起话题</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1377.5" y="1355.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F25</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1345.0" y="629.75" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1360.0" y="656.75" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2032.75" y="1276.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2061.25" y="1303.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2050.0,1900.0 700.0,1900.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1260.0,1900.0 1375.0,1829.0 1490.0,1900.0 1375.0,1971.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1375.0" y="1900.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">包含回复</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1375.0" y="1935.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F26</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1707.5" y="1856.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1722.5" y="1883.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1019.0" y="1856.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1047.5" y="1883.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="550.0,705.0 550.0,1845.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="435.0,1275.0 550.0,1204.0 665.0,1275.0 550.0,1346.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="550.0" y="1275.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">发表回复</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="550.0" y="1310.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F27</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="545.0" y="946.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="560.0" y="973.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="531.5" y="1516.0" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="560.0" y="1543.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="550,650 420.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="420.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="420.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">用户编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="550,650 680.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="680.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="680.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">昵称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="550,650 420.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="420.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="420.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">等级</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="550,650 680.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="680.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="680.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">引领开关</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="400.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="550.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">用户</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="550.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">user</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2200,650 2070.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2070.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2070.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">圈子编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2200,650 2330.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2330.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2330.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">圈子名称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2200,650 2470,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2470" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2470.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">圈子简介</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2050.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2200.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">圈子</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2200.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">circle</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="550,1900 420.0,1690" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="420.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="420.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">回复编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="550,1900 680.0,1690" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="680.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="680.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">回复内容</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="550,1900 820,2110" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="820" cy="2110" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="820.0" y="2123.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">回复时间</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="400.0" y="1845.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="550.0" y="1901.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">话题回复</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="550.0" y="1936.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">topic_reply</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2200,1900 2070.0,1690" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2070.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2070.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">话题编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2200,1900 2330.0,1690" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2330.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2330.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">话题标题</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2200,1900 2470,2110" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2470" cy="2110" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2470.0" y="2123.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">话题内容</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2050.0" y="1845.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2200.0" y="1901.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">话题</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2200.0" y="1936.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">topic</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1400.0" y="2429.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">矩形＝实体　菱形＝联系　椭圆＝主要属性；属性从当前DDL选取，外键字段以联系表达。</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1400.0" y="2474.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">基数为实际可选性：父端1或0..1，子端0..n；SQL结构核对，未连接实际数据库。</ns0:text>
+
+</g>
+<g transform="translate(3500,3010)">
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" width="100%" height="100%" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="80.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="44" font-weight="700">用户成就、AI、文件与会员 E-R 图</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="130.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">下划线为主键；实线为物理外键联系，虚线为逻辑联系；0..n表示可无或多条</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1664.0625,1395.0 585.9375,705.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1010.0,1050.0 1125.0,979.0 1240.0,1050.0 1125.0,1121.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1125.0" y="1050.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">解锁</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1125.0" y="1085.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F01</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1389.53125" y="1178.5" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1404.53125" y="1205.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="836.96875" y="833.5" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="865.46875" y="860.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1835.9375,1395.0 2914.0625,705.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2260.0,1050.0 2375.0,979.0 2490.0,1050.0 2375.0,1121.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="1050.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">上传</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2375.0" y="1085.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F09</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2100.46875" y="1178.5" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2115.46875" y="1205.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2626.03125" y="833.5" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2654.53125" y="860.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1682.7777777777778,1505.0 717.2222222222222,2295.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1085.0,1900.0 1200.0,1829.0 1315.0,1900.0 1200.0,1971.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1200.0" y="1900.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">拥有会员</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1200.0" y="1935.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F28</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1436.388888888889" y="1658.5" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1451.388888888889" y="1685.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="940.6111111111111" y="2053.5" width="56.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="968.6111111111111" y="2080.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..1</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1817.2222222222222,1505.0 2782.777777777778,2295.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2185.0,1900.0 2300.0,1829.0 2415.0,1900.0 2300.0,1971.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2300.0" y="1900.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">创建订单</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2300.0" y="1935.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F29</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2053.6111111111113" y="1658.5" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2068.6111111111113" y="1685.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2522.8888888888887" y="2053.5" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2551.3888888888887" y="2080.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750.0,1395.0 1750.0,605.0" fill="none" stroke="#333" stroke-width="3" stroke-dasharray="13 9" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="1635.0,1000.0 1750.0,929.0 1865.0,1000.0 1750.0,1071.0" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="1000.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">保存对话</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="1035.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">L01 逻辑</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1745.0" y="1153.5" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1760.0" y="1180.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1731.5" y="758.5" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1760.0" y="785.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,1450 1310,1330" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1310" cy="1330" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1310.0" y="1343.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">用户编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,1450 2190,1330" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2190" cy="1330" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2190.0" y="1343.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">昵称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,1450 1310,1570" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1310" cy="1570" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1310.0" y="1583.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">等级</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,1450 2190,1570" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2190" cy="1570" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2190.0" y="1583.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">引领开关</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1600.0" y="1395.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="1451.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">用户</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="1486.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">user</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 370.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="370.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="370.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">成就编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 630.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="630.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="630.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">勋章名称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="500,650 230,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="230" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="230.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">解锁时间</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="350.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">成就</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">achievement</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,550 1620.0,340" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1620.0" cy="340" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1620.0" y="353.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">消息编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,550 1880.0,340" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1880.0" cy="340" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1880.0" y="353.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">消息角色</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1750,550 2020,760" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2020" cy="760" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2020.0" y="773.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">会话类型</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1600.0" y="495.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="551.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">AI对话历史</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="586.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">ai_chat_history</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 2870.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2870.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2870.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">文件编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 3130.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3130.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3130.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">文件名称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="3000,650 3270,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3270" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3270.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">关联类型</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2850.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">上传记录</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3000.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">file_upload</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="650,2350 515.0,2580" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="515.0" cy="2580" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="515.0" y="2593.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">用户编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="650,2350 785.0,2580" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="785.0" cy="2580" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="785.0" y="2593.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">会员到期时间</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="2295.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="650.0" y="2351.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">会员有效期</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="650.0" y="2386.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">vip_membership</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2850,2350 2580.0,2580" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2580.0" cy="2580" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2580.0" y="2593.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">订单编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2850,2350 2850.0,2580" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2850.0" cy="2580" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2850.0" y="2593.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">订单号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2850,2350 3120.0,2580" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="3120.0" cy="2580" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="3120.0" y="2593.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">订单状态</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2700.0" y="2295.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2850.0" y="2351.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">会员订单</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2850.0" y="2386.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">vip_order</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2829.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">矩形＝实体　菱形＝联系　椭圆＝主要属性；属性从当前DDL选取，外键字段以联系表达。</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1750.0" y="2874.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">基数为实际可选性：父端1或0..1，子端0..n；SQL结构核对，未连接实际数据库。</ns0:text>
+
+</g>
+<g transform="translate(1850,5910)">
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" width="100%" height="100%" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="80.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="44" font-weight="700">私信、通知与方案模板 E-R 图</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="130.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">下划线为主键；实线为物理外键联系，虚线为逻辑联系；0..n表示可无或多条</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1500.0,650.0 650,650 650.0,1845.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="535.0,822.5 650.0,751.5 765.0,822.5 650.0,893.5" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="650.0" y="823.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">发送</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="650.0" y="857.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F13</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="983.75" y="606.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="998.75" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="631.5" y="1289.75" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="660.0" y="1316.75" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1500.0,680.0 1400,700 1020,1000 1020,1900 800.0,1900.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="905.0,1266.935436125868 1020.0,1195.935436125868 1135.0,1266.935436125868 1020.0,1337.935436125868" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1020.0" y="1267.435436125868" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">接收</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1020.0" y="1301.935436125868" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F14</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1140.2648137107049" y="857.1067260178646" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1155.2648137107049" y="884.1067260178646" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1001.5" y="1649.4677180629342" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1030.0" y="1676.4677180629342" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1800.0,650.0 2650,650 2650.0,1845.0" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2535.0,822.5 2650.0,751.5 2765.0,822.5 2650.0,893.5" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2650.0" y="823.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">接收通知</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2650.0" y="857.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">F15</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2306.25" y="606.0" width="30.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2321.25" y="633.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2631.5" y="1289.75" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2660.0" y="1316.75" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1800.0,680.0 1900,700 2280,1000 2280,1900 2500.0,1900.0" fill="none" stroke="#333" stroke-width="3" stroke-dasharray="13 9" />
+
+<ns0:polygon xmlns:ns0="http://www.w3.org/2000/svg" points="2165.0,1266.935436125868 2280.0,1195.935436125868 2395.0,1266.935436125868 2280.0,1337.935436125868" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2280.0" y="1267.435436125868" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">发起通知</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2280.0" y="1301.935436125868" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="400">L04 逻辑</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2136.735186289295" y="857.1067260178646" width="56.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2164.735186289295" y="884.1067260178646" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..1</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2261.5" y="1649.4677180629342" width="57.0" height="38" fill="white" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2290.0" y="1676.4677180629342" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">0..n</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1650,650 1520.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1520.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1520.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">用户编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1650,650 1780.0,440" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1780.0" cy="440" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1780.0" y="453.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">昵称</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1650,650 1520.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1520.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1520.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">等级</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1650,650 1780.0,860" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1780.0" cy="860" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1780.0" y="873.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">引领开关</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1500.0" y="595.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="651.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">用户</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="686.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">user</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="650,1900 520.0,1690" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="520.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="520.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">私信编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="650,1900 780.0,1690" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="780.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="780.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">私信类型</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="650,1900 920,2110" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="920" cy="2110" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="920.0" y="2123.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">私信内容</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="500.0" y="1845.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="650.0" y="1901.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">私信</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="650.0" y="1936.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">message</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2650,1900 2520.0,1690" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2520.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2520.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">通知编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2650,1900 2780.0,1690" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2780.0" cy="1690" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2780.0" y="1703.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">通知类型</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="2650,1900 2920,2110" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="2920" cy="2110" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2920.0" y="2123.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">关联类型</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="2500.0" y="1845.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2650.0" y="1901.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">通知</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="2650.0" y="1936.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">notification</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1650,2100 1520.0,1890" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1520.0" cy="1890" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1520.0" y="1903.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400" text-decoration="underline">模板编号</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1650,2100 1780.0,1890" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1780.0" cy="1890" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1780.0" y="1903.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">目标类别</ns0:text>
+
+<ns0:polyline xmlns:ns0="http://www.w3.org/2000/svg" points="1650,2100 1920,2310" fill="none" stroke="#333" stroke-width="3" />
+
+<ns0:ellipse xmlns:ns0="http://www.w3.org/2000/svg" cx="1920" cy="2310" rx="115.0" ry="41.0" fill="white" stroke="#333" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1920.0" y="2323.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="400">目标关键词</ns0:text>
+
+<ns0:rect xmlns:ns0="http://www.w3.org/2000/svg" x="1500.0" y="2045.0" width="300" height="110" fill="white" stroke="#222" stroke-width="3" />
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="2101.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700">方案模板</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="2136.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400">plan_template</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="2461.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400">模板独立存储；未持久关联到计划表</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="2529.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="400">矩形＝实体　菱形＝联系　椭圆＝主要属性；属性从当前DDL选取，外键字段以联系表达。</ns0:text>
+
+<ns0:text xmlns:ns0="http://www.w3.org/2000/svg" x="1650.0" y="2574.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400">基数为实际可选性：父端1或0..1，子端0..n；SQL结构核对，未连接实际数据库。</ns0:text>
+
+</g>
+</svg>

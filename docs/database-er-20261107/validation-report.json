@@ -1,0 +1,16 @@
+{
+  "tables": 21,
+  "columns": 189,
+  "physical_foreign_keys": 29,
+  "logical_references": 4,
+  "unique_indexes": 11,
+  "checks": [
+    "source hashes unchanged",
+    "relation columns exist",
+    "all Mermaid relation IDs occur once",
+    "PNG integrity",
+    "SVG XML and text bounds",
+    "documentation links"
+  ],
+  "runtime_database_verified": false
+}

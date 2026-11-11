@@ -125,8 +125,9 @@ public class AdminController {
         Integer totalTopics = topicMapper.countAll();
         stats.put("totalTopics", totalTopics != null ? totalTopics : 0);
 
-        stats.put("dailyActive", 0);
-        stats.put("checkinRate", 0);
+        stats.put("dailyActive", null);
+        stats.put("checkinRate", null);
+        stats.put("metricsNote", "日活与打卡率的统计口径尚未定义，暂不提供");
 
         return Result.success(stats);
     }

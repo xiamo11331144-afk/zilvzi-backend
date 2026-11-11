@@ -1,0 +1,2348 @@
+{
+  "scope": "baseline + official migrations, statically reconciled; not a live database inspection",
+  "tables": {
+    "achievement": {
+      "name": "achievement",
+      "line": 24,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '成就ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "medal_name",
+          "type": "varchar(50)",
+          "nullable": false,
+          "definition": "`medal_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '勋章名称'"
+        },
+        {
+          "name": "medal_icon",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`medal_icon` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '勋章图标'"
+        },
+        {
+          "name": "medal_color",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`medal_color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '勋章颜色'"
+        },
+        {
+          "name": "condition",
+          "type": "varchar(200)",
+          "nullable": true,
+          "definition": "`condition` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '达成条件'"
+        },
+        {
+          "name": "unlock_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`unlock_time` datetime NULL DEFAULT NULL COMMENT '解锁时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        {
+          "name": "uk_user_medal",
+          "columns": [
+            "user_id",
+            "medal_name"
+          ]
+        }
+      ],
+      "fk": [
+        {
+          "id": "F01",
+          "kind": "FK",
+          "child": "achievement",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "achievement_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "ai_chat_history": {
+      "name": "ai_chat_history",
+      "line": 42,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "role",
+          "type": "varchar(20)",
+          "nullable": false,
+          "definition": "`role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '角色：user/assistant'"
+        },
+        {
+          "name": "content",
+          "type": "text",
+          "nullable": false,
+          "definition": "`content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '消息内容'"
+        },
+        {
+          "name": "session_type",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`session_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT 'chat' COMMENT '会话类型：chat/advice'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": []
+    },
+    "checkin": {
+      "name": "checkin",
+      "line": 59,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '打卡ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "goal_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`goal_id` bigint NOT NULL COMMENT '目标ID'"
+        },
+        {
+          "name": "task_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`task_id` bigint NULL DEFAULT NULL"
+        },
+        {
+          "name": "content",
+          "type": "varchar(500)",
+          "nullable": true,
+          "definition": "`content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '打卡内容/备注'"
+        },
+        {
+          "name": "image",
+          "type": "varchar(255)",
+          "nullable": true,
+          "definition": "`image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '打卡图片'"
+        },
+        {
+          "name": "checkin_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`checkin_time` datetime NULL DEFAULT NULL COMMENT '打卡时间'"
+        },
+        {
+          "name": "date",
+          "type": "date",
+          "nullable": false,
+          "definition": "`date` date NOT NULL COMMENT '打卡日期'"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'approved' COMMENT '审核状态: pending/approved/rejected'"
+        },
+        {
+          "name": "partner_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`partner_id` bigint NULL DEFAULT NULL COMMENT '审核搭子ID'"
+        },
+        {
+          "name": "proof_image",
+          "type": "varchar(500)",
+          "nullable": true,
+          "definition": "`proof_image` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '凭证图片URL'"
+        },
+        {
+          "name": "proof_content",
+          "type": "text",
+          "nullable": true,
+          "definition": "`proof_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '凭证文字描述'"
+        },
+        {
+          "name": "review_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`review_time` datetime NULL DEFAULT NULL COMMENT '审核时间'"
+        },
+        {
+          "name": "review_comment",
+          "type": "varchar(200)",
+          "nullable": true,
+          "definition": "`review_comment` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '审核评语'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        {
+          "name": "uk_user_task_date",
+          "columns": [
+            "user_id",
+            "task_id",
+            "date"
+          ]
+        },
+        {
+          "name": "uk_task_date",
+          "columns": [
+            "task_id",
+            "date"
+          ]
+        }
+      ],
+      "fk": [
+        {
+          "id": "F02",
+          "kind": "FK",
+          "child": "checkin",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "checkin_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F03",
+          "kind": "FK",
+          "child": "checkin",
+          "column": "goal_id",
+          "parent": "goal",
+          "parent_column": "id",
+          "constraint": "checkin_ibfk_2",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "circle": {
+      "name": "circle",
+      "line": 91,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '圈子ID'"
+        },
+        {
+          "name": "creator_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`creator_id` bigint NOT NULL COMMENT '创建者ID'"
+        },
+        {
+          "name": "name",
+          "type": "varchar(100)",
+          "nullable": false,
+          "definition": "`name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '圈子名称'"
+        },
+        {
+          "name": "description",
+          "type": "varchar(500)",
+          "nullable": true,
+          "definition": "`description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '圈子简介'"
+        },
+        {
+          "name": "cover",
+          "type": "varchar(255)",
+          "nullable": true,
+          "definition": "`cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '圈子封面'"
+        },
+        {
+          "name": "tags",
+          "type": "varchar(255)",
+          "nullable": true,
+          "definition": "`tags` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标签(JSON数组)'"
+        },
+        {
+          "name": "member_count",
+          "type": "int",
+          "nullable": true,
+          "definition": "`member_count` int NULL DEFAULT 1 COMMENT '成员数量'"
+        },
+        {
+          "name": "post_count",
+          "type": "int",
+          "nullable": true,
+          "definition": "`post_count` int NULL DEFAULT 0 COMMENT '动态数量'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        },
+        {
+          "name": "update_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F04",
+          "kind": "FK",
+          "child": "circle",
+          "column": "creator_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "circle_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "circle_member": {
+      "name": "circle_member",
+      "line": 111,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID'"
+        },
+        {
+          "name": "circle_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`circle_id` bigint NOT NULL COMMENT '圈子ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "role",
+          "type": "int",
+          "nullable": true,
+          "definition": "`role` int NULL DEFAULT 0 COMMENT '角色: 0-普通成员 1-管理员'"
+        },
+        {
+          "name": "status",
+          "type": "int",
+          "nullable": true,
+          "definition": "`status` int NULL DEFAULT 1 COMMENT '状态: 0-待审核 1-已加入'"
+        },
+        {
+          "name": "join_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`join_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '加入时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        {
+          "name": "uk_circle_user",
+          "columns": [
+            "circle_id",
+            "user_id"
+          ]
+        }
+      ],
+      "fk": [
+        {
+          "id": "F05",
+          "kind": "FK",
+          "child": "circle_member",
+          "column": "circle_id",
+          "parent": "circle",
+          "parent_column": "id",
+          "constraint": "circle_member_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F06",
+          "kind": "FK",
+          "child": "circle_member",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "circle_member_ibfk_2",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "comment": {
+      "name": "comment",
+      "line": 130,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "post_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`post_id` bigint NOT NULL COMMENT '动态ID'"
+        },
+        {
+          "name": "content",
+          "type": "varchar(500)",
+          "nullable": false,
+          "definition": "`content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F07",
+          "kind": "FK",
+          "child": "comment",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "comment_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F08",
+          "kind": "FK",
+          "child": "comment",
+          "column": "post_id",
+          "parent": "post",
+          "parent_column": "id",
+          "constraint": "comment_ibfk_2",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "file_upload": {
+      "name": "file_upload",
+      "line": 147,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '文件ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "file_name",
+          "type": "varchar(255)",
+          "nullable": false,
+          "definition": "`file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '原始文件名'"
+        },
+        {
+          "name": "file_path",
+          "type": "varchar(500)",
+          "nullable": false,
+          "definition": "`file_path` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '存储路径'"
+        },
+        {
+          "name": "file_type",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`file_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件类型: pdf,jpg,png'"
+        },
+        {
+          "name": "file_size",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`file_size` bigint NULL DEFAULT NULL COMMENT '文件大小(字节)'"
+        },
+        {
+          "name": "related_type",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`related_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '关联类型: schedule,checkin'"
+        },
+        {
+          "name": "related_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`related_id` bigint NULL DEFAULT NULL COMMENT '关联ID'"
+        },
+        {
+          "name": "ai_parse_result",
+          "type": "text",
+          "nullable": true,
+          "definition": "`ai_parse_result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT 'AI解析结果JSON'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上传时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F09",
+          "kind": "FK",
+          "child": "file_upload",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "file_upload_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "goal": {
+      "name": "goal",
+      "line": 167,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '目标ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "name",
+          "type": "varchar(100)",
+          "nullable": false,
+          "definition": "`name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '目标名称'"
+        },
+        {
+          "name": "type",
+          "type": "varchar(20)",
+          "nullable": false,
+          "definition": "`type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '目标类型: exam,study,fitness,reading,skill,habit'"
+        },
+        {
+          "name": "description",
+          "type": "varchar(500)",
+          "nullable": true,
+          "definition": "`description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '目标描述'"
+        },
+        {
+          "name": "start_date",
+          "type": "date",
+          "nullable": true,
+          "definition": "`start_date` date NULL DEFAULT NULL COMMENT '开始日期'"
+        },
+        {
+          "name": "end_date",
+          "type": "date",
+          "nullable": true,
+          "definition": "`end_date` date NULL DEFAULT NULL COMMENT '结束日期'"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'active' COMMENT '状态: active,completed,abandoned'"
+        },
+        {
+          "name": "streak",
+          "type": "int",
+          "nullable": true,
+          "definition": "`streak` int NULL DEFAULT 0 COMMENT '连续打卡天数'"
+        },
+        {
+          "name": "total_checkins",
+          "type": "int",
+          "nullable": true,
+          "definition": "`total_checkins` int NULL DEFAULT 0 COMMENT '总打卡天数'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        },
+        {
+          "name": "update_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F10",
+          "kind": "FK",
+          "child": "goal",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "goal_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "like_record": {
+      "name": "like_record",
+      "line": 190,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "post_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`post_id` bigint NOT NULL COMMENT '动态ID'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        {
+          "name": "uk_user_post",
+          "columns": [
+            "user_id",
+            "post_id"
+          ]
+        }
+      ],
+      "fk": [
+        {
+          "id": "F11",
+          "kind": "FK",
+          "child": "like_record",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "like_record_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F12",
+          "kind": "FK",
+          "child": "like_record",
+          "column": "post_id",
+          "parent": "post",
+          "parent_column": "id",
+          "constraint": "like_record_ibfk_2",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "message": {
+      "name": "message",
+      "line": 207,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT"
+        },
+        {
+          "name": "from_user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`from_user_id` bigint NOT NULL"
+        },
+        {
+          "name": "to_user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`to_user_id` bigint NOT NULL"
+        },
+        {
+          "name": "content",
+          "type": "varchar(500)",
+          "nullable": false,
+          "definition": "`content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL"
+        },
+        {
+          "name": "type",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'text'"
+        },
+        {
+          "name": "related_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`related_id` bigint NULL DEFAULT NULL"
+        },
+        {
+          "name": "is_read",
+          "type": "int",
+          "nullable": true,
+          "definition": "`is_read` int NULL DEFAULT 0"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F13",
+          "kind": "FK",
+          "child": "message",
+          "column": "from_user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "message_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F14",
+          "kind": "FK",
+          "child": "message",
+          "column": "to_user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "message_ibfk_2",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "notification": {
+      "name": "notification",
+      "line": 227,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '通知ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '接收用户ID'"
+        },
+        {
+          "name": "from_user_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`from_user_id` bigint NULL DEFAULT NULL COMMENT '发送用户ID'"
+        },
+        {
+          "name": "type",
+          "type": "varchar(50)",
+          "nullable": false,
+          "definition": "`type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '类型: partner_apply,partner_accept,checkin_remind,system'"
+        },
+        {
+          "name": "title",
+          "type": "varchar(100)",
+          "nullable": true,
+          "definition": "`title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题'"
+        },
+        {
+          "name": "content",
+          "type": "varchar(500)",
+          "nullable": true,
+          "definition": "`content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '内容'"
+        },
+        {
+          "name": "related_type",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`related_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '关联类型'"
+        },
+        {
+          "name": "related_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`related_id` bigint NULL DEFAULT NULL COMMENT '关联ID'"
+        },
+        {
+          "name": "is_read",
+          "type": "int",
+          "nullable": true,
+          "definition": "`is_read` int NULL DEFAULT 0 COMMENT '是否已读: 0-未读 1-已读'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F15",
+          "kind": "FK",
+          "child": "notification",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "notification_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "partner": {
+      "name": "partner",
+      "line": 248,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '关系ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "partner_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`partner_id` bigint NOT NULL COMMENT '搭子ID'"
+        },
+        {
+          "name": "goal_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`goal_id` bigint NULL DEFAULT NULL COMMENT '关联目标ID'"
+        },
+        {
+          "name": "match_mode",
+          "type": "varchar(10)",
+          "nullable": false,
+          "definition": "`match_mode` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'mutual' COMMENT 'mutual共勉；lead接收方引领申请方'"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'pending' COMMENT '状态: pending,accepted,rejected,blocked'"
+        },
+        {
+          "name": "prev_status",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`prev_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        {
+          "name": "uk_user_partner",
+          "columns": [
+            "user_id",
+            "partner_id"
+          ]
+        }
+      ],
+      "fk": [
+        {
+          "id": "F16",
+          "kind": "FK",
+          "child": "partner",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "partner_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F17",
+          "kind": "FK",
+          "child": "partner",
+          "column": "partner_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "partner_ibfk_2",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F18",
+          "kind": "FK",
+          "child": "partner",
+          "column": "goal_id",
+          "parent": "goal",
+          "parent_column": "id",
+          "constraint": "partner_ibfk_3",
+          "on_delete": "SET NULL",
+          "nullable": true,
+          "parent_cardinality": "0..1",
+          "child_cardinality": "0..N",
+          "cardinality": "0..1 : 0..N"
+        }
+      ]
+    },
+    "plan": {
+      "name": "plan",
+      "line": 272,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '计划ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "goal_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`goal_id` bigint NULL DEFAULT NULL COMMENT '关联目标ID'"
+        },
+        {
+          "name": "name",
+          "type": "varchar(100)",
+          "nullable": true,
+          "definition": "`name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '计划名称'"
+        },
+        {
+          "name": "total_days",
+          "type": "int",
+          "nullable": true,
+          "definition": "`total_days` int NULL DEFAULT NULL COMMENT '总天数'"
+        },
+        {
+          "name": "completed_days",
+          "type": "int",
+          "nullable": true,
+          "definition": "`completed_days` int NULL DEFAULT 0 COMMENT '已完成天数'"
+        },
+        {
+          "name": "schedule_data",
+          "type": "text",
+          "nullable": true,
+          "definition": "`schedule_data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '课表/时间安排JSON'"
+        },
+        {
+          "name": "remark",
+          "type": "text",
+          "nullable": true,
+          "definition": "`remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '用户备注'"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'active' COMMENT '状态: active,completed,paused'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        },
+        {
+          "name": "update_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'"
+        },
+        {
+          "name": "outline",
+          "type": "text",
+          "nullable": true,
+          "definition": "`outline` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '计划大纲JSON'"
+        },
+        {
+          "name": "current_phase",
+          "type": "int",
+          "nullable": true,
+          "definition": "`current_phase` int NULL DEFAULT 1 COMMENT '当前阶段'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F19",
+          "kind": "FK",
+          "child": "plan",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "plan_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F20",
+          "kind": "FK",
+          "child": "plan",
+          "column": "goal_id",
+          "parent": "goal",
+          "parent_column": "id",
+          "constraint": "plan_ibfk_2",
+          "on_delete": "SET NULL",
+          "nullable": true,
+          "parent_cardinality": "0..1",
+          "child_cardinality": "0..N",
+          "cardinality": "0..1 : 0..N"
+        }
+      ]
+    },
+    "plan_task": {
+      "name": "plan_task",
+      "line": 297,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '任务ID'"
+        },
+        {
+          "name": "plan_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`plan_id` bigint NOT NULL COMMENT '计划ID'"
+        },
+        {
+          "name": "day_number",
+          "type": "int",
+          "nullable": false,
+          "definition": "`day_number` int NOT NULL COMMENT '第几天'"
+        },
+        {
+          "name": "task_date",
+          "type": "date",
+          "nullable": true,
+          "definition": "`task_date` date NULL DEFAULT NULL COMMENT '任务日期'"
+        },
+        {
+          "name": "task_name",
+          "type": "varchar(100)",
+          "nullable": true,
+          "definition": "`task_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '任务名称'"
+        },
+        {
+          "name": "task_type",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`task_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '任务类型'"
+        },
+        {
+          "name": "task_description",
+          "type": "varchar(500)",
+          "nullable": true,
+          "definition": "`task_description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '任务描述'"
+        },
+        {
+          "name": "task_duration",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`task_duration` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '预计时长'"
+        },
+        {
+          "name": "task_icon",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`task_icon` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '任务图标'"
+        },
+        {
+          "name": "task_color",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`task_color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '任务颜色'"
+        },
+        {
+          "name": "sort_order",
+          "type": "int",
+          "nullable": true,
+          "definition": "`sort_order` int NULL DEFAULT 0 COMMENT '排序'"
+        },
+        {
+          "name": "completed",
+          "type": "int",
+          "nullable": true,
+          "definition": "`completed` int NULL DEFAULT 0 COMMENT '是否完成: 0-未完成 1-已完成'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F21",
+          "kind": "FK",
+          "child": "plan_task",
+          "column": "plan_id",
+          "parent": "plan",
+          "parent_column": "id",
+          "constraint": "plan_task_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "plan_template": {
+      "name": "plan_template",
+      "line": 322,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '模板ID'"
+        },
+        {
+          "name": "goal_type",
+          "type": "varchar(50)",
+          "nullable": false,
+          "definition": "`goal_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '目标类型: exam,fitness,reading,study'"
+        },
+        {
+          "name": "goal_keyword",
+          "type": "varchar(100)",
+          "nullable": false,
+          "definition": "`goal_keyword` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '目标关键词: 考研,四六级,健身'"
+        },
+        {
+          "name": "total_days",
+          "type": "int",
+          "nullable": false,
+          "definition": "`total_days` int NOT NULL COMMENT '总天数'"
+        },
+        {
+          "name": "difficulty",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`difficulty` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'medium' COMMENT '难度: easy,medium,hard'"
+        },
+        {
+          "name": "plan_outline",
+          "type": "text",
+          "nullable": true,
+          "definition": "`plan_outline` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '大纲JSON（L1路线图）'"
+        },
+        {
+          "name": "daily_tasks_template",
+          "type": "text",
+          "nullable": true,
+          "definition": "`daily_tasks_template` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '每日任务模板JSON'"
+        },
+        {
+          "name": "ai_model",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`ai_model` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '生成该方案的AI模型'"
+        },
+        {
+          "name": "usage_count",
+          "type": "int",
+          "nullable": true,
+          "definition": "`usage_count` int NULL DEFAULT 0 COMMENT '使用次数'"
+        },
+        {
+          "name": "success_count",
+          "type": "int",
+          "nullable": true,
+          "definition": "`success_count` int NULL DEFAULT 0 COMMENT '成功完成次数'"
+        },
+        {
+          "name": "quality_score",
+          "type": "float",
+          "nullable": true,
+          "definition": "`quality_score` float NULL DEFAULT 5 COMMENT '质量评分（1-10）'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        },
+        {
+          "name": "update_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": []
+    },
+    "post": {
+      "name": "post",
+      "line": 346,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '动态ID'"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL COMMENT '用户ID'"
+        },
+        {
+          "name": "circle_id",
+          "type": "bigint",
+          "nullable": true,
+          "definition": "`circle_id` bigint NULL DEFAULT NULL COMMENT '圈子ID'"
+        },
+        {
+          "name": "content",
+          "type": "text",
+          "nullable": false,
+          "definition": "`content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '动态内容'"
+        },
+        {
+          "name": "images",
+          "type": "text",
+          "nullable": true,
+          "definition": "`images` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '图片(JSON数组)'"
+        },
+        {
+          "name": "like_count",
+          "type": "int",
+          "nullable": true,
+          "definition": "`like_count` int NULL DEFAULT 0 COMMENT '点赞数'"
+        },
+        {
+          "name": "comment_count",
+          "type": "int",
+          "nullable": true,
+          "definition": "`comment_count` int NULL DEFAULT 0 COMMENT '评论数'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F22",
+          "kind": "FK",
+          "child": "post",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "post_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F23",
+          "kind": "FK",
+          "child": "post",
+          "column": "circle_id",
+          "parent": "circle",
+          "parent_column": "id",
+          "constraint": "post_ibfk_2",
+          "on_delete": "SET NULL",
+          "nullable": true,
+          "parent_cardinality": "0..1",
+          "child_cardinality": "0..N",
+          "cardinality": "0..1 : 0..N"
+        }
+      ]
+    },
+    "topic": {
+      "name": "topic",
+      "line": 367,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT"
+        },
+        {
+          "name": "circle_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`circle_id` bigint NOT NULL"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL"
+        },
+        {
+          "name": "title",
+          "type": "varchar(200)",
+          "nullable": false,
+          "definition": "`title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL"
+        },
+        {
+          "name": "content",
+          "type": "text",
+          "nullable": true,
+          "definition": "`content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL"
+        },
+        {
+          "name": "is_pinned",
+          "type": "int",
+          "nullable": true,
+          "definition": "`is_pinned` int NULL DEFAULT 0 COMMENT '是否置顶'"
+        },
+        {
+          "name": "reply_count",
+          "type": "int",
+          "nullable": true,
+          "definition": "`reply_count` int NULL DEFAULT 0"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F24",
+          "kind": "FK",
+          "child": "topic",
+          "column": "circle_id",
+          "parent": "circle",
+          "parent_column": "id",
+          "constraint": "topic_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F25",
+          "kind": "FK",
+          "child": "topic",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "topic_ibfk_2",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "topic_reply": {
+      "name": "topic_reply",
+      "line": 387,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT"
+        },
+        {
+          "name": "topic_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`topic_id` bigint NOT NULL"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL"
+        },
+        {
+          "name": "content",
+          "type": "varchar(1000)",
+          "nullable": false,
+          "definition": "`content` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F26",
+          "kind": "FK",
+          "child": "topic_reply",
+          "column": "topic_id",
+          "parent": "topic",
+          "parent_column": "id",
+          "constraint": "topic_reply_ibfk_1",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        },
+        {
+          "id": "F27",
+          "kind": "FK",
+          "child": "topic_reply",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "topic_reply_ibfk_2",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    },
+    "user": {
+      "name": "user",
+      "line": 404,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID'"
+        },
+        {
+          "name": "username",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户名'"
+        },
+        {
+          "name": "password",
+          "type": "varchar(100)",
+          "nullable": true,
+          "definition": "`password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '密码(MD5加密)'"
+        },
+        {
+          "name": "phone",
+          "type": "varchar(20)",
+          "nullable": true,
+          "definition": "`phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '手机号'"
+        },
+        {
+          "name": "email",
+          "type": "varchar(100)",
+          "nullable": true,
+          "definition": "`email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '邮箱'"
+        },
+        {
+          "name": "nickname",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`nickname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '昵称'"
+        },
+        {
+          "name": "avatar",
+          "type": "varchar(255)",
+          "nullable": true,
+          "definition": "`avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像URL'"
+        },
+        {
+          "name": "bio",
+          "type": "varchar(500)",
+          "nullable": true,
+          "definition": "`bio` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '个人简介'"
+        },
+        {
+          "name": "level",
+          "type": "int",
+          "nullable": true,
+          "definition": "`level` int NULL DEFAULT 1 COMMENT '等级'"
+        },
+        {
+          "name": "experience",
+          "type": "int",
+          "nullable": true,
+          "definition": "`experience` int NULL DEFAULT 0 COMMENT '经验值'"
+        },
+        {
+          "name": "role",
+          "type": "int",
+          "nullable": true,
+          "definition": "`role` int NULL DEFAULT 0 COMMENT '角色: 0-普通用户 1-管理员'"
+        },
+        {
+          "name": "mentor_enabled",
+          "type": "tinyint",
+          "nullable": false,
+          "definition": "`mentor_enabled` tinyint NOT NULL DEFAULT 0 COMMENT '是否开启认证引领者匹配: 0-否 1-是'"
+        },
+        {
+          "name": "openid",
+          "type": "varchar(100)",
+          "nullable": true,
+          "definition": "`openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '微信openid'"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'"
+        },
+        {
+          "name": "update_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'"
+        },
+        {
+          "name": "province",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`province` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '省份'"
+        },
+        {
+          "name": "city",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`city` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '城市'"
+        },
+        {
+          "name": "district",
+          "type": "varchar(50)",
+          "nullable": true,
+          "definition": "`district` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        {
+          "name": "username",
+          "columns": [
+            "username"
+          ]
+        },
+        {
+          "name": "phone",
+          "columns": [
+            "phone"
+          ]
+        },
+        {
+          "name": "email",
+          "columns": [
+            "email"
+          ]
+        },
+        {
+          "name": "openid",
+          "columns": [
+            "openid"
+          ]
+        }
+      ],
+      "fk": []
+    },
+    "vip_membership": {
+      "name": "vip_membership",
+      "line": 437,
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL"
+        },
+        {
+          "name": "vip_until",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`vip_until` datetime NULL DEFAULT NULL"
+        }
+      ],
+      "pk": [
+        "user_id"
+      ],
+      "unique": [],
+      "fk": [
+        {
+          "id": "F28",
+          "kind": "FK",
+          "child": "vip_membership",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "fk_vip_membership_user",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..1",
+          "cardinality": "1 : 0..1"
+        }
+      ]
+    },
+    "vip_order": {
+      "name": "vip_order",
+      "line": 448,
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`id` bigint NOT NULL AUTO_INCREMENT"
+        },
+        {
+          "name": "order_no",
+          "type": "varchar(32)",
+          "nullable": false,
+          "definition": "`order_no` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "definition": "`user_id` bigint NOT NULL"
+        },
+        {
+          "name": "price_fen",
+          "type": "int",
+          "nullable": false,
+          "definition": "`price_fen` int NOT NULL"
+        },
+        {
+          "name": "duration_days",
+          "type": "int",
+          "nullable": false,
+          "definition": "`duration_days` int NOT NULL"
+        },
+        {
+          "name": "payment_channel",
+          "type": "varchar(32)",
+          "nullable": false,
+          "definition": "`payment_channel` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL"
+        },
+        {
+          "name": "status",
+          "type": "varchar(32)",
+          "nullable": false,
+          "definition": "`status` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL"
+        },
+        {
+          "name": "create_time",
+          "type": "datetime",
+          "nullable": false,
+          "definition": "`create_time` datetime NOT NULL"
+        },
+        {
+          "name": "confirmed_time",
+          "type": "datetime",
+          "nullable": true,
+          "definition": "`confirmed_time` datetime NULL DEFAULT NULL"
+        }
+      ],
+      "pk": [
+        "id"
+      ],
+      "unique": [
+        {
+          "name": "uk_vip_order_no",
+          "columns": [
+            "order_no"
+          ]
+        }
+      ],
+      "fk": [
+        {
+          "id": "F29",
+          "kind": "FK",
+          "child": "vip_order",
+          "column": "user_id",
+          "parent": "user",
+          "parent_column": "id",
+          "constraint": "fk_vip_order_user",
+          "on_delete": "CASCADE",
+          "nullable": false,
+          "parent_cardinality": "1",
+          "child_cardinality": "0..N",
+          "cardinality": "1 : 0..N"
+        }
+      ]
+    }
+  },
+  "relationships": [
+    {
+      "id": "F01",
+      "kind": "FK",
+      "child": "achievement",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "achievement_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F02",
+      "kind": "FK",
+      "child": "checkin",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "checkin_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F03",
+      "kind": "FK",
+      "child": "checkin",
+      "column": "goal_id",
+      "parent": "goal",
+      "parent_column": "id",
+      "constraint": "checkin_ibfk_2",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F04",
+      "kind": "FK",
+      "child": "circle",
+      "column": "creator_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "circle_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F05",
+      "kind": "FK",
+      "child": "circle_member",
+      "column": "circle_id",
+      "parent": "circle",
+      "parent_column": "id",
+      "constraint": "circle_member_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F06",
+      "kind": "FK",
+      "child": "circle_member",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "circle_member_ibfk_2",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F07",
+      "kind": "FK",
+      "child": "comment",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "comment_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F08",
+      "kind": "FK",
+      "child": "comment",
+      "column": "post_id",
+      "parent": "post",
+      "parent_column": "id",
+      "constraint": "comment_ibfk_2",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F09",
+      "kind": "FK",
+      "child": "file_upload",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "file_upload_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F10",
+      "kind": "FK",
+      "child": "goal",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "goal_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F11",
+      "kind": "FK",
+      "child": "like_record",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "like_record_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F12",
+      "kind": "FK",
+      "child": "like_record",
+      "column": "post_id",
+      "parent": "post",
+      "parent_column": "id",
+      "constraint": "like_record_ibfk_2",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F13",
+      "kind": "FK",
+      "child": "message",
+      "column": "from_user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "message_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F14",
+      "kind": "FK",
+      "child": "message",
+      "column": "to_user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "message_ibfk_2",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F15",
+      "kind": "FK",
+      "child": "notification",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "notification_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F16",
+      "kind": "FK",
+      "child": "partner",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "partner_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F17",
+      "kind": "FK",
+      "child": "partner",
+      "column": "partner_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "partner_ibfk_2",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F18",
+      "kind": "FK",
+      "child": "partner",
+      "column": "goal_id",
+      "parent": "goal",
+      "parent_column": "id",
+      "constraint": "partner_ibfk_3",
+      "on_delete": "SET NULL",
+      "nullable": true,
+      "parent_cardinality": "0..1",
+      "child_cardinality": "0..N",
+      "cardinality": "0..1 : 0..N"
+    },
+    {
+      "id": "F19",
+      "kind": "FK",
+      "child": "plan",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "plan_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F20",
+      "kind": "FK",
+      "child": "plan",
+      "column": "goal_id",
+      "parent": "goal",
+      "parent_column": "id",
+      "constraint": "plan_ibfk_2",
+      "on_delete": "SET NULL",
+      "nullable": true,
+      "parent_cardinality": "0..1",
+      "child_cardinality": "0..N",
+      "cardinality": "0..1 : 0..N"
+    },
+    {
+      "id": "F21",
+      "kind": "FK",
+      "child": "plan_task",
+      "column": "plan_id",
+      "parent": "plan",
+      "parent_column": "id",
+      "constraint": "plan_task_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F22",
+      "kind": "FK",
+      "child": "post",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "post_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F23",
+      "kind": "FK",
+      "child": "post",
+      "column": "circle_id",
+      "parent": "circle",
+      "parent_column": "id",
+      "constraint": "post_ibfk_2",
+      "on_delete": "SET NULL",
+      "nullable": true,
+      "parent_cardinality": "0..1",
+      "child_cardinality": "0..N",
+      "cardinality": "0..1 : 0..N"
+    },
+    {
+      "id": "F24",
+      "kind": "FK",
+      "child": "topic",
+      "column": "circle_id",
+      "parent": "circle",
+      "parent_column": "id",
+      "constraint": "topic_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F25",
+      "kind": "FK",
+      "child": "topic",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "topic_ibfk_2",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F26",
+      "kind": "FK",
+      "child": "topic_reply",
+      "column": "topic_id",
+      "parent": "topic",
+      "parent_column": "id",
+      "constraint": "topic_reply_ibfk_1",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F27",
+      "kind": "FK",
+      "child": "topic_reply",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "topic_reply_ibfk_2",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F28",
+      "kind": "FK",
+      "child": "vip_membership",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "fk_vip_membership_user",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..1",
+      "cardinality": "1 : 0..1"
+    },
+    {
+      "id": "F29",
+      "kind": "FK",
+      "child": "vip_order",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "constraint": "fk_vip_order_user",
+      "on_delete": "CASCADE",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "L01",
+      "kind": "LR",
+      "child": "ai_chat_history",
+      "column": "user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "nullable": false,
+      "parent_cardinality": "1",
+      "child_cardinality": "0..N",
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "L02",
+      "kind": "LR",
+      "child": "checkin",
+      "column": "task_id",
+      "parent": "plan_task",
+      "parent_column": "id",
+      "nullable": true,
+      "parent_cardinality": "0..1",
+      "child_cardinality": "0..N",
+      "cardinality": "0..1 : 0..N"
+    },
+    {
+      "id": "L03",
+      "kind": "LR",
+      "child": "checkin",
+      "column": "partner_id",
+      "parent": "user",
+      "parent_column": "id",
+      "nullable": true,
+      "parent_cardinality": "0..1",
+      "child_cardinality": "0..N",
+      "cardinality": "0..1 : 0..N"
+    },
+    {
+      "id": "L04",
+      "kind": "LR",
+      "child": "notification",
+      "column": "from_user_id",
+      "parent": "user",
+      "parent_column": "id",
+      "nullable": true,
+      "parent_cardinality": "0..1",
+      "child_cardinality": "0..N",
+      "cardinality": "0..1 : 0..N"
+    }
+  ],
+  "sources": [
+    {
+      "path": "backend/sql/zilvzi.sql",
+      "sha256": "61c8c7062b1b5b2bd8f84d404a548b555c0f6943c8b93f8cb822b2ce4806e502"
+    },
+    {
+      "path": "backend/sql/2026-06-28_checkin_task_fix.sql",
+      "sha256": "67887659712ebddd9f96ecbaf62715963cf770adf1a311f2ea1fd9cb4eb8a0a8"
+    },
+    {
+      "path": "backend/sql/2026-11-07_mentor_matching_rules.sql",
+      "sha256": "8d3f020206a5f53b796c69b519878d1def4645c294206acf80f5063ccc3ae126"
+    },
+    {
+      "path": "backend/sql/2026-11-07_vip_membership.sql",
+      "sha256": "ed7a5ac7166d35108b5901e64ae9fd091649c01727bfc13967b50c0e8a0ddd42"
+    }
+  ]
+}

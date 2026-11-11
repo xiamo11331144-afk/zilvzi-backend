@@ -79,6 +79,12 @@ wechat:
   appid: "${WECHAT_APP_ID:}"
   secret: "${WECHAT_SECRET:}"
 
+# 验证码投递桥接服务：仅接受 HTTPS，未配置时验证码登录返回明确失败。
+verification:
+  delivery:
+    url: "${VERIFICATION_DELIVERY_URL:}"
+    token: "${VERIFICATION_DELIVERY_TOKEN:}"
+
 # 阿里云OSS配置
 aliyun:
   oss:

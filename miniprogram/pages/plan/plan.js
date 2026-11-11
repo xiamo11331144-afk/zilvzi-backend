@@ -49,6 +49,74 @@ Page({
     fullPlanTasks: []
   },
 
+  onShow() {
+    if (this.data.planId) this.refreshPlanProgress()
+  },
+
+  async refreshPlanProgress() {
+    const planId = this.data.planId
+    if (!planId) return
+    try {
+      const [tasksRes, todayRes] = await Promise.all([
+        request.get(`/api/plan/${planId}/tasks`),
+        request.get('/api/checkin/today')
+      ])
+      if (this.data.planId !== planId) return
+      if (tasksRes.code !== 200 || !Array.isArray(tasksRes.data)) return
+      const tasks = tasksRes.data
+      const todayTasks = todayRes.code === 200 && Array.isArray(todayRes.data) ? todayRes.data : []
+      const todayById = {}
+      todayTasks.forEach(task => { todayById[String(task.id)] = task })
+      const completedDays = {}
+      tasks.forEach(task => {
+        const todayTask = todayById[String(task.id)]
+        const status = (todayTask && todayTask.checkinStatus) || task.checkinStatus || ''
+        task.checkinStatus = status
+        if (status === 'pending' || status === 'rejected') task.completed = 0
+        else if (status === 'approved') task.completed = 1
+        if (task.completed === 1 && status !== 'pending' && status !== 'rejected') {
+          completedDays[task.dayNumber] = true
+        }
+      })
+
+      const phases = this.data.phases.map(phase => {
+        const totalDays = phase.endDay - phase.startDay + 1
+        let completedCount = 0
+        for (let day = phase.startDay; day <= phase.endDay; day++) {
+          if (completedDays[day]) completedCount++
+        }
+        return {
+          ...phase,
+          completedDays: completedCount,
+          totalDays,
+          progress: totalDays ? Math.round(completedCount / totalDays * 100) : 0,
+          phaseStatus: completedCount >= totalDays ? 'completed' : completedCount > 0 ? 'active' : 'pending',
+          phaseStatusText: completedCount >= totalDays ? '已完成' : completedCount > 0 ? '进行中' : '未开始'
+        }
+      })
+
+      const tasksById = {}
+      tasks.forEach(task => { tasksById[String(task.id)] = task })
+      const phaseTasks = { ...this.data.phaseTasks }
+      Object.keys(phaseTasks).forEach(phase => {
+        phaseTasks[phase].forEach(day => day.tasks.forEach(task => {
+          const latest = tasksById[String(task.id)]
+          const todayTask = todayById[String(task.id)]
+          task.checkinStatus = (todayTask && todayTask.checkinStatus) ||
+            (latest && latest.checkinStatus) || task.checkinStatus || ''
+          task.pending = task.checkinStatus === 'pending'
+          task.rejected = task.checkinStatus === 'rejected'
+          if (task.pending || task.rejected) task.completed = 0
+          else if (task.checkinStatus === 'approved') task.completed = 1
+          else if (latest) task.completed = latest.completed || 0
+        }))
+      })
+      this.setData({ phases, phaseTasks })
+    } catch (err) {
+      console.log('刷新计划进度失败', err)
+    }
+  },
+
   onLoad(options) {
     const today = formatDate(new Date(), 'YYYY-MM-DD')
     this.setData({ today })
@@ -453,18 +521,27 @@ Page({
       const res = await request.post(`/api/plan/${planId}/phase/${phase}/generate`)
       
       if (res.code === 200 && res.data) {
-        const tasks = res.data.map(t => ({
-          id: t.id,
-          dayNumber: t.dayNumber,
-          taskDate: t.taskDate,
-          name: t.taskName,
-          type: t.taskType,
-          description: t.taskDescription,
-          duration: t.taskDuration,
-          icon: t.taskIcon || '📚',
-          color: t.taskColor || '#4A90D9',
-          completed: t.completed || 0
-        }))
+        const tasks = res.data.map(t => {
+          const checkinStatus = t.checkinStatus || ''
+          const completed = checkinStatus === 'pending' || checkinStatus === 'rejected'
+            ? 0
+            : checkinStatus === 'approved' ? 1 : (t.completed || 0)
+          return {
+            id: t.id,
+            dayNumber: t.dayNumber,
+            taskDate: t.taskDate,
+            name: t.taskName,
+            type: t.taskType,
+            description: t.taskDescription,
+            duration: t.taskDuration,
+            icon: t.taskIcon || '📚',
+            color: t.taskColor || '#4A90D9',
+            completed,
+            checkinStatus,
+            pending: checkinStatus === 'pending',
+            rejected: checkinStatus === 'rejected'
+          }
+        })
 
         // 按天分组
         const groupedTasks = this.groupTasksByDay(tasks)
@@ -478,6 +555,7 @@ Page({
           wx.hideLoading()
           wx.showToast({ title: '生成完成', icon: 'success' })
         }
+        await this.refreshPlanProgress()
       }
     } catch (err) {
       if (isFirstLoad) wx.hideLoading()
@@ -509,30 +587,41 @@ Page({
     this.loadPhaseTasks(phase)
   },
 
-  // 完成任务
+  // 提交任务打卡并按审核状态更新页面
   async completeTask(e) {
     const taskId = e.currentTarget.dataset.id
-    const phase = this.data.currentPhase
-    
-    try {
-      const res = await request.put(`/api/plan/task/complete/${taskId}`)
-      if (res.code === 200) {
-        wx.showToast({ title: '完成！', icon: 'success' })
-        // 更新本地数据
-        const phaseTasks = this.data.phaseTasks
-        if (phaseTasks[phase]) {
-          phaseTasks[phase].forEach(day => {
-            day.tasks.forEach(task => {
-              if (task.id === taskId) {
-                task.completed = 1
-              }
-            })
-          })
-          this.setData({ phaseTasks })
-        }
+    const task = Object.keys(this.data.phaseTasks).reduce((found, phase) => {
+      if (found) return found
+      for (const day of this.data.phaseTasks[phase]) {
+        const match = day.tasks.find(item => String(item.id) === String(taskId))
+        if (match) return match
       }
+      return null
+    }, null)
+    if (!task || task.pending || task.completed === 1 || (task.completed === -1 && !task.rejected)) return
+
+    try {
+      const res = await request.post('/api/checkin/do', { taskId })
+      if (res.code !== 200) {
+        wx.showToast({ title: res.message || '提交失败', icon: 'none' })
+        return
+      }
+      const status = res.data && res.data.status
+      task.checkinStatus = status || ''
+      task.pending = status === 'pending'
+      task.rejected = status === 'rejected'
+      task.completed = status === 'approved' ? 1 : 0
+      this.setData({ phaseTasks: this.data.phaseTasks })
+      if (status === 'approved') {
+        wx.showToast({ title: '打卡已通过', icon: 'success' })
+      } else if (status === 'pending') {
+        wx.showToast({ title: '已提交，等待审核', icon: 'none' })
+      } else {
+        wx.showToast({ title: '已提交，请稍后刷新状态', icon: 'none' })
+      }
+      this.refreshPlanProgress()
     } catch (err) {
-      wx.showToast({ title: '操作失败', icon: 'none' })
+      wx.showToast({ title: err.message || '提交失败', icon: 'none' })
     }
   },
 

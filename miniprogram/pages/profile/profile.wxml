@@ -58,6 +58,29 @@ module.exports = { format: format };
 
   <view class="badge-feedback" wx:if="{{badgeError}}" bindtap="retryBadges">消息未读数更新失败，点击重试</view>
 
+  <view class="mentor-card" wx:if="{{isLoggedIn}}">
+    <view class="mentor-setting">
+      <view class="mentor-setting-main">
+        <text class="mentor-title">让别人通过引领型找到我</text>
+        <text class="mentor-hint">开启后，持续达标且有名额时参与推荐</text>
+      </view>
+      <switch color="#4A90D9" checked="{{mentorStatus && mentorStatus.enabled === true}}" disabled="{{mentorSaving || mentorStatusLoading || !mentorStatus || (!mentorStatus.enabled && mentorStatus.eligible !== true)}}" bindchange="onMentorSwitch" />
+    </view>
+    <text class="mentor-hint" wx:if="{{mentorStatusLoading}}">正在更新推荐状态...</text>
+    <text class="mentor-hint error" wx:elif="{{mentorStatusError}}">{{mentorStatusError}}，当前能否被推荐尚未确认</text>
+    <block wx:elif="{{mentorStatus}}">
+      <text class="mentor-state {{mentorStatus.recommendationState}}">{{mentorStatus.stateLabel}}</text>
+      <text class="mentor-hint" wx:if="{{mentorStatus.enabled && mentorStatus.recommendationState === 'ineligible'}}">开关已保留，但当前不会出现在引领候选中；重新达标且有名额后自动恢复参与推荐。</text>
+      <text class="mentor-hint" wx:if="{{mentorStatus.recommendationState === 'full'}}">待处理申请和已接受关系共占用全部名额；释放名额且资格达标后自动恢复。</text>
+      <text class="mentor-reason" wx:for="{{mentorStatus.unmetRequirements}}" wx:key="*this">· {{item}}</text>
+      <text class="mentor-hint">近30天有效打卡 {{mentorStatus.approvedDays === null ? '--' : mentorStatus.approvedDays}} / {{mentorStatus.requiredApprovedDays}} 天 · 打卡率 {{mentorStatus.checkinRate === null ? '--' : mentorStatus.checkinRate}}% / {{mentorStatus.requiredRate}}%</text>
+      <text class="mentor-hint">当前连续 {{mentorStatus.streak === null ? '--' : mentorStatus.streak}} / {{mentorStatus.requiredDays}} 天（最近有效打卡须为今天或昨天）</text>
+      <text class="mentor-hint">名额剩余 {{mentorStatus.remainingSlots === null ? '--' : mentorStatus.remainingSlots}} / {{mentorStatus.capacity === null ? '--' : mentorStatus.capacity}} · 待处理 {{mentorStatus.pendingCount === null ? '--' : mentorStatus.pendingCount}} · 已接受 {{mentorStatus.acceptedCount === null ? '--' : mentorStatus.acceptedCount}}</text>
+      <text class="mentor-hint">有效打卡以审核通过为准。共勉型展示不代表具备引领资格；可被推荐也需符合对方打卡率、目标、关系和排序条件。</text>
+    </block>
+    <view class="mentor-retry" bindtap="loadMentorStatus">{{mentorStatusLoading ? '更新中...' : '刷新推荐状态'}}</view>
+  </view>
+
   <!-- 功能菜单 -->
   <view class="menu-section">
     <view class="menu-group">
@@ -144,21 +167,6 @@ module.exports = { format: format };
         <text class="info-label">用户ID</text>
         <text class="info-value">{{userInfo.id}}</text>
       </view>
-      <view class="mentor-setting">
-          <view class="mentor-setting-main">
-            <text class="info-label">认证引领者</text>
-            <text class="mentor-hint" wx:if="{{mentorStatusLoading}}">正在加载资格状态...</text>
-            <text class="mentor-hint error" wx:elif="{{mentorStatusError}}">{{mentorStatusError}}</text>
-            <block wx:elif="{{mentorStatus}}">
-              <text class="mentor-hint">近30天 {{mentorStatus.approvedDays === null ? '--' : mentorStatus.approvedDays}} / 30 天（至少24天，80%）</text>
-              <text class="mentor-hint">连续打卡 {{mentorStatus.streak === null ? '--' : mentorStatus.streak}} / {{mentorStatus.requiredDays || 7}} 天（今天或昨天起算）</text>
-              <text class="mentor-hint" wx:if="{{mentorStatus.capacity !== null}}">引领名额 {{mentorStatus.occupiedSlots === null ? '--' : mentorStatus.occupiedSlots}} / {{mentorStatus.capacity}} · 剩余 {{mentorStatus.remainingSlots === null ? '--' : mentorStatus.remainingSlots}} · 待处理 {{mentorStatus.pendingCount === null ? '--' : mentorStatus.pendingCount}} · 已接受 {{mentorStatus.acceptedCount === null ? '--' : mentorStatus.acceptedCount}}</text>
-            </block>
-            <text class="mentor-hint" wx:else>认证状态尚未加载</text>
-          </view>
-          <switch color="#4A90D9" checked="{{mentorStatus && mentorStatus.enabled === true}}" disabled="{{mentorSaving || mentorStatusLoading || !mentorStatus || (!mentorStatus.enabled && mentorStatus.eligible !== true)}}" bindchange="onMentorSwitch" />
-       </view>
-       <view wx:if="{{mentorStatusError}}" class="mentor-retry" bindtap="loadMentorStatus">重新加载状态</view>
         <button class="btn-primary" bindtap="hideInfo">关闭</button>
     </view>
   </view>

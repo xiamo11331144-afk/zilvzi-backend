@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "base_commit": "a5fab940e7dd65fcc14aef4adbf4dc5842f7dd7c",
+  "basis": "current working tree; not a clean committed baseline",
+  "secret_configuration_copied": false,
+  "files": [
+    {
+      "path": "miniprogram/config/env.js",
+      "sha256": "e53f222370b3e430d9ea3dd1829991900e9a76b202c14e793c4a5977927a7397"
+    },
+    {
+      "path": "miniprogram/utils/request.js",
+      "sha256": "a4fab83178385cd7d12369b039619bdcda7ed3623110bae536d7cee1765c677d"
+    },
+    {
+      "path": "miniprogram/pages/plan/plan.js",
+      "sha256": "bc20ccc77bee3b0a48c1ecb37d991c2623f1cb7521f2820528485f293bf075a9"
+    },
+    {
+      "path": "backend/src/main/resources/application.yml",
+      "sha256": "c755fdd3486373f6ab699bbe43d4d0f80739bc2cdb279add29264cb389d1412a"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/controller/AiController.java",
+      "sha256": "9c2e918bf8562680672c8378c4be317910096688db3429c7affeadec02bffe97"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/controller/FileUploadController.java",
+      "sha256": "d7a20d165f08125a52b3b0c4fe623c67fabc14165323c3acb45c6c5d8da5c42a"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/config/WebMvcConfig.java",
+      "sha256": "66280729b0b03ec80cbb5d7c5dd5083ab09be49fc15e74a133b87355e1db5a70"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/service/impl/UserServiceImpl.java",
+      "sha256": "76fc1440835d386a0dcf7bf0c1c3dbe0e26ce023de728806fe6c913e957f4ce5"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/service/impl/AiServiceImpl.java",
+      "sha256": "d224505ddc4a413a704031d4b8c819695e9743bb404bce7e04dcf0f1cee52af8"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/service/impl/OssServiceImpl.java",
+      "sha256": "883fee4bd64edd7b7d9579ef6325dd89f12705b46e3486c6e41d48b7448bf9d2"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/service/impl/OcrServiceImpl.java",
+      "sha256": "df91b74cea0ba6eefd4b95448974ea7bdd8fdb258866792038bb107b0e83cc17"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/service/impl/PlanCacheServiceImpl.java",
+      "sha256": "84dad07e0606a8a09a09b5bdf2835389300c37d9fb2ac8710981b9c06339e80c"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/service/impl/PlanServiceImpl.java",
+      "sha256": "21519631f6c12e1a7fa9c3b55af0c05756d6f2ce159f0272a0d395eb10af35c9"
+    },
+    {
+      "path": "backend/src/main/java/com/zilvzi/utils/RedisUtil.java",
+      "sha256": "a18a2187065c8a42c529b8cc263ebdfdf7fe7159a2256946c1f3b5c0e2a7343d"
+    }
+  ]
+}

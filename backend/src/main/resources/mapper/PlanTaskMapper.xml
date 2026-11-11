@@ -5,19 +5,28 @@
 <mapper namespace="com.zilvzi.mapper.PlanTaskMapper">
 
     <select id="selectByPlanIdAndDay" resultType="PlanTask">
-        SELECT * FROM plan_task 
+        SELECT plan_task.*,
+            (SELECT c.status FROM checkin c WHERE c.task_id = plan_task.id
+             ORDER BY c.checkin_time DESC, c.id DESC LIMIT 1) AS checkin_status
+        FROM plan_task
         WHERE plan_id = #{planId} AND day_number = #{dayNumber}
         ORDER BY sort_order
     </select>
 
     <select id="selectByPlanIdAndDate" resultType="PlanTask">
-        SELECT * FROM plan_task 
+        SELECT plan_task.*,
+            (SELECT c.status FROM checkin c WHERE c.task_id = plan_task.id
+             ORDER BY c.checkin_time DESC, c.id DESC LIMIT 1) AS checkin_status
+        FROM plan_task
         WHERE plan_id = #{planId} AND task_date = #{taskDate}
         ORDER BY sort_order
     </select>
 
     <select id="selectByPlanId" resultType="PlanTask">
-        SELECT * FROM plan_task 
+        SELECT plan_task.*,
+            (SELECT c.status FROM checkin c WHERE c.task_id = plan_task.id
+             ORDER BY c.checkin_time DESC, c.id DESC LIMIT 1) AS checkin_status
+        FROM plan_task
         WHERE plan_id = #{planId}
         ORDER BY day_number, sort_order
     </select>
@@ -41,17 +50,24 @@
 
     <update id="updateStreakBreakStatus">
         UPDATE plan_task SET completed = #{completed}, task_icon = #{taskIcon}, task_color = #{taskColor}
-        WHERE id = #{id}
+        WHERE id = #{id} AND completed != 1
+        AND NOT EXISTS (SELECT 1 FROM checkin c WHERE c.task_id = plan_task.id AND c.status = 'pending')
     </update>
 
     <select id="selectByPlanIdAndPhase" resultType="PlanTask">
-        SELECT * FROM plan_task 
+        SELECT plan_task.*,
+            (SELECT c.status FROM checkin c WHERE c.task_id = plan_task.id
+             ORDER BY c.checkin_time DESC, c.id DESC LIMIT 1) AS checkin_status
+        FROM plan_task
         WHERE plan_id = #{planId} AND day_number BETWEEN #{startDay} AND #{endDay}
         ORDER BY day_number, sort_order
     </select>
 
     <select id="selectByPlanIdAndDayRange" resultType="PlanTask">
-        SELECT * FROM plan_task 
+        SELECT plan_task.*,
+            (SELECT c.status FROM checkin c WHERE c.task_id = plan_task.id
+             ORDER BY c.checkin_time DESC, c.id DESC LIMIT 1) AS checkin_status
+        FROM plan_task
         WHERE plan_id = #{planId} AND day_number BETWEEN #{startDay} AND #{endDay}
         ORDER BY day_number, sort_order
     </select>
@@ -83,6 +99,7 @@
         SELECT * FROM plan_task
         WHERE plan_id = #{planId} AND completed = 0 AND task_date < #{today}
         AND task_name NOT LIKE '【补】%'
+        AND NOT EXISTS (SELECT 1 FROM checkin c WHERE c.task_id = plan_task.id AND c.status = 'pending')
         ORDER BY day_number
         ]]>
     </select>
@@ -94,6 +111,7 @@
         SELECT * FROM plan_task
         WHERE plan_id = #{planId} AND completed != 1 AND task_date < #{today}
         AND task_name NOT LIKE '【补】%'
+        AND NOT EXISTS (SELECT 1 FROM checkin c WHERE c.task_id = plan_task.id AND c.status = 'pending')
         ORDER BY day_number
         ]]>
     </select>
@@ -122,7 +140,10 @@
     </select>
 
     <select id="selectIncompleteByPlanId" resultType="PlanTask">
-        SELECT * FROM plan_task 
+        SELECT plan_task.*,
+            (SELECT c.status FROM checkin c WHERE c.task_id = plan_task.id
+             ORDER BY c.checkin_time DESC, c.id DESC LIMIT 1) AS checkin_status
+        FROM plan_task
         WHERE plan_id = #{planId} AND completed = 0
         ORDER BY day_number, sort_order
     </select>
@@ -143,12 +164,14 @@
     <select id="countStreakBreakDays" resultType="Integer">
         SELECT COUNT(DISTINCT day_number) FROM plan_task
         WHERE plan_id = #{planId} AND completed = -1
+        AND NOT EXISTS (SELECT 1 FROM checkin c WHERE c.task_id = plan_task.id AND c.status = 'pending')
     </select>
 
     <!-- 查询计划中断卡的任务详情（completed = -1） -->
     <select id="selectStreakBreakTasks" resultType="PlanTask">
         SELECT * FROM plan_task
         WHERE plan_id = #{planId} AND completed = -1
+        AND NOT EXISTS (SELECT 1 FROM checkin c WHERE c.task_id = plan_task.id AND c.status = 'pending')
         ORDER BY day_number, sort_order
     </select>
 
@@ -157,6 +180,7 @@
         <![CDATA[
         DELETE FROM plan_task
         WHERE plan_id = #{planId} AND task_name LIKE '【补】%' AND task_date < #{today} AND completed != 1
+        AND NOT EXISTS (SELECT 1 FROM checkin c WHERE c.task_id = plan_task.id AND c.status = 'pending')
         ]]>
     </delete>
 
@@ -164,5 +188,6 @@
     <select id="countPendingDays" resultType="Integer">
         SELECT COUNT(DISTINCT day_number) FROM plan_task
         WHERE plan_id = #{planId} AND completed = 0 AND task_date &lt;= #{today}
+        AND NOT EXISTS (SELECT 1 FROM checkin c WHERE c.task_id = plan_task.id AND c.status = 'pending')
     </select>
 </mapper>

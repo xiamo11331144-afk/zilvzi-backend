@@ -6,6 +6,8 @@ import com.zilvzi.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,7 @@ public class MentorMatchingService {
 
     public static boolean isEligible(Map<String, Object> stats) {
         return number(stats, "approvedDays") >= REQUIRED_DAYS
+                && number(stats, "checkinRate") >= REQUIRED_RATE
                 && number(stats, "streak") >= REQUIRED_STREAK;
     }
 
@@ -51,6 +54,16 @@ public class MentorMatchingService {
         result.put("pendingCount", (int) number(slots, "pendingCount"));
         result.put("acceptedCount", (int) number(slots, "acceptedCount"));
         result.put("remainingSlots", Math.max(0, CAPACITY - (int) number(slots, "occupiedSlots")));
+        List<String> unmet = new ArrayList<>();
+        if (number(stats, "approvedDays") < REQUIRED_DAYS) unmet.add("近30天有效打卡不足" + REQUIRED_DAYS + "天");
+        if (number(stats, "checkinRate") < REQUIRED_RATE) unmet.add("近30天有效打卡率不足" + REQUIRED_RATE + "%");
+        if (number(stats, "streak") < REQUIRED_STREAK) unmet.add("当前连续有效打卡不足" + REQUIRED_STREAK + "天");
+        boolean enabled = Integer.valueOf(1).equals(user.getMentorEnabled());
+        String state = !enabled ? "disabled" : !isEligible(stats) ? "ineligible"
+                : number(slots, "occupiedSlots") >= CAPACITY ? "full" : "available";
+        result.put("recommendationState", state);
+        result.put("recommendationAvailable", "available".equals(state));
+        result.put("unmetRequirements", unmet);
         return result;
     }
 

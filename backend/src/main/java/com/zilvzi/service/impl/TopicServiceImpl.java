@@ -108,10 +108,50 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void updateTopic(Long id, Map<String, Object> params) {
-        topicMapper.update(id,
-            (String) params.get("title"),
-            (String) params.get("content"),
-            params.get("isPinned") != null ? (Integer) params.get("isPinned") : null);
+        if (params == null || params.isEmpty()) {
+            throw new IllegalArgumentException("至少提供一个可更新字段");
+        }
+        for (String key : params.keySet()) {
+            if (!List.of("title", "content", "isPinned").contains(key)) {
+                throw new IllegalArgumentException("包含不支持的更新字段");
+            }
+        }
+
+        String title = null;
+        if (params.containsKey("title")) {
+            Object value = params.get("title");
+            if (!(value instanceof String text) || text.trim().isEmpty()
+                    || text.trim().codePointCount(0, text.trim().length()) > 200) {
+                throw new IllegalArgumentException("标题不能为空且不能超过200个字符");
+            }
+            title = text.trim();
+            if (sensitiveWordFilter.containsSensitive(title)) {
+                throw new IllegalArgumentException("标题包含敏感词");
+            }
+        }
+
+        String content = null;
+        if (params.containsKey("content")) {
+            Object value = params.get("content");
+            if (!(value instanceof String text)) {
+                throw new IllegalArgumentException("内容格式不正确");
+            }
+            content = text;
+            if (sensitiveWordFilter.containsSensitive(content)) {
+                throw new IllegalArgumentException("内容包含敏感词");
+            }
+        }
+
+        Integer isPinned = null;
+        if (params.containsKey("isPinned")) {
+            Object value = params.get("isPinned");
+            if (!(value instanceof Integer flag) || (flag != 0 && flag != 1)) {
+                throw new IllegalArgumentException("置顶状态只能为0或1");
+            }
+            isPinned = flag;
+        }
+
+        topicMapper.update(id, title, content, isPinned);
     }
 
     @Override

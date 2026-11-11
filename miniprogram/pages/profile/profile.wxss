@@ -171,7 +171,15 @@
 }
 
 /* 个人信息弹窗 */
-.mentor-setting{display:flex;align-items:center;justify-content:space-between;padding:20rpx 0;border-top:1rpx solid #f0f0f0}
+.mentor-card{margin:20rpx 20rpx 0;padding:24rpx;background:#fff;border-radius:16rpx}
+.mentor-title{font-size:28rpx;font-weight:600;color:#333}
+.mentor-state{display:block;margin:12rpx 0;font-size:28rpx;font-weight:600;color:#777}
+.mentor-state.available{color:#28854B}
+.mentor-state.ineligible,.mentor-state.full,.mentor-reason{color:#A15D24}
+.mentor-hint,.mentor-reason{display:block;font-size:23rpx;line-height:1.7;word-break:break-all}
+.mentor-hint{color:#737B86;margin-top:6rpx}
+.mentor-setting{display:flex;align-items:center;justify-content:space-between;gap:16rpx;padding:0 0 12rpx}
+.mentor-setting switch{flex-shrink:0}
 .mentor-setting-main{display:flex;flex-direction:column;gap:6rpx;min-width:0}
 .mentor-hint.error{color:#C74646}
 .mentor-retry{padding:12rpx 0;color:#3578B8;font-size:24rpx}

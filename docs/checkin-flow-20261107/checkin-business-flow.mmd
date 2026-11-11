@@ -1,0 +1,33 @@
+flowchart TD
+  A([登录后选择目标或任务]) --> B["POST /api/checkin/do<br/>taskId优先，或使用goalId；可携带凭证"]
+  B --> C{"当前入口校验通过？<br/>任务：存在、归属、完成状态、日期<br/>目标：当日无已有记录"}
+  C -->|否| ERR([返回错误；不新建记录])
+  C -->|是| T["仅任务入口：先置completed=1<br/>断卡任务重置图标，尝试刷新计划完成天数<br/>目标入口跳过"]
+  T --> EXIST{"任务入口已存在同任务同日期记录？"}
+  EXIST -->|是| OLD([返回原记录；不新建、不再次触发奖励])
+  EXIST -->|否，或目标入口| PARTNER{"后端是否查到已接受且目标类别匹配的搭子？"}
+  PARTNER -->|否| NORMAL["① 普通打卡<br/>插入status=approved"]
+  NORMAL --> NS["重算目标连续及累计打卡天数<br/>检查成就；用户存在时加10经验；按条件解锁勋章"]
+  NS --> NE([返回approved；普通打卡请求结束])
+  PARTNER -->|是| PENDING["② 待审核打卡<br/>插入status=pending，保存凭证字段<br/>通知匹配搭子并写入凭证私信"]
+  PENDING --> WAIT["返回pending；提交请求结束<br/>不触发目标统计更新与经验奖励"]
+  WAIT -. 跨请求等待人工审核 .-> REVIEW["搭子从待审列表或凭证私信提交审核<br/>POST /api/checkin/review"]
+  REVIEW --> GATE{"记录存在、仍为pending且现有审核校验通过？<br/>权限实现局限见说明"}
+  GATE -->|否| RE([返回错误；本次审核不改变记录状态])
+  GATE -->|是| DEC{"approved为true？"}
+  DEC -->|是| APPROVED["③ 审核通过<br/>更新status=approved<br/>记录审核人、时间、评语"]
+  APPROVED --> AS["尝试更新关联凭证私信<br/>重算目标统计、检查成就、加10经验<br/>通知打卡提交者"]
+  AS --> AE([返回approved；审核请求结束])
+  DEC -->|否| REJECTED["④ 审核驳回<br/>更新status=rejected<br/>记录审核人、时间、评语"]
+  REJECTED --> RS["尝试更新关联凭证私信并通知提交者<br/>不加经验，不计入approved打卡天数<br/>不恢复任务状态，无完整修改重提流程"]
+  RS --> RF([返回rejected；审核请求结束])
+  classDef ok fill:#eef8f2,stroke:#27694e,color:#19334a;
+  classDef wait fill:#fff8e9,stroke:#97631f,color:#19334a;
+  classDef reject fill:#fff0ee,stroke:#a74442,color:#19334a;
+  class NORMAL,NS,NE,APPROVED,AS,AE ok;
+  class PENDING,WAIT wait;
+  class REJECTED,RS,RF,ERR,RE reject;
+%% 普通打卡与人工审核通过共享approved，不是四种数据库状态。
+%% 任务完成标志与checkin审核状态不同；待审/驳回不回滚completed。
+%% 现有审核SQL只按id更新，未原子校验pending，不保证并发先到先得。
+%% 源码核对日期：2026-11-07；本图不是运行验收结果。

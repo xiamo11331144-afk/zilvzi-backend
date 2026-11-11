@@ -71,9 +71,10 @@
     <view class="section-title">今日打卡任务</view>
     <view class="task-item {{item.streakBreak ? 'task-streak-break' : ''}}" wx:for="{{todayTasks}}" wx:key="id">
       <view class="task-left">
-        <view class="task-check {{item.checked ? 'checked' : ''}} {{item.streakBreak ? 'streak-break' : ''}}"
-              bindtap="{{item.streakBreak || item.checked ? '' : 'doCheckin'}}" data-id="{{item.id}}">
+        <view class="task-check {{item.checked ? 'checked' : ''}} {{item.pending ? 'pending' : ''}} {{item.rejected ? 'rejected' : ''}} {{item.streakBreak ? 'streak-break' : ''}}"
+              bindtap="{{item.streakBreak || item.checked || item.pending ? '' : 'doCheckin'}}" data-id="{{item.id}}">
           <text wx:if="{{item.checked}}">✓</text>
+          <text wx:if="{{item.pending}}">…</text>
           <text wx:if="{{item.streakBreak}}">✕</text>
         </view>
         <view class="task-info">
@@ -85,9 +86,11 @@
         </view>
       </view>
       <view class="task-status">
-        <text class="status-text {{item.checked ? 'done' : ''}} {{item.streakBreak ? 'streak-break-status' : ''}}"
-              wx:if="{{!item.streakBreak}}">{{item.checked ? '已完成' : '未完成'}}</text>
-        <text class="status-text streak-break-status" wx:if="{{item.streakBreak}}">已断卡</text>
+        <text class="status-text done" wx:if="{{item.checked}}">已通过</text>
+        <text class="status-text" style="color:#faad14;" wx:elif="{{item.pending}}">待审核</text>
+        <text class="status-text" style="color:#ff4d4f;" wx:elif="{{item.rejected}}" bindtap="doCheckin" data-id="{{item.id}}">已驳回，重新提交</text>
+        <text class="status-text streak-break-status" wx:elif="{{item.streakBreak}}">已断卡</text>
+        <text class="status-text" wx:else>未完成</text>
       </view>
     </view>
   </view>

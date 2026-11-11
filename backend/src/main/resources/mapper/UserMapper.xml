@@ -77,7 +77,7 @@
         SELECT u.id as userId, u.nickname, u.avatar, u.level,
                COUNT(DISTINCT c.date) as totalDays
         FROM user u
-        LEFT JOIN checkin c ON u.id = c.user_id
+        LEFT JOIN checkin c ON u.id = c.user_id AND c.status = 'approved'
         GROUP BY u.id, u.nickname, u.avatar, u.level
         ORDER BY totalDays DESC
         LIMIT #{limit}
@@ -90,14 +90,14 @@
                COUNT(DISTINCT c.date) as totalDays,
                COALESCE(streak_data.streakDays, 0) as streakDays
         FROM user u
-        LEFT JOIN checkin c ON u.id = c.user_id
+        LEFT JOIN checkin c ON u.id = c.user_id AND c.status = 'approved'
         LEFT JOIN (
             SELECT user_id, COUNT(*) as streakDays
             FROM (
                 SELECT user_id, date,
                        ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY date DESC) as rn
                 FROM checkin
-                WHERE date <= #{today}
+                WHERE status = 'approved' AND date <= #{today}
                 GROUP BY user_id, date
             ) consecutive_dates
             WHERE DATEDIFF(#{today}, date) = rn - 1
@@ -215,7 +215,7 @@
           AND (u.phone = #{keyword} OR u.nickname LIKE CONCAT('%', #{keyword}, '%') OR u.username LIKE CONCAT('%', #{keyword}, '%'))
         </if>
         <if test="requireMentor == 1">
-          AND u.mentor_enabled = 1 AND a.approvedDays &gt;= 24 AND a.streak &gt;= 7
+          AND u.mentor_enabled = 1 AND a.approvedDays &gt;= 24 AND a.checkinRate &gt;= 80 AND a.streak &gt;= 7
           AND a.checkinRate &gt; #{requesterRate} AND COALESCE(slots.occupied, 0) &lt; 3
         </if>
         ORDER BY CASE WHEN u.province = #{province} THEN 0 ELSE 1 END,

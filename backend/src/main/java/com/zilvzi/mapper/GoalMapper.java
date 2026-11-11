@@ -13,6 +13,8 @@ public interface GoalMapper {
     /**
      * 根据ID查询目标
      */
+    Long lockById(@Param("id") Long id);
+
     Goal selectById(@Param("id") Long id);
 
     /**

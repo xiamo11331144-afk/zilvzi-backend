@@ -1,0 +1,22 @@
+接口响应示例（结构示意，字段来自当前 Result / Checkin；非现场抓包）
+
+1) 提交打卡：POST /api/checkin/do
+Request:
+{"taskId": 2101, "proofImage": "<脱敏图片URL>", "proofContent": "已完成今日任务（示例）"}
+
+搭子审核路径的 Response（由Controller返回成功壳；记录字段为示例）:
+{"code":200,"message":"打卡成功","data":{"id":3101,"userId":<脱敏用户ID>,"goalId":4101,"taskId":2101,"status":"pending","proofImage":"<脱敏图片URL>","proofContent":"已完成今日任务（示例）","date":"2026-11-08","checkinTime":"2026-11-08 11:30:00"}}
+
+2) 待审核列表：GET /api/checkin/pending
+Response:
+{"code":200,"message":"success","data":[{"id":3101,"userId":<脱敏用户ID>,"goalId":4101,"taskId":2101,"status":"pending","proofImage":"<脱敏图片URL>","proofContent":"已完成今日任务（示例）"}]}
+
+3) 审核通过：POST /api/checkin/review
+Request: {"checkinId":3101,"approved":true}
+Response: {"code":200,"message":"审核通过","data":{"id":3101,"status":"approved","partnerId":<脱敏审核人ID>,"reviewTime":"2026-11-08 11:35:00","reviewComment":null}}
+
+4) 审核驳回：POST /api/checkin/review
+Request: {"checkinId":3101,"approved":false,"comment":"请补充清晰凭证（示例）"}
+Response: {"code":200,"message":"已驳回","data":{"id":3101,"status":"rejected","partnerId":<脱敏审核人ID>,"reviewComment":"请补充清晰凭证（示例）"}}
+
+注意：示例值为合成数据，未通过真实运行捕获；字段是否序列化及附加关联字段以运行配置和当前数据库查询结果为准。当前源码中打卡页单次/批量入口仅提交taskId，凭证必填仅由首页凭证弹窗约束；接口并不统一强制proofImage。

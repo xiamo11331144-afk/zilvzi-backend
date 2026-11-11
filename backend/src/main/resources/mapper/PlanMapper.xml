@@ -11,6 +11,10 @@
         WHERE p.id = #{id}
     </select>
 
+    <select id="selectByIdForUpdate" resultType="Plan">
+        SELECT * FROM plan WHERE id = #{id} FOR UPDATE
+    </select>
+
     <select id="selectByUserId" resultType="Plan">
         SELECT * FROM plan WHERE user_id = #{userId} ORDER BY create_time DESC
     </select>

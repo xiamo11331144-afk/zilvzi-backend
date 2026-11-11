@@ -82,40 +82,41 @@ Page({
     } catch (err) {}
   },
 
+  formatMentorStatus(d) {
+    const asNumber = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value) : null
+    const status = {
+      enabled: d.enabled === true || d.enabled === 1,
+      eligible: (d.eligible === true || d.eligible === 1) && ['approvedDays', 'checkinRate', 'streak'].every(key => asNumber(d[key]) !== null),
+      requiredDays: asNumber(d.requiredDays) || 7,
+      requiredApprovedDays: asNumber(d.requiredApprovedDays) || 24,
+      requiredRate: asNumber(d.requiredRate) || 80
+    }
+    for (const key of ['approvedDays', 'checkinRate', 'streak', 'capacity', 'occupiedSlots', 'remainingSlots', 'pendingCount', 'acceptedCount']) status[key] = asNumber(d[key])
+    // 旧服务端仍可展示，但容量未知时不能宣称可被推荐。
+    status.recommendationState = !status.enabled ? 'disabled' : !status.eligible ? 'ineligible'
+      : status.remainingSlots === null ? 'unknown' : status.remainingSlots <= 0 ? 'full' : 'available'
+    if (d.recommendationState && ['disabled', 'ineligible', 'full', 'available'].includes(d.recommendationState)) {
+      if (d.recommendationState !== 'available' || (status.eligible && status.enabled && status.remainingSlots > 0)) status.recommendationState = d.recommendationState
+    }
+    const labels = { disabled: '未开启引领推荐', ineligible: '资格不足，暂停推荐', full: '名额已满，暂停推荐', available: '可被引领推荐', unknown: '推荐状态待确认' }
+    status.stateLabel = labels[status.recommendationState]
+    status.unmetRequirements = Array.isArray(d.unmetRequirements) ? d.unmetRequirements : []
+    if (!status.eligible && !status.unmetRequirements.length) {
+      if (status.approvedDays < status.requiredApprovedDays) status.unmetRequirements.push('近30天有效打卡不足' + status.requiredApprovedDays + '天')
+      if (status.checkinRate < status.requiredRate) status.unmetRequirements.push('近30天有效打卡率不足' + status.requiredRate + '%')
+      if (status.streak < status.requiredDays) status.unmetRequirements.push('当前连续有效打卡不足' + status.requiredDays + '天')
+      if (!status.unmetRequirements.length) status.unmetRequirements.push('当前资格尚未通过，请刷新确认')
+    }
+    return status
+  },
+
   async loadMentorStatus() {
-    if (this.data.mentorStatusLoading) return
+    if (this.data.mentorStatusLoading || this.data.mentorSaving) return
     this.setData({ mentorStatusLoading: true, mentorStatusError: '', mentorStatus: null })
     try {
       const res = await request.get('/api/user/mentor/status')
       if (res.code !== 200 || !res.data) throw new Error(res.message || '认证状态暂不可用')
-      const d = res.data
-      const asNumber = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value) : null
-      const requiredDays = asNumber(d.requiredDays) || 7
-      const requiredApprovedDays = asNumber(d.requiredApprovedDays) || 24
-      const requiredRate = asNumber(d.requiredRate) || 80
-      const approvedDays = asNumber(d.approvedDays)
-      const checkinRate = asNumber(d.checkinRate)
-      const streak = asNumber(d.streak)
-      const eligible = (d.eligible === true || d.eligible === 1)
-        && approvedDays !== null && approvedDays >= requiredApprovedDays
-        && checkinRate !== null && checkinRate >= requiredRate
-        && streak !== null && streak >= requiredDays
-      const status = {
-        enabled: d.enabled === true || d.enabled === 1,
-        eligible,
-        approvedDays,
-        checkinRate,
-        streak,
-        requiredDays,
-        requiredApprovedDays,
-        requiredRate,
-        capacity: asNumber(d.capacity),
-        occupiedSlots: asNumber(d.occupiedSlots),
-        remainingSlots: asNumber(d.remainingSlots),
-        pendingCount: asNumber(d.pendingCount),
-        acceptedCount: asNumber(d.acceptedCount)
-      }
-      this.setData({ mentorStatus: status })
+      this.setData({ mentorStatus: this.formatMentorStatus(res.data) })
     } catch (err) {
       this.setData({ mentorStatusError: err.message || '认证状态加载失败' })
       wx.showToast({ title: err.message || '认证状态加载失败', icon: 'none' })
@@ -137,14 +138,9 @@ Page({
     try {
       const res = await request.put('/api/user/mentor', { enabled })
       if (res.code !== 200 || !res.data) throw new Error(res.message || '设置失败')
-      const d = res.data
-      this.setData({ mentorStatus: {
-        ...current,
-        ...d,
-        enabled: d.enabled === true || d.enabled === 1,
-        eligible: d.eligible === true || d.eligible === 1
-      } })
-      wx.showToast({ title: enabled ? '已开启引领' : '已关闭引领', icon: 'success' })
+      const status = this.formatMentorStatus(res.data)
+      this.setData({ mentorStatus: status })
+      wx.showToast({ title: status.stateLabel, icon: 'none' })
     } catch (err) {
       this.setData({ mentorStatus: current })
       wx.showToast({ title: err.message || '设置失败', icon: 'none' })

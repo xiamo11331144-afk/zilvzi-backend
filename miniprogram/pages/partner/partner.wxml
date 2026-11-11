@@ -107,6 +107,7 @@ module.exports = { format: format };
       <view class="match-mode-btn {{matchMode==='mutual'?'active':''}}" bindtap="switchMatchMode" data-mode="mutual">共勉型（相似打卡率）</view>
       <view class="match-mode-btn {{matchMode==='lead'?'active':''}}" bindtap="switchMatchMode" data-mode="lead">引领型（高手带新手）</view>
     </view>
+    <view class="lead-tip card" bindtap="openMentorSettings">这里用于寻找搭子；想让别人通过引领型找到你，请到「我的」查看引领推荐状态 ›</view>
     <view class="match-filter card">
       <view class="filter-tags">
         <view class="tag {{selectedType === item ? 'active' : ''}}" 
@@ -116,7 +117,7 @@ module.exports = { format: format };
     </view>
     <view class="match-list">
        <view wx:if="{{matchMode === 'lead'}}" class="lead-tip" bindtap="openVip">新引领申请需要 VIP，点击查看会员。免费用户可浏览和处理收到的申请；共勉匹配免费。</view>
-       <view wx:if="{{matchMode === 'lead'}}" class="lead-tip">引领条件：近30天至少24/30天（80%）且连续打卡7天；候选需更强且有空余名额</view>
+       <view wx:if="{{matchMode === 'lead'}}" class="lead-tip">引领条件：近30天有效打卡至少24天（打卡率≥80%）、当前连续至少7天；须主动开启引领、打卡率严格高于申请人且有空余名额</view>
        <view class="section-feedback" wx:if="{{matchLoading}}">正在加载推荐...</view>
        <view class="section-feedback error" wx:if="{{matchError}}" bindtap="loadMatchList">{{matchError}}，点击重试</view>
       <view wx:if="{{matchList.length > 0}}" style="padding:8rpx 0 16rpx;font-size:24rpx;color:#999;">
@@ -129,7 +130,7 @@ module.exports = { format: format };
           <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
           <view class="match-info">
             <text class="match-name">{{item.nickname}}</text>
-             <text wx:if="{{matchMode === 'lead' && item.leadDataComplete}}" class="mentor-badge">认证引领者 · 连续{{item.streak}}天 · 余{{item.remainingSlots}}名额</text>
+             <text wx:if="{{matchMode === 'lead' && item.leadDataComplete && item.mentorEnabled && item.mentorEligible}}" class="mentor-badge">认证引领者 · 连续{{item.streak}}天 · 余{{item.remainingSlots}}名额</text>
              <text wx:elif="{{matchMode === 'lead'}}" class="mentor-unknown">引领资格数据待确认</text>
 
 
@@ -150,7 +151,7 @@ module.exports = { format: format };
       </view>
     </view>
     <view class="empty-state" wx:if="{{matchList.length === 0 && !matchLoading && !matchError}}">
-      <text>暂无推荐用户</text>
+      <text>{{matchMode === 'lead' ? '暂无符合当前条件的引领者，可调整筛选或尝试共勉型' : '暂无推荐用户'}}</text>
     </view>
   </view>
 </view>

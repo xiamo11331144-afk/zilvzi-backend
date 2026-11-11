@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1520" viewBox="0 0 2200 1520"><rect width="100%" height="100%" fill="white"/>
+<text x="1100" y="72" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="42" font-weight="700" fill="#172b42">系统总体架构与实际调用方向</text>
+<text x="1100" y="117" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="25" font-weight="400" fill="#536477">配置与源码核对｜2026-11-07｜本地开发配置；外部依赖未做连通验收</text>
+<rect x="480" y="175" width="960" height="955" rx="22" fill="#fafcfe" stroke="#8da5bd" stroke-width="2"/>
+<text x="960" y="224" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="29" font-weight="700" fill="#172b42">Spring Boot 3.2.5 后端单体应用 · Java 17 · :8081</text>
+<text x="960" y="263" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#536477">逻辑分层，不代表独立部署的微服务</text>
+<rect x="65" y="300" width="305" height="170" rx="15" fill="#edf5fd" stroke="#97aec3" stroke-width="2"/>
+<text x="217" y="352" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="30" font-weight="700" fill="#172b42">微信原生小程序</text>
+<text x="217" y="398" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">JS / WXML / WXSS</text>
+<text x="217" y="437" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">development 配置</text>
+<rect x="65" y="590" width="305" height="135" rx="15" fill="#edf5fd" stroke="#97aec3" stroke-width="2"/>
+<text x="217" y="638" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="28" font-weight="700" fill="#172b42">管理端浏览器</text>
+<text x="217" y="683" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">同一后端提供 /admin</text>
+<rect x="550" y="300" width="820" height="150" rx="15" fill="#f3f7fb" stroke="#97aec3" stroke-width="2"/>
+<text x="960" y="348" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="32" font-weight="700" fill="#172b42">Controller 接口层</text>
+<text x="960" y="394" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="24" font-weight="400" fill="#172b42">Spring MVC · /api/** · JSON / multipart</text>
+<text x="960" y="433" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">登录 / 管理员拦截器：JWT 校验（公开接口除外）</text>
+<polyline points="370,345 550,345" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="550,345 536.3036658953154,351.11640679589357 536.3036658953154,338.88359320410643" fill="#2e668e"/>
+<text x="460" y="300" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#172b42">HTTP 请求</text>
+<text x="285" y="517" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#536477">http://localhost:8081</text>
+<polyline points="370,650 410,650 410,415 550,415" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="550,415 536.3036658953154,421.11640679589357 536.3036658953154,408.88359320410643" fill="#2e668e"/>
+<rect x="550" y="530" width="820" height="350" rx="15" fill="#edf6f3" stroke="#89b3a4" stroke-width="2"/>
+<text x="960" y="577" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="31" font-weight="700" fill="#172b42">Service 业务层与外部服务适配</text>
+<text x="960" y="631" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">User / Goal / Plan / Checkin / Partner 等业务服务</text>
+<text x="960" y="678" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">UserServiceImpl → RedisUtil → StringRedisTemplate</text>
+<text x="960" y="725" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">AiServiceImpl：对话、建议、计划生成</text>
+<text x="960" y="772" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">OssServiceImpl：上传；OcrServiceImpl：URL 识别</text>
+<text x="960" y="828" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#536477">课表：Controller 先调 OSS，取得 URL 后再调 OCR</text>
+<polyline points="960,450 960,530" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="960,530 953.8835932041064,516.3036658953154 966.1164067958936,516.3036658953154" fill="#2e668e"/>
+<text x="1005" y="497" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#2e668e">调用</text>
+<rect x="550" y="970" width="820" height="130" rx="15" fill="#f3f7fb" stroke="#97aec3" stroke-width="2"/>
+<text x="960" y="1018" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="31" font-weight="700" fill="#172b42">Mapper 数据访问层</text>
+<text x="960" y="1068" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="24" font-weight="400" fill="#172b42">MyBatis Mapper 接口 / XML · SQL 执行与结果映射</text>
+<polyline points="960,880 960,970" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="960,970 953.8835932041064,956.3036658953154 966.1164067958936,956.3036658953154" fill="#2e668e"/>
+<text x="1085" y="932" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#2e668e">调用 / 数据读写</text>
+<polyline points="550,390 505,390 505,1030 550,1030" fill="none" stroke="#a76522" stroke-width="3" stroke-dasharray="10 7"/><polygon points="550,1030 536.3036658953154,1036.1164067958935 536.3036658953154,1023.8835932041064" fill="#a76522"/>
+<text x="450" y="921" text-anchor="end" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="21" font-weight="400" fill="#a76522">部分 Controller</text>
+<text x="450" y="956" text-anchor="end" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="21" font-weight="400" fill="#a76522">直接调用 Mapper</text>
+<rect x="550" y="1205" width="355" height="145" rx="15" fill="#fff8ec" stroke="#c9ae77" stroke-width="2"/>
+<text x="727" y="1251" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="31" font-weight="700" fill="#172b42">Redis</text>
+<text x="727" y="1297" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="25" font-weight="400" fill="#172b42">127.0.0.1:6379</text>
+<text x="727" y="1333" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#172b42">验证码 · TTL 300 秒</text>
+<polyline points="550,690 530,690 530,1170 727,1170 727,1205" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="727,1205 720.8835932041064,1191.3036658953154 733.1164067958936,1191.3036658953154" fill="#2e668e"/>
+<text x="630" y="1159" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#172b42">GET / SETEX / DEL</text>
+<rect x="1010" y="1205" width="360" height="145" rx="15" fill="#fff8ec" stroke="#c9ae77" stroke-width="2"/>
+<text x="1190" y="1251" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="31" font-weight="700" fill="#172b42">MySQL</text>
+<text x="1190" y="1296" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="24" font-weight="400" fill="#172b42">localhost:3306 / zilvzi</text>
+<text x="1190" y="1331" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="21" font-weight="400" fill="#172b42">业务数据、AI 历史、计划模板</text>
+<polyline points="1190,1100 1190,1205" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="1190,1205 1183.8835932041065,1191.3036658953154 1196.1164067958935,1191.3036658953154" fill="#2e668e"/>
+<text x="1300" y="1169" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#2e668e">JDBC / Druid</text>
+<text x="1895" y="196" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="30" font-weight="700" fill="#172b42">外部平台与云服务</text>
+<rect x="1710" y="235" width="430" height="150" rx="15" fill="#f5f1fb" stroke="#b3a2c8" stroke-width="2"/>
+<text x="1925" y="278" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="29" font-weight="700" fill="#172b42">微信开放接口</text>
+<text x="1925" y="323" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" font-weight="400" fill="#172b42">api.weixin.qq.com</text>
+<text x="1925" y="363" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" font-weight="400" fill="#172b42">jscode2session · 登录换取 openid</text>
+<rect x="1710" y="455" width="430" height="150" rx="15" fill="#f5f1fb" stroke="#b3a2c8" stroke-width="2"/>
+<text x="1925" y="498" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="29" font-weight="700" fill="#172b42">DeepSeek AI</text>
+<text x="1925" y="543" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" font-weight="400" fill="#172b42">api.deepseek.com/chat/completions</text>
+<text x="1925" y="583" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" font-weight="400" fill="#172b42">模型：deepseek-chat</text>
+<rect x="1710" y="695" width="430" height="150" rx="15" fill="#f5f1fb" stroke="#b3a2c8" stroke-width="2"/>
+<text x="1925" y="738" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="29" font-weight="700" fill="#172b42">阿里云 OSS</text>
+<text x="1925" y="783" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" font-weight="400" fill="#172b42">oss-cn-hangzhou.aliyuncs.com</text>
+<text x="1925" y="823" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" font-weight="400" fill="#172b42">后端 SDK 上传 · 返回对象访问 URL</text>
+<rect x="1710" y="935" width="430" height="150" rx="15" fill="#f5f1fb" stroke="#b3a2c8" stroke-width="2"/>
+<text x="1925" y="978" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="29" font-weight="700" fill="#172b42">阿里云 OCR</text>
+<text x="1925" y="1023" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" font-weight="400" fill="#172b42">ocr-api.cn-hangzhou.aliyuncs.com</text>
+<text x="1925" y="1063" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="20" font-weight="400" fill="#172b42">RecognizeAdvanced · 传入图片 URL</text>
+<polyline points="1370,585 1490,585 1490,310 1710,310" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="1710,310 1696.3036658953154,316.11640679589357 1696.3036658953154,303.88359320410643" fill="#2e668e"/>
+<text x="1585" y="262" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#172b42">UserService</text>
+<text x="1585" y="295" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="21" font-weight="400" fill="#172b42">HTTPS GET</text>
+<polyline points="1370,710 1550,710 1550,530 1710,530" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="1710,530 1696.3036658953154,536.1164067958936 1696.3036658953154,523.8835932041064" fill="#2e668e"/>
+<text x="1585" y="478" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#172b42">AiService</text>
+<text x="1585" y="511" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="21" font-weight="400" fill="#172b42">HTTPS POST</text>
+<polyline points="1370,755 1620,755 1620,770 1710,770" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="1710,770 1696.3036658953154,776.1164067958936 1696.3036658953154,763.8835932041064" fill="#2e668e"/>
+<text x="1545" y="744" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="21" font-weight="400" fill="#172b42">OSS SDK 上传</text>
+<polyline points="1370,815 1540,815 1540,1010 1710,1010" fill="none" stroke="#2e668e" stroke-width="3"/><polygon points="1710,1010 1696.3036658953154,1016.1164067958936 1696.3036658953154,1003.8835932041064" fill="#2e668e"/>
+<text x="1590" y="960" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="22" font-weight="400" fill="#172b42">OCR SDK</text>
+<text x="1590" y="994" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="21" font-weight="400" fill="#172b42">图片 URL</text>
+<polyline points="2140,1000 2180,1000 2180,770 2140,770" fill="none" stroke="#a76522" stroke-width="3" stroke-dasharray="10 7"/><polygon points="2140,770 2153.6963341046844,763.8835932041064 2153.6963341046844,776.1164067958936" fill="#a76522"/>
+<text x="1910" y="1133" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#a76522">OCR 按 URL 读取对象（须可访问）</text>
+<text x="1100" y="1418" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#536477">图例：实线 → 发起调用 / 数据访问；虚线 → 跨层调用或按 URL 获取资源。返回数据沿调用链回传，省略反向箭头。</text>
+<text x="1100" y="1458" text-anchor="middle" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="23" font-weight="400" fill="#536477">说明：未绘制虚构的网关、消息队列或微服务；Redis 不是计划模板缓存；图中不含账号、口令及密钥。</text>
+</svg>

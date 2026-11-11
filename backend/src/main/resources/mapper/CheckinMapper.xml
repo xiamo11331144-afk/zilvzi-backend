@@ -18,6 +18,7 @@
     <select id="selectCheckinDates" resultType="String">
         SELECT DISTINCT date FROM checkin 
         WHERE user_id = #{userId} 
+        AND status = 'approved'
         AND YEAR(date) = #{year} 
         AND MONTH(date) = #{month}
     </select>
@@ -101,7 +102,15 @@
     <update id="updateStatus">
         UPDATE checkin SET status = #{status}, partner_id = #{partnerId},
         review_comment = #{reviewComment}, review_time = NOW()
-        WHERE id = #{id}
+        WHERE id = #{id} AND status = 'pending'
+    </update>
+
+    <update id="resubmitRejected">
+        UPDATE checkin SET content = #{content}, image = #{image},
+            proof_image = #{proofImage}, proof_content = #{proofContent},
+            status = #{status}, checkin_time = NOW(), partner_id = NULL,
+            review_comment = NULL, review_time = NULL
+        WHERE id = #{id} AND user_id = #{userId} AND status = 'rejected'
     </update>
 
     <select id="selectPendingByGoalId" resultType="Checkin">
@@ -113,22 +122,18 @@
     </select>
 
     <select id="selectPendingForReview" resultType="Checkin">
-        SELECT DISTINCT c.*, g.name as goalName, u.nickname as userNickname, u.avatar as userAvatar
+        SELECT c.*, g.name as goalName, u.nickname as userNickname, u.avatar as userAvatar
         FROM checkin c
-        JOIN partner p ON p.status = 'accepted'
-           AND (p.user_id = #{userId} OR p.partner_id = #{userId})
-           AND c.user_id != #{userId}
-        JOIN goal cg ON cg.id = c.goal_id
-        LEFT JOIN goal pg ON (pg.user_id = p.user_id OR pg.user_id = p.partner_id)
-           AND pg.status = 'active'
-           AND (
-               (p.goal_id IS NOT NULL AND p.goal_id = c.goal_id)
-               OR (p.goal_id IS NULL AND pg.type = cg.type)
-           )
-        JOIN goal g ON g.id = c.goal_id
+        JOIN goal g ON g.id = c.goal_id AND g.user_id = c.user_id AND g.status != 'deleted'
         JOIN user u ON u.id = c.user_id
         WHERE c.status = 'pending'
-          AND (p.goal_id IS NOT NULL OR pg.id IS NOT NULL)
+          AND c.user_id != #{userId}
+          AND EXISTS (
+              SELECT 1 FROM partner p
+              WHERE p.status = 'accepted'
+                AND ((p.user_id = #{userId} AND p.partner_id = c.user_id)
+                  OR (p.partner_id = #{userId} AND p.user_id = c.user_id))
+          )
         ORDER BY c.checkin_time DESC
     </select>
 

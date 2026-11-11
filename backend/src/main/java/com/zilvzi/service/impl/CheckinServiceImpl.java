@@ -80,7 +80,7 @@ public class CheckinServiceImpl implements CheckinService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = org.springframework.transaction.annotation.Isolation.READ_COMMITTED)
     public Checkin doCheckin(Long userId, Long goalId, Long taskId, String content, String image, String proofImage, String proofContent) {
         String today = LocalDate.now().toString();
 
@@ -97,40 +97,26 @@ public class CheckinServiceImpl implements CheckinService {
                 throw new RuntimeException("无权操作此任务");
             }
 
+            requireActiveOwnedGoal(userId, plan.getGoalId());
+            goalMapper.lockById(plan.getGoalId());
+
             System.out.println("[Checkin] userId=" + userId + " taskId=" + taskId + " day=" + task.getDayNumber() + " name=" + task.getTaskName() + " completed=" + task.getCompleted() + " taskDate=" + task.getTaskDate());
 
-            // 断卡任务允许手动打卡（移除 -1 拦截）
-            if (task.getCompleted() == 1) {
+            Long actualGoalId = plan.getGoalId();
+            String checkinDate = task.getTaskDate() != null ? task.getTaskDate().toString() : today;
+            Checkin existingCheckin = checkinMapper.selectByTaskAndDate(taskId, checkinDate);
+            if (existingCheckin != null && !"rejected".equals(existingCheckin.getStatus())) {
+                return existingCheckin;
+            }
+            if (task.getCompleted() == 1 && existingCheckin == null) {
                 throw new RuntimeException("今日已打卡");
             }
-            // 过期校验：仅阻止正常过期任务，断卡任务(completed=-1)允许手动补打卡
-            if (task.getCompleted() != -1 && task.getTaskDate() != null && task.getTaskDate().isBefore(LocalDate.now())) {
-                throw new RuntimeException("该任务已过期，无法打卡");
+            // 驳回的记录可补充凭证；其余任务保留原有日期限制。
+            if (existingCheckin == null && task.getCompleted() != -1 && task.getTaskDate() != null
+                    && !task.getTaskDate().equals(LocalDate.now())) {
+                throw new RuntimeException("该任务不在可打卡日期");
             }
-            // 未来日期校验：不允许提前打卡（断卡补发任务除外）
-            if (task.getCompleted() != -1 && task.getTaskDate() != null && task.getTaskDate().isAfter(LocalDate.now())) {
-                throw new RuntimeException("该任务尚未到期，无法提前打卡");
-            }
-
-            // 更新任务完成状态：断卡任务同时重置图标颜色
-            if (task.getCompleted() == -1) {
-                System.out.println("[Checkin] 断卡任务补打卡: taskId=" + taskId + " 原始日期=" + task.getTaskDate() + " 重置图标");
-                planTaskMapper.resetTaskCompletion(taskId);
-            } else {
-                // C3: updateCompleted SQL 已加 WHERE completed != 1 防并发
-                planTaskMapper.updateCompleted(taskId, 1);
-            }
-
-            // 更新任务的已完成天数
-            updatePlanCompletedDays(task.getPlanId());
-
-            // 创建打卡记录：断卡任务使用原始任务日期，正常任务使用今天
-            Long actualGoalId = plan != null ? plan.getGoalId() : task.getPlanId();
-            String checkinDate = (task.getCompleted() == -1 && task.getTaskDate() != null)
-                    ? task.getTaskDate().toString() : today;
-
-            Checkin existingCheckin = checkinMapper.selectByTaskAndDate(taskId, checkinDate);
-            if (existingCheckin == null) {
+            {
                 // 获取当前任务的目标类型
                 String taskGoalType = task.getTaskType();
                 if (taskGoalType == null && actualGoalId != null) {
@@ -171,7 +157,11 @@ public class CheckinServiceImpl implements CheckinService {
                     checkin.setStatus("pending");
                     checkin.setProofImage(proofImage);
                     checkin.setProofContent(proofContent);
-                    checkinMapper.insert(checkin);
+                    saveSubmission(checkin, existingCheckin);
+                    if (task.getCompleted() == 1) {
+                        planTaskMapper.updateCompleted(taskId, 0);
+                        updatePlanCompletedDays(task.getPlanId());
+                    }
                     // 通知同类型目标的所有搭子审核 + 发送打卡凭证私信
                     for (Partner p : partners) {
                         if ("accepted".equals(p.getStatus())) {
@@ -202,7 +192,8 @@ public class CheckinServiceImpl implements CheckinService {
                 } else {
                     // 无搭子：直接通过，兼容自打卡
                     checkin.setStatus("approved");
-                    checkinMapper.insert(checkin);
+                    saveSubmission(checkin, existingCheckin);
+                    completeTask(task);
                     updateGoalStatsAndAchievement(userId, actualGoalId);
                 }
             }
@@ -213,9 +204,11 @@ public class CheckinServiceImpl implements CheckinService {
 
         // 原来的goal打卡逻辑
         if (goalId != null) {
+            Goal goalObj = requireActiveOwnedGoal(userId, goalId);
+            goalMapper.lockById(goalId);
             Checkin existing = checkinMapper.selectByUserAndDate(userId, goalId, today);
-            if (existing != null) {
-                throw new RuntimeException("今日已打卡");
+            if (existing != null && !"rejected".equals(existing.getStatus())) {
+                return existing;
             }
 
             Checkin checkin = new Checkin();
@@ -227,10 +220,7 @@ public class CheckinServiceImpl implements CheckinService {
             checkin.setDate(today);
 
             // 获取目标类型，按类型匹配搭子
-            String rawGoalType = null;
-            Goal goalObj = goalMapper.selectById(goalId);
-            if (goalObj != null) rawGoalType = goalObj.getType();
-            final String goalType = rawGoalType;
+            final String goalType = goalObj.getType();
 
             // 按目标类型匹配搭子
             List<Partner> partners = partnerMapper.selectByUserId(userId);
@@ -246,7 +236,7 @@ public class CheckinServiceImpl implements CheckinService {
                 checkin.setStatus("pending");
                 checkin.setProofImage(proofImage);
                 checkin.setProofContent(proofContent);
-                checkinMapper.insert(checkin);
+                saveSubmission(checkin, existing);
                 for (Partner p : partners) {
                     if ("accepted".equals(p.getStatus())) {
                         Long partnerUserId = p.getUserId().equals(userId) ? p.getPartnerId() : p.getUserId();
@@ -275,7 +265,7 @@ public class CheckinServiceImpl implements CheckinService {
                 }
             } else {
                 checkin.setStatus("approved");
-                checkinMapper.insert(checkin);
+                saveSubmission(checkin, existing);
                 updateGoalStatsAndAchievement(userId, goalId);
             }
 
@@ -323,18 +313,28 @@ public class CheckinServiceImpl implements CheckinService {
      * 更新计划的已完成天数
      */
     private void updatePlanCompletedDays(Long planId) {
-        try {
-            // 查询该计划已完成的任务天数（distinct day_number）
-            Integer completedDays = planTaskMapper.countCompletedDays(planId);
-            if (completedDays == null) completedDays = 0;
-            
-            // 更新plan表
-            planMapper.updateCompletedDays(planId, completedDays);
-            
-            System.out.println("[Plan] 更新计划" + planId + "已完成天数: " + completedDays);
-        } catch (Exception e) {
-            System.out.println("[Plan] 更新计划已完成天数失败: " + e.getMessage());
+        Integer completedDays = planTaskMapper.countCompletedDays(planId);
+        planMapper.updateCompletedDays(planId, completedDays == null ? 0 : completedDays);
+    }
+
+    private void saveSubmission(Checkin checkin, Checkin existing) {
+        if (existing == null) {
+            checkinMapper.insert(checkin);
+        } else {
+            checkin.setId(existing.getId());
+            if (checkinMapper.resubmitRejected(checkin) != 1) {
+                throw new RuntimeException("打卡状态已变化，请刷新后重试");
+            }
         }
+    }
+
+    private void completeTask(PlanTask task) {
+        if (task.getCompleted() == -1) {
+            planTaskMapper.resetTaskCompletion(task.getId());
+        } else {
+            planTaskMapper.updateCompleted(task.getId(), 1);
+        }
+        updatePlanCompletedDays(task.getPlanId());
     }
 
     @Override
@@ -346,8 +346,23 @@ public class CheckinServiceImpl implements CheckinService {
     /**
      * 更新目标打卡统计 + 触发成就（approved 后调用）
      */
+    private Goal requireActiveOwnedGoal(Long userId, Long goalId) {
+        Goal goal = goalMapper.selectById(goalId);
+        if (goal == null || !userId.equals(goal.getUserId())) {
+            throw new RuntimeException("目标不存在或无权操作");
+        }
+        if (!"active".equals(goal.getStatus())) {
+            throw new RuntimeException("目标已结束，无法打卡");
+        }
+        return goal;
+    }
+
     private void updateGoalStatsAndAchievement(Long userId, Long goalId) {
         if (goalId != null) {
+            Goal goal = goalMapper.selectById(goalId);
+            if (goal == null || !userId.equals(goal.getUserId())) {
+                throw new RuntimeException("目标不存在或无权操作");
+            }
             Integer streak = checkinMapper.countStreak(userId, goalId, LocalDate.now());
             Integer total = checkinMapper.countTotal(userId, goalId);
             goalMapper.updateCheckinStats(goalId, streak, total);
@@ -356,32 +371,40 @@ public class CheckinServiceImpl implements CheckinService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = org.springframework.transaction.annotation.Isolation.READ_COMMITTED)
     public Checkin reviewCheckin(Long userId, Long checkinId, boolean approved, String comment) {
         Checkin checkin = checkinMapper.selectById(checkinId);
         if (checkin == null) {
             throw new RuntimeException("打卡记录不存在");
         }
-        if (!"pending".equals(checkin.getStatus())) {
+        goalMapper.lockById(checkin.getGoalId());
+        checkin = checkinMapper.selectById(checkinId);
+        if (checkin == null || !"pending".equals(checkin.getStatus())) {
             throw new RuntimeException("该打卡已被审核");
         }
-        // 校验审核人是否是搭子（按目标类型匹配）
-        Goal checkinGoal = goalMapper.selectById(checkin.getGoalId());
-        String checkinGoalType = checkinGoal != null ? checkinGoal.getType() : null;
-        List<Partner> partners = partnerMapper.selectByUserId(userId);
-        boolean isPartner = checkinGoalType != null && partners.stream()
-                .filter(p -> "accepted".equals(p.getStatus()))
-                .anyMatch(p -> {
-                    Long partnerUserId = p.getUserId().equals(userId) ? p.getPartnerId() : p.getUserId();
-                    List<Goal> pGoals = goalMapper.selectByUserId(partnerUserId);
-                    return pGoals.stream().anyMatch(g -> isSameGoalCategory(checkinGoalType, g.getType()));
-                });
-        if (!isPartner) {
+        if (!canReviewCheckin(userId, checkin)) {
             throw new RuntimeException("你不是该目标的搭子，无权审核");
         }
 
         String newStatus = approved ? "approved" : "rejected";
-        checkinMapper.updateStatus(checkinId, newStatus, userId, comment);
+        if (checkinMapper.updateStatus(checkinId, newStatus, userId, comment) != 1) {
+            throw new RuntimeException("该打卡已被审核，请刷新后重试");
+        }
+        if (checkin.getTaskId() != null) {
+            PlanTask task = planTaskMapper.selectById(checkin.getTaskId());
+            if (task == null) throw new RuntimeException("任务不存在");
+            Plan plan = planMapper.selectById(task.getPlanId());
+            if (plan == null || !checkin.getUserId().equals(plan.getUserId())
+                    || !checkin.getGoalId().equals(plan.getGoalId())) {
+                throw new RuntimeException("任务归属异常");
+            }
+            if (approved) {
+                completeTask(task);
+            } else {
+                planTaskMapper.updateCompleted(task.getId(), 0);
+                updatePlanCompletedDays(task.getPlanId());
+            }
+        }
 
         // 更新关联的打卡凭证私信内容
         try {
@@ -418,10 +441,27 @@ public class CheckinServiceImpl implements CheckinService {
         return checkinMapper.selectById(checkinId);
     }
 
+    /** 列表和审核操作共用授权规则：实际搭子、目标归属、审核人的目标类别。 */
+    private boolean canReviewCheckin(Long reviewerId, Checkin checkin) {
+        if (reviewerId.equals(checkin.getUserId()) || checkin.getGoalId() == null) return false;
+        Goal goal = goalMapper.selectById(checkin.getGoalId());
+        if (goal == null || !checkin.getUserId().equals(goal.getUserId())) return false;
+        boolean actualPartner = partnerMapper.selectByUserId(reviewerId).stream()
+                .filter(p -> "accepted".equals(p.getStatus()))
+                .anyMatch(p -> (reviewerId.equals(p.getUserId()) && checkin.getUserId().equals(p.getPartnerId()))
+                        || (reviewerId.equals(p.getPartnerId()) && checkin.getUserId().equals(p.getUserId())));
+        if (!actualPartner) return false;
+        PlanTask task = checkin.getTaskId() == null ? null : planTaskMapper.selectById(checkin.getTaskId());
+        String type = task != null && task.getTaskType() != null ? task.getTaskType() : goal.getType();
+        return goalMapper.selectByUserId(reviewerId).stream()
+                .anyMatch(g -> isSameGoalCategory(type, g.getType()));
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<Checkin> getPendingForReview(Long userId) {
-        return checkinMapper.selectPendingForReview(userId);
+        return checkinMapper.selectPendingForReview(userId).stream()
+                .filter(c -> canReviewCheckin(userId, c)).toList();
     }
 
     @Override

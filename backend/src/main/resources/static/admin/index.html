@@ -49,18 +49,18 @@ th{background:#f8f9fa;font-weight:600;color:#666}
 <div class="login-box"><h1 class="login-title">自律搭子 - 后台管理</h1>
 <div class="fgroup"><label class="flabel">用户名</label><input class="finput" id="username" value="admin"></div>
 <div class="fgroup"><label class="flabel">密码</label><input type="password" class="finput" id="password" value="admin123"></div>
-<button class="login-btn" onclick="login()">登录</button></div></div>
+<button class="login-btn" data-action="login">登录</button></div></div>
 
 <div id="mainPage" style="display:none">
-<div class="header"><div class="header-content"><div class="logo">自律搭子 后台管理</div><div><span style="margin-right:12px">管理员</span><button onclick="logout()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:16px;cursor:pointer">退出</button></div></div></div>
+<div class="header"><div class="header-content"><div class="logo">自律搭子 后台管理</div><div><span style="margin-right:12px">管理员</span><button data-action="logout" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:16px;cursor:pointer">退出</button></div></div></div>
 <div class="container">
 <div class="nav">
-<div class="nav-item active" onclick="switchPage('users',this)">用户管理</div>
-<div class="nav-item" onclick="switchPage('circles',this)">圈子管理</div>
-<div class="nav-item" onclick="switchPage('posts',this)">动态审核</div>
-<div class="nav-item" onclick="switchPage('comments',this)">评论管理</div>
-<div class="nav-item" onclick="switchPage('topics',this)">话题管理</div>
-<div class="nav-item" onclick="switchPage('system',this)">系统配置</div>
+<div class="nav-item active" data-action="switch-page" data-page="users">用户管理</div>
+<div class="nav-item" data-action="switch-page" data-page="circles">圈子管理</div>
+<div class="nav-item" data-action="switch-page" data-page="posts">动态审核</div>
+<div class="nav-item" data-action="switch-page" data-page="comments">评论管理</div>
+<div class="nav-item" data-action="switch-page" data-page="topics">话题管理</div>
+<div class="nav-item" data-action="switch-page" data-page="system">系统配置</div>
 </div>
 <div class="stats-grid">
 <div class="stat-card"><span class="stat-num" id="totalUsers">0</span><span class="stat-label">总用户数</span></div>
@@ -72,8 +72,8 @@ th{background:#f8f9fa;font-weight:600;color:#666}
 
 <div id="page-users" class="panel">
 <div class="panel-header"><h2 class="panel-title">用户管理</h2>
-<div class="sbar"><input class="sinput" id="userSearch" placeholder="搜索用户"><button class="sbtn" onclick="loadUsers()">搜索</button>
-<button class="sbtn" onclick="showAddUser()">+ 新增</button></div></div>
+<div class="sbar"><input class="sinput" id="userSearch" placeholder="搜索用户"><button class="sbtn" data-action="load-users">搜索</button>
+<button class="sbtn" data-action="show-add-user">+ 新增</button></div></div>
 <table><thead><tr><th>ID</th><th>昵称</th><th>手机号</th><th>等级</th><th>经验</th><th>时间</th><th>操作</th></tr></thead><tbody id="userList"></tbody></table>
 <div class="empty" id="userEmpty" style="display:none">暂无数据</div>
 </div>
@@ -86,21 +86,21 @@ th{background:#f8f9fa;font-weight:600;color:#666}
 
 <div id="page-posts" class="panel" style="display:none">
 <div class="panel-header"><h2 class="panel-title">动态审核</h2>
-<div class="sbar"><input class="sinput" id="postSearch" placeholder="搜索动态内容"><button class="sbtn" onclick="loadPosts()">搜索</button></div></div>
+<div class="sbar"><input class="sinput" id="postSearch" placeholder="搜索动态内容"><button class="sbtn" data-action="load-posts">搜索</button></div></div>
 <table><thead><tr><th>ID</th><th>发布者</th><th>内容</th><th>圈子</th><th>时间</th><th>操作</th></tr></thead><tbody id="postList"></tbody></table>
 <div class="empty" id="postEmpty" style="display:none">暂无数据</div>
 </div>
 
 <div id="page-comments" class="panel" style="display:none">
 <div class="panel-header"><h2 class="panel-title">评论管理</h2>
-<div class="sbar"><input class="sinput" id="commentSearch" placeholder="搜索评论内容"><button class="sbtn" onclick="loadComments()">搜索</button></div></div>
+<div class="sbar"><input class="sinput" id="commentSearch" placeholder="搜索评论内容"><button class="sbtn" data-action="load-comments">搜索</button></div></div>
 <table><thead><tr><th>ID</th><th>用户</th><th>内容</th><th>动态ID</th><th>时间</th><th>操作</th></tr></thead><tbody id="commentList"></tbody></table>
 <div class="empty" id="commentEmpty" style="display:none">暂无数据</div>
 </div>
 
 <div id="page-topics" class="panel" style="display:none">
 <div class="panel-header"><h2 class="panel-title">话题管理</h2>
-<div class="sbar"><input class="sinput" id="topicSearch" placeholder="搜索话题标题/内容"><button class="sbtn" onclick="loadTopics()">搜索</button></div></div>
+<div class="sbar"><input class="sinput" id="topicSearch" placeholder="搜索话题标题/内容"><button class="sbtn" data-action="load-topics">搜索</button></div></div>
 <table><thead><tr><th>ID</th><th>标题</th><th>发布者</th><th>圈子</th><th>回复数</th><th>时间</th><th>操作</th></tr></thead><tbody id="topicList"></tbody></table>
 <div class="empty" id="topicEmpty" style="display:none">暂无数据</div>
 </div>
@@ -119,24 +119,24 @@ th{background:#f8f9fa;font-weight:600;color:#666}
 <div class="modal" id="userModal">
 <div class="modal-box">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-<span class="modal-title" id="userModalTitle">新增用户</span><span class="modal-close" onclick="closeUserModal()">×</span></div>
+<span class="modal-title" id="userModalTitle">新增用户</span><span class="modal-close" data-action="close-user-modal">×</span></div>
 <input type="hidden" id="editUserId">
 <div class="fgroup"><label class="flabel">昵称</label><input class="finput" id="editNickname"></div>
 <div class="fgroup"><label class="flabel">手机号</label><input class="finput" id="editPhone"></div>
 <div class="fgroup"><label class="flabel">等级</label><input class="finput" type="number" id="editLevel" value="1"></div>
-<button class="login-btn" onclick="saveUser()">保存</button>
+<button class="login-btn" data-action="save-user">保存</button>
 </div></div>
 
 <div class="modal" id="replyModal">
 <div class="modal-box" style="width:600px">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-<span class="modal-title">话题回复</span><span class="modal-close" onclick="closeReplyModal()">×</span></div>
-<div class="sbar" style="margin-bottom:12px"><input class="sinput" id="replySearch" placeholder="搜索回复内容"><button class="sbtn" onclick="showTopicReplies(currentTopicId)">搜索</button></div>
+<span class="modal-title">话题回复</span><span class="modal-close" data-action="close-reply-modal">×</span></div>
+<div class="sbar" style="margin-bottom:12px"><input class="sinput" id="replySearch" placeholder="搜索回复内容"><button class="sbtn" data-action="show-topic-replies">搜索</button></div>
 <div id="replyList"></div>
 </div></div>
 
 <script>
-var B='http://localhost:8081';
+var B='';
 var token=localStorage.getItem('adminToken')||'';
 
 function handleAuth(r){
@@ -145,6 +145,32 @@ function handleAuth(r){
 }
 
 if(token){validateAndLoad();}
+
+document.addEventListener('click',function(event){
+  var trigger=event.target.closest('[data-action]');
+  if(!trigger)return;
+  var action=trigger.dataset.action;
+  if(action==='login')login();
+  else if(action==='logout')logout();
+  else if(action==='switch-page')switchPage(trigger.dataset.page,trigger);
+  else if(action==='load-users')loadUsers();
+  else if(action==='show-add-user')showAddUser();
+  else if(action==='load-posts')loadPosts();
+  else if(action==='load-comments')loadComments();
+  else if(action==='load-topics')loadTopics();
+  else if(action==='close-user-modal')closeUserModal();
+  else if(action==='save-user')saveUser();
+  else if(action==='close-reply-modal')closeReplyModal();
+  else if(action==='show-topic-replies')showTopicReplies(currentTopicId);
+  else if(action==='edit-user')editUser(trigger.dataset.id,trigger.dataset.nickname,trigger.dataset.phone,trigger.dataset.level);
+  else if(action==='delete-user')deleteUser(trigger.dataset.id);
+  else if(action==='delete-circle')deleteCircle(trigger.dataset.id);
+  else if(action==='delete-post')deletePost(trigger.dataset.id);
+  else if(action==='delete-comment')deleteComment(trigger.dataset.id);
+  else if(action==='open-topic-replies')showTopicReplies(trigger.dataset.id);
+  else if(action==='delete-topic')deleteTopic(trigger.dataset.id);
+  else if(action==='delete-reply')deleteReply(trigger.dataset.id,trigger.dataset.topicId);
+});
 
 async function validateAndLoad(){
   try{
@@ -203,111 +229,27 @@ async function loadStats(){
   }catch(e){console.error('loadStats error:',e);}
 }
 
-function esc(s){return (s||'').replace(/'/g,"\\'").replace(/"/g,"&quot;");}
-
-function buildUsers(users){
-  var h='';
-  for(var i=0;i<users.length;i++){
-    var u=users[i];
-    h+='<tr><td>'+u.id+'</td><td>'+esc(u.nickname)+'</td><td>'+(u.phone||'-')+'</td><td>Lv.'+u.level+'</td><td>'+u.experience+'</td><td>'+(u.createTime||'-')+'</td>';
-    h+='<td><button class="abtn btn-blue" onclick="editUser('+u.id+',\''+esc(u.nickname)+'\',\''+(u.phone||'')+'\','+u.level+')">编辑</button> ';
-    h+='<button class="abtn btn-red" onclick="deleteUser('+u.id+')">删除</button></td></tr>';
-  }
-  return h;
-}
-
-async function loadUsers(){
-  try{
-    var k=document.getElementById('userSearch').value.trim();
-    var url=B+'/api/admin/users'+(k?'?keyword='+encodeURIComponent(k):'');
-    var r=await fetch(url,{headers:{Authorization:'Bearer '+token}});
-    if(r.status===401||r.status===403){logout();return;}
-    var d=await r.json();
-    if(d.code===200&&d.data&&d.data.length>0){document.getElementById('userList').innerHTML=buildUsers(d.data);document.getElementById('userEmpty').style.display='none';}
-    else{document.getElementById('userList').innerHTML='';document.getElementById('userEmpty').style.display='block';}
-  }catch(e){console.error('loadUsers error:',e);}
-}
-
-function showAddUser(){document.getElementById('editUserId').value='';document.getElementById('editNickname').value='';document.getElementById('editPhone').value='';document.getElementById('editLevel').value='1';document.getElementById('userModalTitle').textContent='新增用户';document.getElementById('userModal').style.display='flex'}
-function editUser(id,nick,phone,level){document.getElementById('editUserId').value=id;document.getElementById('editNickname').value=nick;document.getElementById('editPhone').value=phone;document.getElementById('editLevel').value=level;document.getElementById('userModalTitle').textContent='编辑用户';document.getElementById('userModal').style.display='flex'}
-function closeUserModal(){document.getElementById('userModal').style.display='none'}
-
-async function saveUser(){
-  var id=document.getElementById('editUserId').value;
-  var data={nickname:document.getElementById('editNickname').value,phone:document.getElementById('editPhone').value,level:parseInt(document.getElementById('editLevel').value)};
-  var url=id?B+'/api/admin/users/'+id+'/update':B+'/api/admin/users/create';
-  var method=id?'PUT':'POST';
-  var r=await fetch(url,{method:method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify(data)});
-  var d=await r.json();
-  if(d.code===200){closeUserModal();loadUsers();}else alert(d.message);
-}
-
-async function deleteUser(id){if(!confirm('确定删除用户#'+id+'？'))return;var r=await fetch(B+'/api/admin/users/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadUsers();else alert(d.message)}
-
-async function loadCircles(){
-  var r=await fetch(B+'/api/circle/list?size=100');var d=await r.json();
-  if(d.code===200&&d.data.length>0){
-    var h='';
-    for(var i=0;i<d.data.length;i++){var c=d.data[i];h+='<tr><td>'+c.id+'</td><td>'+esc(c.name)+'</td><td>'+(c.creatorNickname||c.creatorId)+'</td><td>'+c.memberCount+'</td><td>'+c.postCount+'</td><td>'+c.createTime+'</td><td><button class="abtn btn-red" onclick="deleteCircle('+c.id+')">删除</button></td></tr>';}
-    document.getElementById('circleList').innerHTML=h;document.getElementById('circleEmpty').style.display='none';
-  }else{document.getElementById('circleList').innerHTML='';document.getElementById('circleEmpty').style.display='block';}
-}
-
-async function deleteCircle(id){if(!confirm('确定删除？'))return;var r=await fetch(B+'/api/admin/circles/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadCircles();else alert(d.message)}
-
-async function loadPosts(){
-  var k=document.getElementById('postSearch').value;
-  var r=await fetch(B+'/api/circle/all-posts?size=100&keyword='+encodeURIComponent(k));var d=await r.json();
-  if(d.code===200&&d.data.length>0){
-    var h='';
-    for(var i=0;i<d.data.length;i++){var p=d.data[i];h+='<tr><td>'+p.id+'</td><td>'+esc(p.nickname||'匿名')+'</td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p.content)+'</td><td>'+p.circleId+'</td><td>'+p.createTime+'</td><td><button class="abtn btn-red" onclick="deletePost('+p.id+')">删除</button></td></tr>';}
-    document.getElementById('postList').innerHTML=h;document.getElementById('postEmpty').style.display='none';
-  }else{document.getElementById('postList').innerHTML='';document.getElementById('postEmpty').style.display='block';}
-}
-
-async function deletePost(id){if(!confirm('确定删除？'))return;var r=await fetch(B+'/api/admin/posts/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadPosts();else alert(d.message)}
-
-async function loadComments(){
-  var k=document.getElementById('commentSearch').value;
-  var r=await fetch(B+'/api/circle/all-comments?size=200&keyword='+encodeURIComponent(k));var d=await r.json();
-  if(d.code===200&&d.data.length>0){
-    var h='';
-    for(var i=0;i<d.data.length;i++){var c=d.data[i];h+='<tr><td>'+c.id+'</td><td>'+esc(c.nickname||'匿名')+'</td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(c.content)+'</td><td>'+c.postId+'</td><td>'+c.createTime+'</td><td><button class="abtn btn-red" onclick="deleteComment('+c.id+')">删除</button></td></tr>';}
-    document.getElementById('commentList').innerHTML=h;document.getElementById('commentEmpty').style.display='none';
-  }else{document.getElementById('commentList').innerHTML='';document.getElementById('commentEmpty').style.display='block';}
-}
-
-async function deleteComment(id){if(!confirm('确定删除？'))return;var r=await fetch(B+'/api/admin/comments/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadComments();else alert(d.message)}
-
-async function loadTopics(){
-  var k=document.getElementById('topicSearch').value;
-  var r=await fetch(B+'/api/admin/topics?keyword='+encodeURIComponent(k),{headers:{Authorization:'Bearer '+token}});var d=await r.json();
-  if(d.code===200&&d.data.length>0){
-    var h='';
-    for(var i=0;i<d.data.length;i++){var t=d.data[i];h+='<tr><td>'+t.id+'</td><td style="cursor:pointer;color:#4A90D9" onclick="showTopicReplies('+t.id+')">'+esc(t.title)+'</td><td>'+esc(t.nickname||'匿名')+'</td><td>'+t.circleId+'</td><td>'+(t.replyCount||0)+'</td><td>'+t.createTime+'</td><td><button class="abtn btn-red" onclick="deleteTopic('+t.id+')">删除</button></td></tr>';}
-    document.getElementById('topicList').innerHTML=h;document.getElementById('topicEmpty').style.display='none';
-  }else{document.getElementById('topicList').innerHTML='';document.getElementById('topicEmpty').style.display='block';}
-}
-
-async function deleteTopic(id){if(!confirm('确定删除话题#'+id+'？'))return;var r=await fetch(B+'/api/admin/topics/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)loadTopics();else alert(d.message)}
-
+function appendCell(row,value){var cell=document.createElement('td');cell.textContent=value===null||value===undefined||value===''?'-':String(value);row.appendChild(cell);return cell;}
+function makeAction(action,label,data,className){var button=document.createElement('button');button.type='button';button.className='abtn '+className;button.dataset.action=action;Object.keys(data||{}).forEach(function(key){button.dataset[key]=data[key]===null||data[key]===undefined?'':String(data[key]);});button.textContent=label;return button;}
+function addActions(row,actions){var cell=document.createElement('td');actions.forEach(function(action,index){if(index)cell.appendChild(document.createTextNode(' '));cell.appendChild(action);});row.appendChild(cell);}
+function setRows(listId,emptyId,rows){var list=document.getElementById(listId);list.replaceChildren.apply(list,rows);document.getElementById(emptyId).style.display=rows.length?'none':'block';}
+function buildUsers(users){return users.map(function(user){var row=document.createElement('tr');appendCell(row,user.id);appendCell(row,user.nickname);appendCell(row,user.phone);appendCell(row,'Lv.'+(user.level||0));appendCell(row,user.experience);appendCell(row,user.createTime);addActions(row,[makeAction('edit-user','编辑',{id:user.id,nickname:user.nickname,phone:user.phone,level:user.level},'btn-blue'),makeAction('delete-user','删除',{id:user.id},'btn-red')]);return row;});}
+async function loadUsers(){try{var keyword=document.getElementById('userSearch').value.trim();var url=B+'/api/admin/users'+(keyword?'?keyword='+encodeURIComponent(keyword):'');var response=await fetch(url,{headers:{Authorization:'Bearer '+token}});if(response.status===401||response.status===403){logout();return;}var result=await response.json();setRows('userList','userEmpty',result.code===200&&Array.isArray(result.data)?buildUsers(result.data):[]);}catch(e){console.error('loadUsers error:',e);}}
+function showAddUser(){document.getElementById('editUserId').value='';document.getElementById('editNickname').value='';document.getElementById('editPhone').value='';document.getElementById('editLevel').value='1';document.getElementById('userModalTitle').textContent='新增用户';document.getElementById('userModal').style.display='flex';}
+function editUser(id,nickname,phone,level){document.getElementById('editUserId').value=id;document.getElementById('editNickname').value=nickname||'';document.getElementById('editPhone').value=phone||'';document.getElementById('editLevel').value=level;document.getElementById('userModalTitle').textContent='编辑用户';document.getElementById('userModal').style.display='flex';}
+function closeUserModal(){document.getElementById('userModal').style.display='none';}
+async function saveUser(){var id=document.getElementById('editUserId').value;var data={nickname:document.getElementById('editNickname').value,phone:document.getElementById('editPhone').value,level:parseInt(document.getElementById('editLevel').value,10)};var url=id?B+'/api/admin/users/'+id+'/update':B+'/api/admin/users/create';var response=await fetch(url,{method:id?'PUT':'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify(data)});var result=await response.json();if(result.code===200){closeUserModal();loadUsers();}else alert(result.message);}
+async function deleteUser(id){if(!confirm('确定删除用户#'+id+'？'))return;var response=await fetch(B+'/api/admin/users/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var result=await response.json();if(result.code===200)loadUsers();else alert(result.message);}
+async function loadCircles(){var response=await fetch(B+'/api/circle/list?size=100');var result=await response.json();var rows=(result.code===200&&Array.isArray(result.data)?result.data:[]).map(function(circle){var row=document.createElement('tr');appendCell(row,circle.id);appendCell(row,circle.name);appendCell(row,circle.creatorNickname||circle.creatorId);appendCell(row,circle.memberCount);appendCell(row,circle.postCount);appendCell(row,circle.createTime);addActions(row,[makeAction('delete-circle','删除',{id:circle.id},'btn-red')]);return row;});setRows('circleList','circleEmpty',rows);}
+async function deleteCircle(id){if(!confirm('确定删除？'))return;var response=await fetch(B+'/api/admin/circles/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var result=await response.json();if(result.code===200)loadCircles();else alert(result.message);}
+async function loadPosts(){var keyword=document.getElementById('postSearch').value;var response=await fetch(B+'/api/circle/all-posts?size=100&keyword='+encodeURIComponent(keyword));var result=await response.json();var rows=(result.code===200&&Array.isArray(result.data)?result.data:[]).map(function(post){var row=document.createElement('tr');appendCell(row,post.id);appendCell(row,post.nickname||'匿名');var content=appendCell(row,post.content);content.style.cssText='max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';appendCell(row,post.circleId);appendCell(row,post.createTime);addActions(row,[makeAction('delete-post','删除',{id:post.id},'btn-red')]);return row;});setRows('postList','postEmpty',rows);}
+async function deletePost(id){if(!confirm('确定删除？'))return;var response=await fetch(B+'/api/admin/posts/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var result=await response.json();if(result.code===200)loadPosts();else alert(result.message);}
+async function loadComments(){var keyword=document.getElementById('commentSearch').value;var response=await fetch(B+'/api/circle/all-comments?size=200&keyword='+encodeURIComponent(keyword));var result=await response.json();var rows=(result.code===200&&Array.isArray(result.data)?result.data:[]).map(function(comment){var row=document.createElement('tr');appendCell(row,comment.id);appendCell(row,comment.nickname||'匿名');var content=appendCell(row,comment.content);content.style.cssText='max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';appendCell(row,comment.postId);appendCell(row,comment.createTime);addActions(row,[makeAction('delete-comment','删除',{id:comment.id},'btn-red')]);return row;});setRows('commentList','commentEmpty',rows);}
+async function deleteComment(id){if(!confirm('确定删除？'))return;var response=await fetch(B+'/api/admin/comments/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var result=await response.json();if(result.code===200)loadComments();else alert(result.message);}
+async function loadTopics(){var keyword=document.getElementById('topicSearch').value;var response=await fetch(B+'/api/admin/topics?keyword='+encodeURIComponent(keyword),{headers:{Authorization:'Bearer '+token}});var result=await response.json();var rows=(result.code===200&&Array.isArray(result.data)?result.data:[]).map(function(topic){var row=document.createElement('tr');appendCell(row,topic.id);var title=appendCell(row,'');title.appendChild(makeAction('open-topic-replies',topic.title,{id:topic.id},'btn-blue'));appendCell(row,topic.nickname||'匿名');appendCell(row,topic.circleId);appendCell(row,topic.replyCount||0);appendCell(row,topic.createTime);addActions(row,[makeAction('delete-topic','删除',{id:topic.id},'btn-red')]);return row;});setRows('topicList','topicEmpty',rows);}
+async function deleteTopic(id){if(!confirm('确定删除话题#'+id+'？'))return;var response=await fetch(B+'/api/admin/topics/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var result=await response.json();if(result.code===200)loadTopics();else alert(result.message);}
 var currentTopicId=0;
-
-async function showTopicReplies(id){
-  currentTopicId=id;
-  var k=document.getElementById('replySearch').value||'';
-  var url=B+'/api/admin/topics/'+id+'/replies';
-  if(k)url+='?keyword='+encodeURIComponent(k);
-  var r=await fetch(url,{headers:{Authorization:'Bearer '+token}});var d=await r.json();
-  var h='';
-  if(d.code===200&&d.data.length>0){
-    for(var i=0;i<d.data.length;i++){var rp=d.data[i];h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0"><div><span style="color:#4A90D9;font-weight:600">'+esc(rp.nickname||'匿名')+'</span><span style="margin-left:8px;color:#333">'+esc(rp.content)+'</span><div style="font-size:12px;color:#999">'+rp.createTime+'</div></div><button class="abtn btn-red" onclick="deleteReply('+rp.id+','+id+')">删除</button></div>';}
-  }else{h='<div class="empty" style="padding:20px">暂无回复</div>';}
-  document.getElementById('replyList').innerHTML=h;
-  document.getElementById('replyModal').style.display='flex';
-}
-
-function closeReplyModal(){document.getElementById('replyModal').style.display='none'}
-
-async function deleteReply(id,topicId){if(!confirm('确定删除？'))return;var r=await fetch(B+'/api/admin/topics/reply/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var d=await r.json();if(d.code===200)showTopicReplies(topicId);else alert(d.message)}
+async function showTopicReplies(id){currentTopicId=id;var keyword=document.getElementById('replySearch').value||'';var url=B+'/api/admin/topics/'+id+'/replies';if(keyword)url+='?keyword='+encodeURIComponent(keyword);var response=await fetch(url,{headers:{Authorization:'Bearer '+token}});var result=await response.json();var nodes=[];if(result.code===200&&Array.isArray(result.data)&&result.data.length){result.data.forEach(function(reply){var row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0';var text=document.createElement('div');var nickname=document.createElement('span');nickname.style.cssText='color:#4A90D9;font-weight:600';nickname.textContent=reply.nickname||'匿名';var content=document.createElement('span');content.style.cssText='margin-left:8px;color:#333';content.textContent=reply.content||'-';var time=document.createElement('div');time.style.cssText='font-size:12px;color:#999';time.textContent=reply.createTime||'-';text.appendChild(nickname);text.appendChild(content);text.appendChild(time);row.appendChild(text);row.appendChild(makeAction('delete-reply','删除',{id:reply.id,topicId:id},'btn-red'));nodes.push(row);});}else{var empty=document.createElement('div');empty.className='empty';empty.style.padding='20px';empty.textContent='暂无回复';nodes.push(empty);}var list=document.getElementById('replyList');list.replaceChildren.apply(list,nodes);document.getElementById('replyModal').style.display='flex';}
+function closeReplyModal(){document.getElementById('replyModal').style.display='none';}
+async function deleteReply(id,topicId){if(!confirm('确定删除？'))return;var response=await fetch(B+'/api/admin/topics/reply/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}});var result=await response.json();if(result.code===200)showTopicReplies(topicId);else alert(result.message);}
 </script></body></html>

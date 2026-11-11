@@ -1,0 +1,8 @@
+{
+  "entities": 21,
+  "fixed_relationships": 33,
+  "FK": 29,
+  "LR": 4,
+  "sql_hashes_verified": true,
+  "runtime_database_verified": false
+}

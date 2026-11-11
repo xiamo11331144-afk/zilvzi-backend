@@ -1,0 +1,208 @@
+{
+  "width": 3300,
+  "height": 2600,
+  "entities": [
+    {
+      "table": "user",
+      "x": 1650,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "用户编号"
+        ],
+        [
+          "nickname",
+          "昵称"
+        ],
+        [
+          "level",
+          "等级"
+        ],
+        [
+          "mentor_enabled",
+          "引领开关"
+        ]
+      ]
+    },
+    {
+      "table": "message",
+      "x": 650,
+      "y": 1900,
+      "attributes": [
+        [
+          "id",
+          "私信编号"
+        ],
+        [
+          "type",
+          "私信类型"
+        ],
+        [
+          "content",
+          "私信内容"
+        ]
+      ]
+    },
+    {
+      "table": "notification",
+      "x": 2650,
+      "y": 1900,
+      "attributes": [
+        [
+          "id",
+          "通知编号"
+        ],
+        [
+          "type",
+          "通知类型"
+        ],
+        [
+          "related_type",
+          "关联类型"
+        ]
+      ]
+    },
+    {
+      "table": "plan_template",
+      "x": 1650,
+      "y": 2100,
+      "attributes": [
+        [
+          "id",
+          "模板编号"
+        ],
+        [
+          "goal_type",
+          "目标类别"
+        ],
+        [
+          "goal_keyword",
+          "目标关键词"
+        ]
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "F13",
+      "parent": "user",
+      "child": "message",
+      "column": "from_user_id",
+      "kind": "FK",
+      "route": [
+        [
+          1500.0,
+          650.0
+        ],
+        [
+          650,
+          650
+        ],
+        [
+          650.0,
+          1845.0
+        ]
+      ],
+      "diamond": [
+        650.0,
+        822.5
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F14",
+      "parent": "user",
+      "child": "message",
+      "column": "to_user_id",
+      "kind": "FK",
+      "route": [
+        [
+          1500.0,
+          680.0
+        ],
+        [
+          1400,
+          700
+        ],
+        [
+          1020,
+          1000
+        ],
+        [
+          1020,
+          1900
+        ],
+        [
+          800.0,
+          1900.0
+        ]
+      ],
+      "diamond": [
+        1020.0,
+        1266.935436125868
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F15",
+      "parent": "user",
+      "child": "notification",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          1800.0,
+          650.0
+        ],
+        [
+          2650,
+          650
+        ],
+        [
+          2650.0,
+          1845.0
+        ]
+      ],
+      "diamond": [
+        2650.0,
+        822.5
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "L04",
+      "parent": "user",
+      "child": "notification",
+      "column": "from_user_id",
+      "kind": "LR",
+      "route": [
+        [
+          1800.0,
+          680.0
+        ],
+        [
+          1900,
+          700
+        ],
+        [
+          2280,
+          1000
+        ],
+        [
+          2280,
+          1900
+        ],
+        [
+          2500.0,
+          1900.0
+        ]
+      ],
+      "diamond": [
+        2280.0,
+        1266.935436125868
+      ],
+      "cardinality": "0..1 : 0..N"
+    }
+  ]
+}

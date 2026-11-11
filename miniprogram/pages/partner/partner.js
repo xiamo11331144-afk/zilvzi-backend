@@ -44,6 +44,8 @@ Page({
     }
   },
 
+  openMentorSettings() { wx.switchTab({ url: '/pages/profile/profile' }) },
+
   openVip() { wx.navigateTo({ url: '/pages/vip/vip?from=match' }) },
 
   switchTab(e) {
@@ -79,22 +81,23 @@ Page({
       const res = await request.get('/api/partner/match', { goalType, keyword, matchMode })
       if (requestId !== this._matchRequestId) return
       if (res.code !== 200 || !Array.isArray(res.data)) throw new Error(res.message || '推荐列表加载失败')
-      this.setData({ matchList: res.data.map(item => ({
-        ...item,
-        mentorEnabled: item.mentorEnabled === true || item.mentorEnabled === 1,
-        mentorEligible: item.mentorEligible === true,
-        leadDataComplete: (item.mentorEnabled === true || item.mentorEnabled === 1)
-          && item.mentorEligible === true
-          && item.approvedDays !== null && item.approvedDays !== undefined && Number.isFinite(Number(item.approvedDays))
-          && item.checkinRate !== null && item.checkinRate !== undefined && Number.isFinite(Number(item.checkinRate))
-          && item.streak !== null && item.streak !== undefined && Number.isFinite(Number(item.streak))
-          && item.remainingSlots !== null && item.remainingSlots !== undefined && Number.isFinite(Number(item.remainingSlots)),
-        leadCanApply: (item.mentorEnabled === true || item.mentorEnabled === 1)
-          && item.mentorEligible === true
-          && Number(item.approvedDays) >= 24 && Number(item.checkinRate) >= 80
-          && Number(item.streak) >= 7 && Number(item.remainingSlots) > 0
-          && item.checkinRate !== null && item.checkinRate !== undefined && Number.isFinite(Number(item.checkinRate))
-      })) })
+      this.setData({ matchList: res.data.map(item => {
+        const hasNumber = key => item[key] !== null && item[key] !== undefined && item[key] !== ''
+          && Number.isFinite(Number(item[key]))
+        const mentorEnabled = item.mentorEnabled === true || item.mentorEnabled === 1
+        const mentorEligible = item.mentorEligible === true
+        const leadDataComplete = typeof item.mentorEligible === 'boolean'
+          && (typeof item.mentorEnabled === 'boolean' || item.mentorEnabled === 0 || item.mentorEnabled === 1)
+          && ['approvedDays', 'checkinRate', 'streak', 'remainingSlots'].every(hasNumber)
+        return {
+          ...item,
+          mentorEnabled,
+          mentorEligible,
+          leadDataComplete,
+          // 推荐接口已检查双方打卡率差异；资格由后端统一判断，提交时再次校验。
+          leadCanApply: leadDataComplete && mentorEnabled && mentorEligible && Number(item.remainingSlots) > 0
+        }
+      }) })
     } catch (err) {
       if (requestId !== this._matchRequestId) return
       this.setData({ matchError: err.message || '推荐列表加载失败' })

@@ -1,0 +1,38 @@
+flowchart LR
+  Mini["微信原生小程序<br/>development · http://localhost:8081"]
+  Admin["管理端浏览器 /admin"]
+  subgraph Backend["Spring Boot 单体后端 :8081 · Java 17"]
+    C["接口入口与 Controller<br/>Spring MVC /api/**<br/>JWT 拦截器，公开接口除外"]
+    S["Service 业务层<br/>User / Goal / Plan / Checkin / Partner 等"]
+    AIAdapter["AiServiceImpl"]
+    OSSAdapter["OssServiceImpl"]
+    OCRAdapter["OcrServiceImpl"]
+    RU["RedisUtil / StringRedisTemplate"]
+    M["MyBatis Mapper 接口 / XML"]
+  end
+  DB[("MySQL<br/>localhost:3306/zilvzi<br/>业务数据 / 对话历史 / 计划模板")]
+  Redis[("Redis<br/>127.0.0.1:6379<br/>验证码 TTL 300秒")]
+  AI["DeepSeek<br/>HTTPS POST /chat/completions<br/>deepseek-chat"]
+  OSS["阿里云 OSS<br/>oss-cn-hangzhou.aliyuncs.com"]
+  OCR["阿里云 OCR<br/>ocr-api.cn-hangzhou.aliyuncs.com"]
+  WX["微信 jscode2session 接口"]
+  Mini -->|HTTP JSON / multipart；受保护请求附 JWT| C
+  Admin -->|HTTP API| C
+  C --> S
+  S --> M
+  C -.->|部分 Controller 直接访问| M
+  M -->|JDBC / Druid| DB
+  S -->|UserService 验证码读写| RU
+  RU -->|GET / SETEX / DEL| Redis
+  C -->|AI对话与建议| AIAdapter
+  S -->|计划生成等| AIAdapter
+  AIAdapter -->|后端 HttpClient 请求| AI
+  C -->|1. 文件或课表上传| OSSAdapter
+  OSSAdapter -->|SDK putObject；返回对象URL| OSS
+  C -->|2. 课表上传取得URL后识别| OCRAdapter
+  OCRAdapter -->|SDK RecognizeAdvanced；传入图片URL| OCR
+  OCR -.->|按URL读取图片，须可访问| OSS
+  S -->|UserService：HTTPS GET换取openid| WX
+%% 箭头为发起调用方向；返回沿原链回传，省略返回箭头。
+%% OCR文字经后端返回小程序，再可被用于计划请求；无OCR直接调用AI。
+%% 配置/源码核对日期2026-11-07；不表示运行或云服务连通验收。

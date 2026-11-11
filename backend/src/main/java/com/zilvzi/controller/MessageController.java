@@ -53,6 +53,12 @@ public class MessageController {
                 return Result.error("消息包含敏感词【" + word + "】，请修改后发送");
             }
 
+            List<Partner> relationshipRecords = partnerMapper.selectAllByUserAndPartner(userId, toUserId);
+            boolean blocked = relationshipRecords.stream().anyMatch(record -> "blocked".equals(record.getStatus()));
+            if (blocked) {
+                return Result.error("双方存在拉黑关系，无法发送消息");
+            }
+
             Message message = new Message();
             message.setFromUserId(userId);
             message.setToUserId(toUserId);

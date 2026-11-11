@@ -14,6 +14,9 @@ public interface PlanMapper {
      */
     Plan selectById(@Param("id") Long id);
 
+    /** 阶段任务生成事务内锁定计划，串行化相同计划的首次生成。 */
+    Plan selectByIdForUpdate(@Param("id") Long id);
+
     /**
      * 查询用户的计划列表
      */

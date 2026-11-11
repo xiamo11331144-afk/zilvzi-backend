@@ -62,6 +62,8 @@ public interface CheckinMapper {
     /**
      * 更新打卡审核状态
      */
+    int resubmitRejected(Checkin checkin);
+
     int updateStatus(@Param("id") Long id, @Param("status") String status,
                      @Param("partnerId") Long partnerId, @Param("reviewComment") String reviewComment);
 

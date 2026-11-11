@@ -1,0 +1,188 @@
+{
+  "width": 2800,
+  "height": 2500,
+  "entities": [
+    {
+      "table": "user",
+      "x": 550,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "用户编号"
+        ],
+        [
+          "nickname",
+          "昵称"
+        ],
+        [
+          "level",
+          "等级"
+        ],
+        [
+          "mentor_enabled",
+          "引领开关"
+        ]
+      ]
+    },
+    {
+      "table": "circle",
+      "x": 2200,
+      "y": 650,
+      "attributes": [
+        [
+          "id",
+          "圈子编号"
+        ],
+        [
+          "name",
+          "圈子名称"
+        ],
+        [
+          "description",
+          "圈子简介"
+        ]
+      ]
+    },
+    {
+      "table": "topic_reply",
+      "x": 550,
+      "y": 1900,
+      "attributes": [
+        [
+          "id",
+          "回复编号"
+        ],
+        [
+          "content",
+          "回复内容"
+        ],
+        [
+          "create_time",
+          "回复时间"
+        ]
+      ]
+    },
+    {
+      "table": "topic",
+      "x": 2200,
+      "y": 1900,
+      "attributes": [
+        [
+          "id",
+          "话题编号"
+        ],
+        [
+          "title",
+          "话题标题"
+        ],
+        [
+          "content",
+          "话题内容"
+        ]
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "F24",
+      "parent": "circle",
+      "child": "topic",
+      "column": "circle_id",
+      "kind": "FK",
+      "route": [
+        [
+          2200.0,
+          705.0
+        ],
+        [
+          2200.0,
+          1845.0
+        ]
+      ],
+      "diamond": [
+        2200.0,
+        1275.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F25",
+      "parent": "user",
+      "child": "topic",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          700.0,
+          650.0
+        ],
+        [
+          1350,
+          650
+        ],
+        [
+          1350,
+          1320
+        ],
+        [
+          2200,
+          1320
+        ],
+        [
+          2200.0,
+          1845.0
+        ]
+      ],
+      "diamond": [
+        1377.5,
+        1320.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F26",
+      "parent": "topic",
+      "child": "topic_reply",
+      "column": "topic_id",
+      "kind": "FK",
+      "route": [
+        [
+          2050.0,
+          1900.0
+        ],
+        [
+          700.0,
+          1900.0
+        ]
+      ],
+      "diamond": [
+        1375.0,
+        1900.0
+      ],
+      "cardinality": "1 : 0..N"
+    },
+    {
+      "id": "F27",
+      "parent": "user",
+      "child": "topic_reply",
+      "column": "user_id",
+      "kind": "FK",
+      "route": [
+        [
+          550.0,
+          705.0
+        ],
+        [
+          550.0,
+          1845.0
+        ]
+      ],
+      "diamond": [
+        550.0,
+        1275.0
+      ],
+      "cardinality": "1 : 0..N"
+    }
+  ]
+}
