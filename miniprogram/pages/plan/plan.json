@@ -1,4 +1,4 @@
 {
-  "usingComponents": {},
+  "usingComponents": {"checkin-proof":"/components/checkin-proof/checkin-proof"},
   "navigationBarTitleText": "AI制定计划"
 }

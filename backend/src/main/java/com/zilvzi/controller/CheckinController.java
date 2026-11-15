@@ -24,6 +24,15 @@ public class CheckinController {
     @Autowired
     private PlanService planService;
 
+    @GetMapping("/review-required")
+    public Result<?> requiresReview(@RequestAttribute("userId") Long userId, @RequestParam Long taskId) {
+        try {
+            return Result.success(Map.of("required", checkinService.requiresReview(userId, taskId)));
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
     /**
      * 打卡
      */
@@ -138,7 +147,7 @@ public class CheckinController {
             
             boolean hasStreakBreak = (boolean) streakBreakInfo.get("hasStreakBreak");
             if (hasStreakBreak) {
-                return Result.success("检测到断卡，已自动调整计划", streakBreakInfo);
+                return Result.success("检测到断卡，请查看各计划处理结果", streakBreakInfo);
             }
             
             return Result.success("无断卡情况", streakBreakInfo);

@@ -237,7 +237,7 @@
           <view class="task-list">
             <view class="task-item" wx:for="{{item.tasks}}" wx:key="id" wx:for-item="task">
               <view class="task-check {{task.completed === 1 ? 'checked' : ''}} {{task.pending ? 'pending' : ''}} {{task.completed === -1 ? 'streak-break' : ''}}"
-                    bindtap="{{task.pending || task.completed === 1 || task.completed === -1 ? '' : 'completeTask'}}" data-id="{{task.id}}">
+                    bindtap="{{task.pending || task.completed === 1 || (task.completed === -1 && !task.rejected) ? '' : 'completeTask'}}" data-id="{{task.id}}">
                 <text wx:if="{{task.completed === 1}}">✓</text>
                 <text wx:if="{{task.pending}}">…</text>
                 <text wx:if="{{task.completed === -1}}">✕</text>
@@ -291,7 +291,7 @@
             <view class="task-list">
               <view class="task-item" wx:for="{{dayItem.tasks}}" wx:key="id" wx:for-item="task">
                 <view class="task-check {{task.completed === 1 ? 'checked' : ''}} {{task.pending ? 'pending' : ''}} {{task.completed === -1 ? 'streak-break' : ''}}"
-                      bindtap="{{task.pending || task.completed === 1 || task.completed === -1 ? '' : 'completeTask'}}" data-id="{{task.id}}">
+                      bindtap="{{task.pending || task.completed === 1 || (task.completed === -1 && !task.rejected) ? '' : 'completeTask'}}" data-id="{{task.id}}">
                   <text wx:if="{{task.completed === 1}}">✓</text>
                   <text wx:if="{{task.pending}}">…</text>
                   <text wx:if="{{task.completed === -1}}">✕</text>
@@ -316,3 +316,4 @@
     </view>
   </view>
 </view>
+<checkin-proof id="checkin-proof" bind:submitted="onProofSubmitted" />

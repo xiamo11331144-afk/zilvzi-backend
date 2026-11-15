@@ -96,9 +96,10 @@ Page({
         const res = await request.put(`/api/notification/read/${id}`)
         if (res.code !== 200) throw new Error(res.message || '标记已读失败')
         this.setData({ notifications: this.data.notifications.map(n => Number(n.id) === id ? { ...n, isRead: 1 } : n) })
-        await this.refreshUnread()
+        // 未读数的辅助刷新不能阻塞打开目标页面。
+        this.refreshUnread().catch(() => {})
       }
-      this.openRelated(notification)
+      await this.openRelated(notification)
     } catch (err) {
       wx.showToast({ title: err.message || '操作失败', icon: 'none' })
     } finally {
@@ -107,19 +108,29 @@ Page({
     }
   },
 
-  openRelated(n) {
+  async openRelated(n) {
+    const fail = () => wx.showToast({ title: '页面打开失败，请返回后重试', icon: 'none' })
     if (n.relatedId && n.relatedType === 'post') {
-      // 帖子在所属圈子内展示，当前通知没有圈子ID时保留通知内容。
+      const res = await request.get(`/api/circle/post/${Number(n.relatedId)}`)
+      if (res.code !== 200 || !res.data || !res.data.circleId) throw new Error(res.message || '动态已不存在')
+      wx.navigateTo({ url: `/pages/circle-detail/circle-detail?id=${Number(res.data.circleId)}&postId=${Number(n.relatedId)}`, fail })
       return
     }
     if (n.relatedId && n.relatedType === 'topic') {
-      wx.navigateTo({ url: `/pages/topic-detail/topic-detail?id=${n.relatedId}` })
-    } else if ((n.type === 'private_message' || n.type === 'checkin_review') && n.fromUserId) {
-      wx.navigateTo({ url: `/pages/message/message?partnerId=${n.fromUserId}&nickname=${encodeURIComponent(n.fromNickname || '')}` })
+      wx.navigateTo({ url: `/pages/topic-detail/topic-detail?id=${Number(n.relatedId)}`, fail })
+    } else if (n.type === 'checkin_review') {
+      if (!Number.isSafeInteger(Number(n.fromUserId)) || Number(n.fromUserId) <= 0) {
+        throw new Error('通知缺少提交者信息，无法打开聊天')
+      }
+      wx.navigateTo({ url: `/pages/message/message?partnerId=${Number(n.fromUserId)}&nickname=${encodeURIComponent(n.fromNickname || '')}`, fail })
+    } else if ((n.type === 'private_message' || n.type === 'checkin_approved' || n.type === 'checkin_rejected') && n.fromUserId) {
+      wx.navigateTo({ url: `/pages/message/message?partnerId=${Number(n.fromUserId)}&nickname=${encodeURIComponent(n.fromNickname || '')}`, fail })
     } else if (String(n.type || '').indexOf('partner_') === 0) {
-      wx.switchTab({ url: '/pages/partner/partner' })
+      wx.switchTab({ url: '/pages/partner/partner', fail })
     } else if (String(n.type || '').indexOf('checkin_') === 0 || n.type === 'streak_break') {
-      wx.switchTab({ url: '/pages/index/index' })
+      wx.switchTab({ url: '/pages/index/index', fail })
+    } else {
+      wx.showModal({ title: n.title || '通知详情', content: n.content || n.displayText || '暂无详细内容', showCancel: false })
     }
   },
 

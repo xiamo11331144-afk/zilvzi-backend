@@ -30,8 +30,8 @@ function badgeHarness() {
 
 function pageHarness(name, request, counts = empty()) {
   let page
-  const notices = []
-  const wx = { showToast: options => notices.push(options.title), showModal(options) { this.modal = options }, navigateTo() {}, switchTab() {}, setNavigationBarTitle() {} }
+  const notices = [], navigations = []
+  const wx = { showToast: options => notices.push(options.title), showModal(options) { this.modal = options }, navigateTo(options) { navigations.push(options) }, switchTab(options) { navigations.push(options) }, setNavigationBarTitleText() {}, setNavigationBarTitle() {} }
   const badgeApi = { emptyCounts: empty, bind() {}, unbind() {}, refresh: async () => counts }
   const context = {
     Page(config) { page = config }, wx, getApp: () => ({ globalData: { userId: 1 } }),
@@ -41,7 +41,7 @@ function pageHarness(name, request, counts = empty()) {
   page.data = snapshot(page.data)
   page.setData = function (data) { Object.assign(this.data, snapshot(data)) }
   page._visible = true
-  return { page, wx, notices }
+  return { page, wx, notices, navigations, badgeApi }
 }
 
 test('批量已读和清除的业务失败不能清空界面或计数', async () => {
@@ -76,6 +76,50 @@ test('迟到的列表响应不会恢复已经成功标记为已读的通知', as
 })
 
 const success = data => ({ code: 200, data })
+
+test('待审核通知打开提交者聊天，未读刷新未完成不阻止跳转', async () => {
+  const { page, navigations, badgeApi } = pageHarness('notification', { put: async () => success(null) })
+  badgeApi.refresh = () => new Promise(() => {})
+  page.setData({ notifications: [{ id: 1, isRead: 0, type: 'checkin_review', fromUserId: 2 }] })
+  await page.readNotification({ currentTarget: { dataset: { id: 1 } } })
+  assert.equal(navigations[0].url, '/pages/message/message?partnerId=2&nickname=')
+  assert.equal(page.data.notifications[0].isRead, 1)
+  assert.equal(page.data.actionBusy, false)
+})
+
+test('审核结果通知进入双方私信，会话参数编码且已读通知仍可打开', async () => {
+  const { page, navigations } = pageHarness('notification', {})
+  for (const type of ['checkin_approved', 'checkin_rejected']) {
+    page.setData({ notifications: [{ id: 1, isRead: 1, type, fromUserId: 2, fromNickname: '搭子&测试' }] })
+    await page.readNotification({ currentTarget: { dataset: { id: 1 } } })
+  }
+  assert.equal(navigations.length, 2)
+  assert.match(navigations[0].url, /^\/pages\/message\/message\?partnerId=2&nickname=/)
+  assert.ok(navigations[1].url.includes(encodeURIComponent('搭子&测试')))
+})
+
+test('帖子互动通知查询所属圈子后打开动态，删除的动态保留明确反馈', async () => {
+  let exists = true
+  const { page, navigations, notices } = pageHarness('notification', {
+    get: async url => { assert.equal(url, '/api/circle/post/9'); return exists ? success({ circleId: 3 }) : { code: 500, message: '动态不存在' } }
+  })
+  page.setData({ notifications: [{ id: 1, isRead: 1, type: 'comment', relatedType: 'post', relatedId: 9 }] })
+  await page.readNotification({ currentTarget: { dataset: { id: 1 } } })
+  assert.equal(navigations[0].url, '/pages/circle-detail/circle-detail?id=3&postId=9')
+  exists = false
+  await page.readNotification({ currentTarget: { dataset: { id: 1 } } })
+  assert.equal(navigations.length, 1)
+  assert.equal(notices[0], '动态不存在')
+})
+
+test('页面跳转失败提供单次错误反馈，系统通知打开详情', async () => {
+  const { page, navigations, notices, wx } = pageHarness('notification', {})
+  await page.openRelated({ type: 'checkin_review', fromUserId: 2 })
+  navigations[0].fail()
+  assert.deepEqual(notices, ['页面打开失败，请返回后重试'])
+  await page.openRelated({ type: 'system', title: '公告', content: '详细说明' })
+  assert.equal(wx.modal.content, '详细说明')
+})
 
 test('角标有固定归属：申请、互动、通知加真实私信；首页只保留快捷入口', async () => {
   const h = badgeHarness(), page = h.page()

@@ -19,7 +19,7 @@
   </view>
 
   <view class="notification-list">
-    <view class="notification-item {{item.isRead === 0 ? 'unread' : ''}}" wx:for="{{notifications}}" wx:key="id">
+    <view class="notification-item {{item.isRead === 0 ? 'unread' : ''}}" wx:for="{{notifications}}" wx:key="id" bindtap="readNotification" data-id="{{item.id}}">
       <view class="notification-avatar">
         <image class="avatar-sm" src="{{item.fromAvatar || '/images/default-avatar.png'}}" mode="aspectFill" />
         <view class="type-icon">
@@ -31,7 +31,7 @@
           <text wx:else>📢</text>
         </view>
       </view>
-      <view class="notification-content" bindtap="readNotification" data-id="{{item.id}}">
+      <view class="notification-content">
         <view class="notification-header">
           <text class="notification-nickname">{{item.fromNickname || '系统'}}</text>
           <text class="notification-tag tag tag-primary">{{item.title}}</text>
@@ -41,7 +41,7 @@
       </view>
       <view class="notification-actions">
         <view class="unread-dot" wx:if="{{item.isRead === 0}}"></view>
-        <text class="delete-btn" bindtap="deleteOne" data-id="{{item.id}}">×</text>
+        <text class="delete-btn" catchtap="deleteOne" data-id="{{item.id}}">×</text>
       </view>
     </view>
     <view class="list-feedback" wx:if="{{loading}}">加载中...</view>

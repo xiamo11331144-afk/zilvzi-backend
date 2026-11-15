@@ -53,16 +53,19 @@
                      src="{{item.proofImage}}" mode="widthFix"
                      bindtap="previewImage" data-url="{{item.proofImage}}" />
               <text class="proof-text" wx:if="{{item.displayContent}}">{{item.displayContent}}</text>
-              <button wx:if="{{item.isCheckinProof}}" class="confirm-btn"
-                      bindtap="confirmCheckin"
-                      data-checkinid="{{item.relatedId}}" data-msgid="{{item.id}}">
-                ✅ 确认打卡
-              </button>
+              <view wx:if="{{item.isCheckinProof}}" class="review-actions">
+                <button class="confirm-btn" bindtap="confirmCheckin"
+                        disabled="{{reviewingCheckinId !== null}}"
+                        data-checkinid="{{item.relatedId}}">确认打卡</button>
+                <button class="reject-btn" bindtap="rejectCheckin"
+                        disabled="{{reviewingCheckinId !== null}}"
+                        data-checkinid="{{item.relatedId}}">驳回</button>
+              </view>
               <view wx:if="{{item.isMyCheckinProof}}" class="confirmed-badge" style="color:#4A90D9;">
-                等待对方确认
+                等待对方审核
               </view>
               <view wx:if="{{item.isCheckinConfirmed && !item.isCheckinProof && !item.isMyCheckinProof}}" class="confirmed-badge">
-                已确认
+                审核已处理
               </view>
             </view>
           </block>

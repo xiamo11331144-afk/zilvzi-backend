@@ -2,10 +2,11 @@
  * 环境配置
  */
 const env = {
-  // 开发环境
+  // 开发环境：模拟器和手机共用电脑的局域网地址，手机与电脑需处于可互通网络。
+  // 电脑IP变化时同步更新下方地址；真机不能使用localhost。
   development: {
-    baseUrl: 'http://localhost:8081',
-    apiBaseUrl: 'http://localhost:8081/api'
+    baseUrl: 'http://192.168.1.100:8081',
+    apiBaseUrl: 'http://192.168.1.100:8081/api'
   },
   // 生产环境
   production: {

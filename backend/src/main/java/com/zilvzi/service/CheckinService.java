@@ -55,4 +55,5 @@ public interface CheckinService {
      * 获取当前用户需要审核的打卡列表
      */
     List<Checkin> getPendingForReview(Long userId);
+    boolean requiresReview(Long userId, Long taskId);
 }

@@ -16,6 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/file")
 public class FileUploadController {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FileUploadController.class);
 
     @Autowired
     private OssService ossService;
@@ -59,21 +60,33 @@ public class FileUploadController {
     @PostMapping("/upload-schedule")
     public Result<?> uploadSchedule(@RequestAttribute("userId") Long userId,
                                     @RequestParam("file") MultipartFile file) {
+        String traceId = java.util.UUID.randomUUID().toString().substring(0, 8);
+        String stage = "upload";
         try {
+            log.info("[ScheduleUpload] trace={} stage=received bytes={}", traceId, file.getSize());
             // 1. 上传到OSS
             String fileUrl = ossService.uploadFile(file, "schedule");
 
             // 2. 调用OCR识别
-            String recognizedText = ocrService.recognizeText(fileUrl);
+            stage = "ocr";
+            log.info("[ScheduleUpload] trace={} stage=ocr input=binary", traceId);
+            String recognizedText = ocrService.recognizeFile(file.getBytes(), file.getOriginalFilename());
 
             Map<String, Object> result = new HashMap<>();
             result.put("url", fileUrl);
             result.put("name", file.getOriginalFilename());
             result.put("recognizedText", recognizedText);
+            result.put("traceId", traceId);
+            log.info("[ScheduleUpload] trace={} stage=complete characters={}", traceId, recognizedText == null ? 0 : recognizedText.length());
 
-            return Result.success("上传并识别成功", result);
+            return Result.success(recognizedText == null || recognizedText.isBlank()
+                    ? "文件已上传，但未识别到文字" : "上传并识别成功", result);
         } catch (Exception e) {
-            return Result.error("处理失败: " + e.getMessage());
+            log.warn("[ScheduleUpload] trace={} stage={} exceptionType={}", traceId, stage, e.getClass().getSimpleName());
+            String message = "ocr".equals(stage) && e instanceof IllegalStateException ? e.getMessage() :
+                    "ocr".equals(stage) && e instanceof IllegalArgumentException ? e.getMessage() :
+                    "upload".equals(stage) ? "文件上传失败，请检查对象存储配置" : "课表读取或识别失败，请重试";
+            return Result.error(message + "（排查编号：" + traceId + "）");
         }
     }
 }

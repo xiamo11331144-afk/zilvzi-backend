@@ -11,6 +11,7 @@ Page({
     partnerAvatar: '',
     messages: [],
     inputMsg: '',
+    reviewingCheckinId: null,
     loading: true,
     loadError: '',
     conversationPage: 0, conversationsHasMore: true,
@@ -217,34 +218,56 @@ Page({
     wx.previewImage({ urls: [url] })
   },
 
-  // 确认搭子打卡
-  async confirmCheckin(e) {
-    const checkinId = e.currentTarget.dataset.checkinid
-    const msgId = e.currentTarget.dataset.msgid
-    if (!checkinId) return
+  // 审核结果由服务端校验权限和当前打卡状态。
+  confirmCheckin(e) {
+    this.reviewCheckin(e, true)
+  },
+
+  rejectCheckin(e) {
+    this.reviewCheckin(e, false)
+  },
+
+  reviewCheckin(e, approved) {
+    const checkinId = Number(e.currentTarget.dataset.checkinid)
+    if (!Number.isSafeInteger(checkinId) || checkinId <= 0 || this.data.reviewingCheckinId !== null) return
+    const partnerId = this.data.partnerId
+    this.setData({ reviewingCheckinId: checkinId })
 
     wx.showModal({
-      title: '确认打卡',
-      content: '确认对方已完成打卡？',
+      title: approved ? '确认打卡' : '驳回打卡',
+      content: approved ? '确认对方已完成打卡？' : '',
+      editable: !approved,
+      placeholderText: approved ? '' : '驳回原因（选填），对方可补充凭证后重提',
+      confirmText: approved ? '确认通过' : '确认驳回',
+      confirmColor: approved ? '#52C41A' : '#D93025',
       success: async (res) => {
-        if (!res.confirm) return
-        wx.showLoading({ title: '确认中...' })
+        if (!res.confirm) {
+          this.setData({ reviewingCheckinId: null })
+          return
+        }
+        wx.showLoading({ title: approved ? '确认中...' : '驳回中...' })
         try {
-          const result = await request.post('/api/checkin/review', {
-            checkinId: Number(checkinId),
-            approved: true
-          })
-          wx.hideLoading()
+          const params = { checkinId, approved }
+          if (!approved) params.comment = (res.content || '').trim()
+          const result = await request.post('/api/checkin/review', params)
           if (result.code === 200) {
-            wx.showToast({ title: '已确认打卡', icon: 'success' })
-            this.loadConversation(this.data.partnerId)
+            wx.showToast({ title: approved ? '已确认打卡' : '已驳回打卡', icon: 'success' })
+            if (this._visible && this.data.viewMode === 'chat' && this.data.partnerId === partnerId) {
+              await this.loadConversation(partnerId)
+            }
           } else {
-            wx.showToast({ title: result.message || '确认失败', icon: 'none' })
+            wx.showToast({ title: result.message || '审核失败', icon: 'none' })
           }
         } catch (err) {
+          wx.showToast({ title: err.message || '审核失败，请重试', icon: 'none' })
+        } finally {
           wx.hideLoading()
-          wx.showToast({ title: '确认失败', icon: 'none' })
+          this.setData({ reviewingCheckinId: null })
         }
+      },
+      fail: () => {
+        this.setData({ reviewingCheckinId: null })
+        wx.showToast({ title: '无法打开审核窗口，请重试', icon: 'none' })
       }
     })
   }

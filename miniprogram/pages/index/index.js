@@ -28,6 +28,10 @@ Page({
     checkinDays: 0,
     todayGoals: [],
     allChecked: false,
+    tasksLoading: true,
+    tasksLoadError: '',
+    streakBreakPlans: [],
+    streakBreakError: '',
     uncheckedCount: 0,
     weekTrend: [],
     plans: [], // 计划列表
@@ -40,6 +44,7 @@ Page({
     proofTaskType: '',
     proofImage: '',
     proofContent: '',
+    proofSubmitting: false,
     uploadedTasks: {},
     partners: [],
     newGoal: {
@@ -63,13 +68,18 @@ Page({
     this.checkLoginStatus()
     if (this.data.isLoggedIn) {
       this.loadUserInfo()
-      this.loadGoals()
+      this.loadExecutionState()
       this.loadWeekTrend()
-      this.loadPlans()
       this.loadStreakDays()
-      this.checkStreakBreak()
       this.loadPartners()
     }
+  },
+
+  async loadExecutionState() {
+    this.setData({ tasksLoading: true })
+    // 检测可能生成补发任务，完成后再读取，避免首页停留在调整前的空列表。
+    await this.checkStreakBreak()
+    await Promise.all([this.loadGoals(), this.loadPlans()])
   },
 
   async loadUserInfo() {
@@ -86,10 +96,12 @@ Page({
   async loadPartners() {
     try {
       const res = await request.get('/api/partner/list')
-      if (res.code === 200 && res.data) {
+      if (res.code === 200 && Array.isArray(res.data)) {
         this.setData({ partners: res.data })
+        return res.data
       }
     } catch (err) {}
+    return null
   },
 
   async loadStreakDays() {
@@ -122,10 +134,12 @@ Page({
   },
 
   async loadGoals() {
+    this.setData({ tasksLoading: true, tasksLoadError: '' })
     try {
       // 获取今日计划任务（包括过期任务）
       const res = await request.get('/api/checkin/today')
-      if (res.code === 200 && res.data && res.data.length > 0) {
+      if (res.code !== 200 || !Array.isArray(res.data)) throw new Error(res.message || '今日任务加载失败')
+      if (res.data.length > 0) {
         const goals = res.data.map(t => {
           const isRejected = t.checkinStatus === 'rejected'
           const isPending = t.checkinStatus === 'pending'
@@ -149,13 +163,15 @@ Page({
         this.setData({
           todayGoals: goals,
           uncheckedCount,
-          allChecked: uncheckedCount === 0
+          allChecked: goals.every(g => g.checked)
         })
       } else {
-        this.setData({ todayGoals: [], uncheckedCount: 0, allChecked: true })
+        this.setData({ todayGoals: [], uncheckedCount: 0, allChecked: false })
       }
     } catch (err) {
-      console.log('加载目标失败', err)
+      this.setData({ tasksLoadError: err.message || '今日任务加载失败', allChecked: false })
+    } finally {
+      this.setData({ tasksLoading: false })
     }
   },
 
@@ -259,47 +275,38 @@ Page({
 
   retryBadges() { return badges.refresh(true) },
 
-  // 断卡检测（进入小程序时执行，每天只弹窗一次，但后端补卡逻辑始终执行）
+  // 按用户、计划和处理状态限制弹窗频率，提醒卡片始终保留。
   async checkStreakBreak() {
     try {
-      console.log('[StreakBreak] 开始断卡检测...')
       const res = await request.post('/api/checkin/streak-break/check')
-      console.log('[StreakBreak] 后端返回:', JSON.stringify(res))
-
-      if (res.code === 200 && res.data) {
-        const hasBreak = res.data.hasStreakBreak
-        console.log('[StreakBreak] hasStreakBreak:', hasBreak)
-
-        if (hasBreak) {
-          badges.refresh(true)
-          // 检查今天是否已提示过，避免反复弹窗
-          const today = formatDate(new Date(), 'YYYY-MM-DD')
-          const lastDate = wx.getStorageSync('lastStreakBreakNotifyDate')
-          if (lastDate === today) {
-            console.log('[StreakBreak] 今天已提示过，跳过弹窗')
-            return
-          }
-
-          const plans = res.data.affectedPlans || []
-          const supplementTasks = res.data.supplementTasks || []
-          console.log('[StreakBreak] 受影响计划:', JSON.stringify(plans))
-          console.log('[StreakBreak] 补发任务:', JSON.stringify(supplementTasks))
-
-          const names = plans.map(p => p.planName).join('、')
+      if (res.code !== 200 || !res.data) throw new Error(res.message || '断卡检测失败，请重试')
+      const plans = (res.data.affectedPlans || []).map(plan => ({
+        ...plan,
+        reminder: plan.adjustmentFailed ? '任务调整失败，请重试；原计划仍可查看。'
+          : plan.supplementPaused ? `${plan.infeasibleReason || '已达到补发阈值'}。已停止自动补发，${plan.remainingDays > 0 ? '后续继续原日程' : '原定日程已结束，可查看原计划'}。`
+          : plan.supplementCount > 0 ? `存在未完成任务，已有${plan.supplementCount}个补发任务，请查看计划安排。`
+          : '存在未完成任务，请进入原计划查看安排。'
+      }))
+      this.setData({ streakBreakPlans: plans, streakBreakError: '' })
+      if (res.data.hasStreakBreak && plans.length) {
+        badges.refresh(true)
+        const today = formatDate(new Date(), 'YYYY-MM-DD')
+        const userId = app.globalData.userId || (this.data.userInfo && this.data.userInfo.id) || ''
+        const key = `streakBreakNotify:${userId}:${today}:` + plans.map(p => `${p.planId}-${p.supplementPaused ? 'paused' : 'missed'}-${p.adjustmentFailed ? 'error' : 'ok'}`).sort().join(',')
+        if (!wx.getStorageSync(key)) {
           wx.showModal({
-            title: '断卡提醒',
-            content: `${names}有断卡情况，已自动补发${supplementTasks.length}个任务到后续天数`,
-            showCancel: false
+            title: plans.some(p => p.supplementPaused) ? '计划调整提醒' : '断卡提醒',
+            content: plans.map(p => `${p.planName}：${p.reminder}`).join('\n'),
+            confirmText: '查看计划', cancelText: '稍后查看',
+            success: result => {
+              if (result.confirm) this.viewPlan({ currentTarget: { dataset: { id: plans[0].planId } } })
+            }
           })
-
-          // 记录今天已提示
-          wx.setStorageSync('lastStreakBreakNotifyDate', today)
-        } else {
-          console.log('[StreakBreak] 无断卡情况')
+          wx.setStorageSync(key, true)
         }
       }
     } catch (err) {
-      console.error('[StreakBreak] 检测失败:', err)
+      this.setData({ streakBreakError: err.message || '断卡检测失败，请重试' })
     }
   },
 
@@ -319,11 +326,14 @@ Page({
       wx.showToast({ title: '该任务已过期', icon: 'none' }); return
     }
 
-    // 检查是否有同类型目标的搭子
-    const taskType = normalizeGoalType(todayGoals[goalIndex].type)
-    const hasPartner = this.data.partners.some(p =>
-      p.status === 'accepted' && p.goalTypes && p.goalTypes.includes(taskType)
-    )
+    // 提交前重新获取关系，加载失败不能当作没有搭子。
+    let hasPartner
+    try {
+      hasPartner = await require('../../utils/checkin-review').forTask(taskId)
+    } catch (err) {
+      wx.showToast({ title: err.message || '审核条件查询失败，请重试', icon: 'none' })
+      return
+    }
     if (hasPartner) {
       // 有搭子 → 弹出凭证上传弹窗
       this.setData({
@@ -338,30 +348,37 @@ Page({
     }
 
     // 无搭子 → 直接打卡
-    todayGoals[goalIndex].checked = true
-    const uncheckedCount = todayGoals.filter(g => !g.checked && !g.expired).length
-    this.setData({ todayGoals, uncheckedCount, allChecked: uncheckedCount === 0 })
-
     try {
       const res = await request.post('/api/checkin/do', { taskId })
       if (res.code === 200) {
-        wx.showToast({ title: '打卡成功', icon: 'success' })
+        const status = res.data && res.data.status
+        if (status !== 'pending' && status !== 'approved') {
+          wx.showToast({ title: '打卡状态未确认，请刷新后查看', icon: 'none' })
+          return
+        }
+        todayGoals[goalIndex].checked = status === 'approved'
+        todayGoals[goalIndex].pending = status === 'pending'
+        todayGoals[goalIndex].rejected = false
+        const uncheckedCount = todayGoals.filter(g => !g.checked && !g.pending && !g.expired).length
+        this.setData({ todayGoals, uncheckedCount, allChecked: todayGoals.length > 0 && todayGoals.every(g => g.checked) })
+        wx.showToast({ title: status === 'pending' ? '已提交，等待搭子审核' : '打卡成功', icon: status === 'pending' ? 'none' : 'success' })
       } else {
         todayGoals[goalIndex].checked = false
         const rollbackCount = todayGoals.filter(g => !g.checked && !g.expired).length
-        this.setData({ todayGoals, uncheckedCount: rollbackCount, allChecked: rollbackCount === 0 })
+        this.setData({ todayGoals, uncheckedCount: rollbackCount, allChecked: todayGoals.length > 0 && todayGoals.every(g => g.checked) })
         wx.showToast({ title: res.message || '打卡失败', icon: 'none' })
       }
     } catch (err) {
       todayGoals[goalIndex].checked = false
       const rollbackCount = todayGoals.filter(g => !g.checked && !g.expired).length
-      this.setData({ todayGoals, uncheckedCount: rollbackCount, allChecked: rollbackCount === 0 })
+      this.setData({ todayGoals, uncheckedCount: rollbackCount, allChecked: todayGoals.length > 0 && todayGoals.every(g => g.checked) })
       wx.showToast({ title: '打卡失败，请重试', icon: 'none' })
     }
   },
 
   // 凭证上传弹窗相关
   hideProofModal() {
+    if (this.data.proofSubmitting) return
     this.setData({ showProofModal: false, proofTaskId: null, proofTaskName: '', proofTaskType: '', proofImage: '', proofContent: '' })
   },
 
@@ -412,19 +429,22 @@ Page({
   },
 
   async submitProof() {
+    if (this.data.proofSubmitting) return
     const { proofTaskId, proofImage, proofContent } = this.data
     console.log('[submitProof] taskId:', proofTaskId, 'image:', proofImage, 'content:', proofContent)
     if (!proofImage) { wx.showToast({ title: '请上传凭证照片', icon: 'none' }); return }
 
+    this.setData({ proofSubmitting: true })
     wx.showLoading({ title: '提交中...' })
     try {
       const res = await request.post('/api/checkin/do', {
         taskId: proofTaskId, proofImage, proofContent
       })
       console.log('[submitProof] 后端返回:', JSON.stringify(res))
-      wx.hideLoading()
       if (res.code === 200) {
-        wx.showToast({ title: '已提交，等待搭子审核', icon: 'success' })
+        const status = res.data && res.data.status
+        if (status !== 'pending' && status !== 'approved') throw new Error('打卡状态未确认，请刷新后查看')
+        wx.showToast({ title: status === 'pending' ? '已提交，等待搭子审核' : '打卡已通过', icon: status === 'pending' ? 'none' : 'success' })
         // 清除该任务的上传状态
         const uploadedTasks = { ...this.data.uploadedTasks }
         delete uploadedTasks[proofTaskId]
@@ -434,8 +454,10 @@ Page({
         wx.showToast({ title: res.message || '提交失败', icon: 'none' })
       }
     } catch (err) {
+      wx.showToast({ title: err.message || '提交失败，请重试', icon: 'none' })
+    } finally {
       wx.hideLoading()
-      wx.showToast({ title: '提交失败，请重试', icon: 'none' })
+      this.setData({ proofSubmitting: false })
     }
   },
 

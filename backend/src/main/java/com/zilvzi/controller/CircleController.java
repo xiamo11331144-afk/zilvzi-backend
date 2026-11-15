@@ -124,6 +124,16 @@ public class CircleController {
     /**
      * 获取圈子动态
      */
+    @GetMapping("/post/{postId}")
+    public Result<?> getPost(@PathVariable Long postId) {
+        try {
+            Post post = circleService.getPostById(postId);
+            return post == null ? Result.error("动态不存在") : Result.success(post);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
     @GetMapping("/{circleId}/posts")
     public Result<?> getCirclePosts(@RequestAttribute(value = "userId", required = false) Long userId,
                                     @PathVariable Long circleId,

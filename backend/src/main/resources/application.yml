@@ -97,6 +97,12 @@ aliyun:
     access-key-id: "${ALIYUN_OCR_ACCESS_KEY_ID:}"
     access-key-secret: "${ALIYUN_OCR_ACCESS_KEY_SECRET:}"
 
+baidu:
+  ocr:
+    app-id: "${BAIDU_OCR_APP_ID:}"
+    api-key: "${BAIDU_OCR_API_KEY:}"
+    secret-key: "${BAIDU_OCR_SECRET_KEY:}"
+
 # 日志配置
 logging:
   level:

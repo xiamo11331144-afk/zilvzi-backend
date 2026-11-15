@@ -23,5 +23,11 @@ admin:
     password: "${ADMIN_BOOTSTRAP_PASSWORD:}"
 
 # Optional cloud services: configure the environment variables documented in README.
+baidu:
+  ocr:
+    app-id: "${BAIDU_OCR_APP_ID:}"
+    api-key: "${BAIDU_OCR_API_KEY:}"
+    secret-key: "${BAIDU_OCR_SECRET_KEY:}"
+
 # To test VIP in dev, use IDEA program arguments:
 # --spring.profiles.active=dev --vip.payment.channel=mock --vip.mock-payment.enabled=true

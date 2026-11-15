@@ -6,6 +6,148 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CheckinLifecycleTest extends CheckinServiceTest {
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({"1,true", "2,true", "1,false", "2,false"})
+    void differentPlanNamesAndTaskTypesStillAllowMatchingGoalPartnersToReview(long submitter, boolean approved) {
+        long reviewer = submitter == 1 ? 2 : 1;
+        PlanTask task = task(submitter, 0);
+        task.setTaskType("练习");
+        Goal submittedGoal = goal(20, submitter, "study");
+        submittedGoal.setName(submitter == 1 ? "计算机二级C语言" : "计算机二级Python");
+        when(goals.selectById(20L)).thenReturn(submittedGoal);
+        Goal reviewerGoal = goal(21, reviewer, "学习提升");
+        reviewerGoal.setName(submitter == 1 ? "计算机二级Python" : "计算机二级C语言");
+        when(goals.selectByUserId(reviewer)).thenReturn(java.util.List.of(reviewerGoal));
+        Partner relation = new Partner(); relation.setUserId(1L); relation.setPartnerId(2L);
+        relation.setMatchMode("lead"); relation.setStatus("accepted");
+        when(partners.selectByUserId(submitter)).thenReturn(java.util.List.of(relation));
+        when(partners.selectByUserId(reviewer)).thenReturn(java.util.List.of(relation));
+        doAnswer(invocation -> { ((Checkin)invocation.getArgument(0)).setId(100L); return 1; }).when(checkins).insert(any());
+
+        assertTrue(service.requiresReview(submitter,30L));
+        service.doCheckin(submitter,null,30L,null,null,"proof-photo",null);
+        var record = org.mockito.ArgumentCaptor.forClass(Checkin.class);
+        verify(checkins).insert(record.capture());
+        Checkin pending = record.getValue();
+        assertEquals("pending", pending.getStatus());
+        when(checkins.selectById(100L)).thenReturn(pending);
+        when(checkins.selectPendingForReview(reviewer)).thenReturn(java.util.List.of(pending));
+        assertEquals(java.util.List.of(pending), service.getPendingForReview(reviewer));
+        String status = approved ? "approved" : "rejected";
+        when(checkins.updateStatus(100L,status,reviewer,null)).thenReturn(1);
+
+        service.reviewCheckin(reviewer,100L,approved,null);
+
+        verify(checkins).updateStatus(100L,status,reviewer,null);
+        verify(tasks).updateCompleted(30L,approved ? 1 : 0);
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(longs = {1, 2})
+    void goalCategoryOverridesAiTaskTypeInBothLeadDirections(long submitter) {
+        long reviewer = submitter == 1 ? 2 : 1;
+        PlanTask task = task(submitter, 0);
+        task.setTaskType("练习");
+        when(goals.selectById(20L)).thenReturn(goal(20, submitter, "exam"));
+        Partner relation = new Partner(); relation.setUserId(1L); relation.setPartnerId(2L);
+        relation.setMatchMode("lead"); relation.setStatus("accepted");
+        when(partners.selectByUserId(submitter)).thenReturn(java.util.List.of(relation));
+        when(goals.selectByUserId(reviewer)).thenReturn(java.util.List.of(goal(21, reviewer, "考试备考")));
+        assertTrue(service.requiresReview(submitter, 30L));
+        assertThrows(IllegalArgumentException.class, () -> service.doCheckin(submitter,null,30L,null,null,null,null));
+        verify(checkins,never()).insert(any());
+        service.doCheckin(submitter,null,30L,null,null,"proof-photo",null);
+        var record = org.mockito.ArgumentCaptor.forClass(Checkin.class);
+        verify(checkins).insert(record.capture());
+        assertEquals("pending",record.getValue().getStatus());
+        var message = org.mockito.ArgumentCaptor.forClass(Message.class);
+        verify(messages).insert(message.capture());
+        assertEquals(reviewer,message.getValue().getToUserId().longValue());
+        verify(tasks,never()).updateCompleted(anyLong(),anyInt());
+    }
+
+    @Test void reviewRequirementDoesNotExposeOtherUsersTasks() {
+        task(2,0);
+        assertThrows(IllegalArgumentException.class, () -> service.requiresReview(1L,30L));
+        verifyNoInteractions(partners);
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({"1,true", "2,true", "1,false", "2,false"})
+    void neitherSideOfLeadRelationshipCanSubmitWithoutProof(long submitter, boolean taskSubmission) {
+        long reviewer = submitter == 1 ? 2 : 1;
+        Partner relation = new Partner();
+        relation.setUserId(1L); relation.setPartnerId(2L);
+        relation.setMatchMode("lead"); relation.setStatus("accepted");
+        when(partners.selectByUserId(submitter)).thenReturn(java.util.List.of(relation));
+        when(goals.selectByUserId(reviewer)).thenReturn(java.util.List.of(goal(21, reviewer, "学习")));
+        if (taskSubmission) task(submitter, 0);
+        else when(goals.selectById(20L)).thenReturn(goal(20, submitter, "study"));
+
+        var error = assertThrows(IllegalArgumentException.class, () -> service.doCheckin(submitter,
+                taskSubmission ? null : 20L, taskSubmission ? 30L : null, null, null, " ", null));
+        assertTrue(error.getMessage().contains("凭证照片"));
+        verify(checkins, never()).insert(any());
+        verify(tasks, never()).updateCompleted(anyLong(), anyInt());
+        verifyNoInteractions(notifications, messages, achievements);
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({"1,true", "2,true", "1,false", "2,false"})
+    void leadRelationshipRequiresSameCategoryProofReviewInBothDirections(long submitter, boolean taskSubmission) {
+        long reviewer = submitter == 1 ? 2 : 1;
+        Partner relation = new Partner();
+        relation.setUserId(1L); relation.setPartnerId(2L);
+        relation.setMatchMode("lead"); relation.setStatus("accepted");
+        when(partners.selectByUserId(submitter)).thenReturn(java.util.List.of(relation));
+        when(goals.selectByUserId(reviewer)).thenReturn(java.util.List.of(goal(21, reviewer, "学习提升")));
+        if (taskSubmission) task(submitter, 0);
+        else when(goals.selectById(20L)).thenReturn(goal(20, submitter, "study"));
+        doAnswer(invocation -> {
+            Checkin record = invocation.getArgument(0);
+            record.setId(100L);
+            return 1;
+        }).when(checkins).insert(any());
+
+        service.doCheckin(submitter, taskSubmission ? null : 20L, taskSubmission ? 30L : null,
+                "任务完成", null, "https://example.com/proof.png", "执行凭证");
+
+        var record = org.mockito.ArgumentCaptor.forClass(Checkin.class);
+        verify(checkins).insert(record.capture());
+        assertEquals("pending", record.getValue().getStatus());
+        assertEquals(submitter, record.getValue().getUserId().longValue());
+        assertEquals("https://example.com/proof.png", record.getValue().getProofImage());
+        var message = org.mockito.ArgumentCaptor.forClass(Message.class);
+        verify(messages).insert(message.capture());
+        assertEquals(submitter, message.getValue().getFromUserId().longValue());
+        assertEquals(reviewer, message.getValue().getToUserId().longValue());
+        assertEquals(100L, message.getValue().getRelatedId());
+        assertEquals("checkin_proof", message.getValue().getType());
+        verify(notifications).sendNotification(eq(reviewer), eq(submitter), eq("checkin_review"),
+                anyString(), anyString(), eq("checkin"), eq(100L));
+        verify(tasks, never()).updateCompleted(anyLong(), anyInt());
+        verifyNoInteractions(achievements);
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(longs = {1, 2})
+    void eitherSideOfLeadRelationshipCanReviewTheOtherSidesMatchingGoal(long submitter) {
+        long reviewer = submitter == 1 ? 2 : 1;
+        pending(submitter);
+        Partner relation = new Partner();
+        relation.setUserId(1L); relation.setPartnerId(2L);
+        relation.setMatchMode("lead"); relation.setStatus("accepted");
+        when(partners.selectByUserId(reviewer)).thenReturn(java.util.List.of(relation));
+        when(goals.selectByUserId(reviewer)).thenReturn(java.util.List.of(goal(21, reviewer, "学习")));
+        when(checkins.updateStatus(100L, "approved", reviewer, null)).thenReturn(1);
+
+        service.reviewCheckin(reviewer, 100L, true, null);
+
+        verify(checkins).updateStatus(100L, "approved", reviewer, null);
+        verify(notifications).sendNotification(eq(submitter), eq(reviewer), eq("checkin_approved"),
+                anyString(), anyString(), eq("checkin"), eq(100L));
+    }
+
     PlanTask task(long owner, int completed) {
         PlanTask t = new PlanTask(); t.setId(30L); t.setPlanId(40L); t.setCompleted(completed);
         t.setTaskType("study"); t.setTaskDate(java.time.LocalDate.now());

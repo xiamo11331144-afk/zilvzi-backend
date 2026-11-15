@@ -33,6 +33,13 @@
         LIMIT #{offset}, #{limit}
     </select>
 
+    <select id="selectById" resultMap="notificationMap">
+        SELECT n.*, u.nickname as from_nickname, u.avatar as from_avatar
+        FROM notification n
+        LEFT JOIN user u ON n.from_user_id = u.id
+        WHERE n.id = #{id}
+    </select>
+
     <sql id="categoryPredicate">
         <choose>
             <when test="category == 'notice'">

@@ -1,0 +1,13 @@
+<view wx:if="{{visible}}" class="proof-mask" catchtap="stopTap">
+  <view class="proof-dialog">
+    <view class="title">提交打卡凭证</view>
+    <view class="task-name">{{taskName}}</view>
+    <image wx:if="{{image}}" class="proof-image" src="{{image}}" mode="aspectFit" bindtap="preview" />
+    <button bindtap="chooseImage" loading="{{uploading}}" disabled="{{uploading || submitting}}">{{image ? '重新选择照片' : '拍照或选择凭证照片'}}</button>
+    <input class="proof-input" value="{{content}}" bindinput="inputContent" maxlength="200" placeholder="补充说明（选填）" disabled="{{submitting}}" />
+    <view class="actions">
+      <button bindtap="close" disabled="{{uploading || submitting}}">取消</button>
+      <button type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{uploading || submitting}}">提交审核</button>
+    </view>
+  </view>
+</view>

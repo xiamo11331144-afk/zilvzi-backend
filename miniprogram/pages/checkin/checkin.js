@@ -28,7 +28,8 @@ Page({
     const now = new Date()
     this.setData({
       currentYear: now.getFullYear(),
-      currentMonth: now.getMonth() + 1
+      currentMonth: now.getMonth() + 1,
+      activeTab: options && options.tab === 'pending' ? 'pending' : 'tasks'
     })
     this.initCalendar()
     this.loadCheckedDates()
@@ -234,6 +235,11 @@ Page({
     const task = this.data.todayTasks.find(item => item.id === taskId)
     if (task && (task.pending || task.checked || task.streakBreak)) return
     try {
+      const review = require('../../utils/checkin-review')
+      if (task && await review.forTask(taskId)) {
+        this.selectComponent('#checkin-proof').open(task)
+        return
+      }
       const res = await request.post('/api/checkin/do', { taskId })
       if (res.code === 200) {
         const status = res.data && res.data.status
@@ -247,6 +253,8 @@ Page({
         this.loadTodayTasks()
         this.loadCheckedDates()
         this.loadStats()
+      } else {
+        wx.showToast({ title: res.message || '打卡失败', icon: 'none' })
       }
     } catch (err) {
       wx.showToast({ title: err.message || '打卡失败', icon: 'none' })
@@ -257,6 +265,21 @@ Page({
     const unchecked = this.data.todayTasks.filter(t => !t.checked && !t.pending && !t.streakBreak)
     if (unchecked.length === 0) {
       wx.showToast({ title: '没有可打卡的任务', icon: 'none' })
+      return
+    }
+    try {
+      const review = require('../../utils/checkin-review')
+      let supervised
+      for (const task of unchecked) {
+        if (await review.forTask(task.id)) { supervised = task; break }
+      }
+      if (supervised) {
+        wx.showToast({ title: '有搭子监督的任务需逐项上传凭证', icon: 'none' })
+        this.selectComponent('#checkin-proof').open(supervised)
+        return
+      }
+    } catch (err) {
+      wx.showToast({ title: err.message || '搭子信息加载失败，请重试', icon: 'none' })
       return
     }
     let approved = 0
@@ -294,6 +317,12 @@ Page({
 
   hideSuccess() {
     this.setData({ showSuccess: false })
+  },
+
+  onProofSubmitted() {
+    this.loadTodayTasks()
+    this.loadCheckedDates()
+    this.loadStats()
   },
 
   switchTab(e) {

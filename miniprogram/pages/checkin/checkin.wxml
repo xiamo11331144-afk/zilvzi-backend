@@ -132,3 +132,4 @@
     </view>
   </view>
 </view>
+<checkin-proof id="checkin-proof" bind:submitted="onProofSubmitted" />

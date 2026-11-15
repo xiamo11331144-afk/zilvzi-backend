@@ -20,7 +20,7 @@ Page({
 
   onLoad(options) {
     if (options.id) {
-      this.setData({ circleId: options.id })
+      this.setData({ circleId: options.id, targetPostId: options.postId || '', targetPostLoaded: false })
       this.loadCircleDetail(options.id)
       this.loadPosts(options.id)
       this.checkMembership(options.id)
@@ -73,7 +73,12 @@ Page({
     try {
       const res = await request.get(`/api/circle/${circleId}/posts`, { page: 1, size: 20 })
       if (res.code === 200 && res.data) {
-        const posts = res.data.map(p => {
+        const rawPosts = res.data.slice()
+        if (this.data.targetPostId && !rawPosts.some(p => String(p.id) === String(this.data.targetPostId))) {
+          const target = await request.get(`/api/circle/post/${Number(this.data.targetPostId)}`)
+          if (target.code === 200 && target.data && String(target.data.circleId) === String(circleId)) rawPosts.unshift(target.data)
+        }
+        const posts = rawPosts.map(p => {
           let images = []
           try {
             images = p.images ? JSON.parse(p.images) : []
@@ -94,6 +99,13 @@ Page({
           }
         })
         this.setData({ posts })
+        if (this.data.targetPostId && !this.data.targetPostLoaded) {
+          const index = posts.findIndex(p => String(p.id) === String(this.data.targetPostId))
+          if (index >= 0) {
+            this.setData({ targetPostLoaded: true })
+            this.showComments({ currentTarget: { dataset: { id: posts[index].id, index } } })
+          }
+        }
       }
     } catch (err) {
       console.log('加载动态失败', err)

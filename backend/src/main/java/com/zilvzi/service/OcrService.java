@@ -11,4 +11,5 @@ public interface OcrService {
      * @return 识别出的文字
      */
     String recognizeText(String imageUrl);
+    String recognizeFile(byte[] content, String filename);
 }

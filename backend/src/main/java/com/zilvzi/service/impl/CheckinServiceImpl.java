@@ -118,11 +118,7 @@ public class CheckinServiceImpl implements CheckinService {
             }
             {
                 // 获取当前任务的目标类型
-                String taskGoalType = task.getTaskType();
-                if (taskGoalType == null && actualGoalId != null) {
-                    Goal goal = goalMapper.selectById(actualGoalId);
-                    if (goal != null) taskGoalType = goal.getType();
-                }
+                String taskGoalType = requireActiveOwnedGoal(userId, actualGoalId).getType();
                 final String goalType = taskGoalType;
 
                 // 按目标类型匹配搭子
@@ -153,6 +149,7 @@ public class CheckinServiceImpl implements CheckinService {
                 checkin.setDate(checkinDate);
 
                 if (hasPartner) {
+                    requireProofImage(proofImage);
                     // 有搭子：提交凭证，等待审核
                     checkin.setStatus("pending");
                     checkin.setProofImage(proofImage);
@@ -233,6 +230,7 @@ public class CheckinServiceImpl implements CheckinService {
                     });
 
             if (hasPartner) {
+                requireProofImage(proofImage);
                 checkin.setStatus("pending");
                 checkin.setProofImage(proofImage);
                 checkin.setProofContent(proofContent);
@@ -325,6 +323,27 @@ public class CheckinServiceImpl implements CheckinService {
             if (checkinMapper.resubmitRejected(checkin) != 1) {
                 throw new RuntimeException("打卡状态已变化，请刷新后重试");
             }
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean requiresReview(Long userId, Long taskId) {
+        PlanTask task = planTaskMapper.selectById(taskId);
+        if (task == null) throw new IllegalArgumentException("任务不存在");
+        Plan plan = planMapper.selectById(task.getPlanId());
+        if (plan == null || !userId.equals(plan.getUserId())) throw new IllegalArgumentException("无权操作该任务");
+        Goal goal = requireActiveOwnedGoal(userId, plan.getGoalId());
+        return partnerMapper.selectByUserId(userId).stream()
+                .filter(p -> "accepted".equals(p.getStatus()))
+                .map(p -> userId.equals(p.getUserId()) ? p.getPartnerId() : p.getUserId())
+                .anyMatch(other -> goalMapper.selectByUserId(other).stream()
+                        .anyMatch(g -> isSameGoalCategory(goal.getType(), g.getType())));
+    }
+
+    private void requireProofImage(String proofImage) {
+        if (proofImage == null || proofImage.isBlank()) {
+            throw new IllegalArgumentException("有同类目标搭子时，请先上传打卡凭证照片");
         }
     }
 
@@ -451,10 +470,8 @@ public class CheckinServiceImpl implements CheckinService {
                 .anyMatch(p -> (reviewerId.equals(p.getUserId()) && checkin.getUserId().equals(p.getPartnerId()))
                         || (reviewerId.equals(p.getPartnerId()) && checkin.getUserId().equals(p.getUserId())));
         if (!actualPartner) return false;
-        PlanTask task = checkin.getTaskId() == null ? null : planTaskMapper.selectById(checkin.getTaskId());
-        String type = task != null && task.getTaskType() != null ? task.getTaskType() : goal.getType();
         return goalMapper.selectByUserId(reviewerId).stream()
-                .anyMatch(g -> isSameGoalCategory(type, g.getType()));
+                .anyMatch(g -> isSameGoalCategory(goal.getType(), g.getType()));
     }
 
     @Override
@@ -530,12 +547,14 @@ public class CheckinServiceImpl implements CheckinService {
 
                 result.put("hasStreakBreak", true);
 
-                // 3. 自动触发补卡调整（创建补发任务）
+                // 3. 自动触发补卡调整；达到现有阈值时保留原日程，不再补发。
+                boolean adjustmentFailed = false;
                 try {
                     System.out.println("[StreakBreak] 计划" + plan.getId() + " 自动触发 adjustPlan 创建补发任务...");
                     planService.adjustPlan(plan.getId());
                     System.out.println("[StreakBreak] 计划" + plan.getId() + " adjustPlan 执行完成");
                 } catch (Exception e) {
+                    adjustmentFailed = true;
                     System.out.println("[StreakBreak] adjustPlan 失败: " + e.getMessage());
                     e.printStackTrace();
                 }
@@ -554,6 +573,12 @@ public class CheckinServiceImpl implements CheckinService {
                 planInfo.put("planId", plan.getId());
                 planInfo.put("planName", plan.getName());
                 planInfo.put("missedCount", missedTasks.size());
+                java.util.Map<String, Object> scheduleInfo = planService.getStreakBreakInfo(plan.getId());
+                boolean supplementPaused = Boolean.FALSE.equals(scheduleInfo.get("feasible"));
+                planInfo.put("supplementPaused", supplementPaused);
+                planInfo.put("infeasibleReason", scheduleInfo.getOrDefault("infeasibleReason", ""));
+                planInfo.put("remainingDays", scheduleInfo.getOrDefault("remainingDays", 0));
+                planInfo.put("adjustmentFailed", adjustmentFailed);
 
                 // 构建补发任务详情：原始天数 → 补到哪天
                 java.util.List<java.util.Map<String, Object>> supplementDetails = new java.util.ArrayList<>();
@@ -595,7 +620,7 @@ public class CheckinServiceImpl implements CheckinService {
 
         boolean hasBreak = (boolean) result.get("hasStreakBreak");
         if (hasBreak) {
-            System.out.println("[StreakBreak] ========== 总结: 检测到断卡，已自动补发任务 ==========");
+            System.out.println("[StreakBreak] ========== 总结: 检测到断卡，已返回各计划处理结果 ==========");
         } else {
             System.out.println("[StreakBreak] ========== 总结: 所有计划无断卡情况 ==========");
         }

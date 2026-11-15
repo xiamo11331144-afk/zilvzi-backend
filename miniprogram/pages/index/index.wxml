@@ -24,9 +24,15 @@
   <!-- 今日打卡状态 -->
   <view class="today-card card" wx:if="{{isLoggedIn}}">
     <view class="badge-feedback home-badge-feedback" wx:if="{{badgeError}}" bindtap="retryBadges">通知未读数更新失败，点击重试</view>
+    <view class="badge-feedback home-badge-feedback" wx:if="{{streakBreakError}}" bindtap="loadExecutionState">{{streakBreakError}}，点击重试</view>
+    <view class="streak-break-card" wx:for="{{streakBreakPlans}}" wx:key="planId">
+      <view class="streak-break-title">{{item.planName}} · {{item.supplementPaused ? '补发已暂停' : '断卡提醒'}}</view>
+      <text class="streak-break-text">{{item.reminder}}</text>
+      <view class="streak-break-link" bindtap="viewPlan" data-id="{{item.planId}}">查看原计划 ›</view>
+    </view>
     <view class="today-header flex-between">
       <text class="section-title">今日任务</text>
-      <text class="checkin-status {{allChecked ? 'done' : ''}}">{{allChecked ? '全部完成' : '待打卡 ' + uncheckedCount + ' 项'}}</text>
+      <text class="checkin-status {{allChecked ? 'done' : ''}}">{{tasksLoading ? '加载中' : tasksLoadError ? '加载失败' : todayGoals.length === 0 ? '今日未排任务' : allChecked ? '全部完成' : uncheckedCount > 0 ? '待打卡 ' + uncheckedCount + ' 项' : '等待审核'}}</text>
     </view>
     <view class="goal-list">
       <view class="goal-item" wx:for="{{todayGoals}}" wx:key="id">
@@ -59,8 +65,10 @@
         </view>
       </view>
     </view>
-    <view class="empty-tip" wx:if="{{todayGoals.length === 0}}">
-      <text>暂无任务，点击"制定计划"AI生成</text>
+    <view class="empty-tip" wx:if="{{tasksLoadError}}" bindtap="loadGoals">{{tasksLoadError}}，点击重试</view>
+    <view class="empty-tip" wx:elif="{{!tasksLoading && todayGoals.length === 0}}">
+      <text>{{plans.length > 0 ? '今天没有排定任务，可进入原计划查看后续安排。' : '今天没有排定任务，已有计划可在下方查看，也可以制定新计划。'}}</text>
+      <view class="streak-break-link" wx:if="{{plans.length > 0}}" bindtap="viewPlan" data-id="{{plans[0].id}}">查看原计划 ›</view>
     </view>
   </view>
 
@@ -247,7 +255,7 @@
     </view>
     <view class="modal-footer">
       <button class="btn-outline" bindtap="hideProofModal">取消</button>
-      <button class="btn-primary" bindtap="submitProof">提交审核</button>
+      <button class="btn-primary" bindtap="submitProof" loading="{{proofSubmitting}}" disabled="{{proofSubmitting}}">提交审核</button>
     </view>
   </view>
 </view>

@@ -291,12 +291,12 @@ Page({
                 } else {
                   wx.showModal({
                     title: '上传成功',
-                    content: '文件已上传，但未能识别出文字内容。可能原因：图片模糊、格式不支持。你可以手动填写课程安排，或重新上传更清晰的图片。',
+                    content: '文件已上传，但本次没有识别出文字。你可以手动填写课程安排，或换一张内容清晰的图片；PDF目前识别第1页。' + (data.data.traceId ? '\n排查编号：' + data.data.traceId : ''),
                     showCancel: false
                   })
                 }
               } else {
-                wx.showToast({ title: data.message || '上传失败', icon: 'none' })
+                wx.showModal({ title: '课表识别失败', content: data.message || '处理失败，请重试', showCancel: false })
               }
             } catch (e) {
               wx.showToast({ title: '解析失败', icon: 'none' })
@@ -601,6 +601,11 @@ Page({
     if (!task || task.pending || task.completed === 1 || (task.completed === -1 && !task.rejected)) return
 
     try {
+      const review = require('../../utils/checkin-review')
+      if (await review.forTask(taskId)) {
+        this.selectComponent('#checkin-proof').open(task)
+        return
+      }
       const res = await request.post('/api/checkin/do', { taskId })
       if (res.code !== 200) {
         wx.showToast({ title: res.message || '提交失败', icon: 'none' })
@@ -623,6 +628,10 @@ Page({
     } catch (err) {
       wx.showToast({ title: err.message || '提交失败', icon: 'none' })
     }
+  },
+
+  onProofSubmitted() {
+    this.refreshPlanProgress()
   },
 
   // 查看完整计划
